@@ -2,6 +2,7 @@
 
 import time
 import json
+import requests
 from discord.ext import commands
 from discord.utils import get
 
@@ -32,9 +33,7 @@ async def game_channel_create(self, gamename):
         manage_channels=False,
         manage_permissions=False,
         manage_webhooks=False,
-        
         create_instant_invite=False,
-        
         send_messages=False,
         embed_links=False,
         attach_files=False,
@@ -53,7 +52,6 @@ async def game_channel_create(self, gamename):
         mute_members=False,
         deafen_members=False,
         move_members=False,
-        
         request_to_speak=False
         )
     
@@ -64,9 +62,7 @@ async def game_channel_create(self, gamename):
         manage_channels=False,
         manage_permissions=False,
         manage_webhooks=False,
-        
         create_instant_invite=False,
-        
         send_messages=True,
         embed_links=False,
         attach_files=False,
@@ -85,7 +81,6 @@ async def game_channel_create(self, gamename):
         mute_members=False,
         deafen_members=False,
         move_members=False,
-        
         request_to_speak=True
         )
     
@@ -96,9 +91,7 @@ async def game_channel_create(self, gamename):
         manage_channels=False,
         manage_permissions=False,
         manage_webhooks=False,
-        
         create_instant_invite=False,
-        
         send_messages=True,
         embed_links=False,
         attach_files=False,
@@ -117,7 +110,6 @@ async def game_channel_create(self, gamename):
         mute_members=True,
         deafen_members=True,
         move_members=True,
-        
         request_to_speak=True
         )
     
@@ -128,9 +120,7 @@ async def game_channel_create(self, gamename):
         manage_channels=False,
         manage_permissions=False,
         manage_webhooks=False,
-        
         create_instant_invite=False,
-        
         send_messages=True,
         embed_links=True,
         attach_files=False,
@@ -149,7 +139,6 @@ async def game_channel_create(self, gamename):
         mute_members=True,
         deafen_members=True,
         move_members=True,
-        
         request_to_speak=True
         )
     
@@ -160,9 +149,7 @@ async def game_channel_create(self, gamename):
         manage_channels=True,
         manage_permissions=False,
         manage_webhooks=False,
-        
         create_instant_invite=False,
-        
         send_messages=True,
         embed_links=True,
         attach_files=True,
@@ -181,17 +168,14 @@ async def game_channel_create(self, gamename):
         mute_members=True,
         deafen_members=True,
         move_members=True,
-        
         request_to_speak=True
         )
     
     await guild.create_text_channel(name=str(gamename) + '-talk', category=place)
-
     await guild.create_voice_channel(name='Fraktion-I', category=place, user_limit=8)
     await guild.create_voice_channel(name='Fraktion-II', category=place, user_limit=8)
     await guild.create_voice_channel(name='Fraktion-III', category=place, user_limit=8)
     await guild.create_voice_channel(name='Fraktion-IV', category=place, user_limit=8)
-        
     await guild.create_voice_channel(name='Group-Talk', category=place)
 
 # Die folgenden Zeilen sind das Rollen Feature des Kirkland Meeseeks.
@@ -209,6 +193,25 @@ async def lsrole(context):
         if role.position < highestrole.position and role.position > lowest.position:
             await context.send(role)
             time.sleep(0.75)
+
+@client.command()
+
+# tell a joke
+# written by Pope
+
+async def joke(context):
+    jokejson = requests.get("https://v2.jokeapi.dev/joke/Any?lang=de")
+    joke_payload = jokejson.json()
+    if jokejson.status_code == 200:
+        if joke_payload['type'] == 'twopart':
+            question = joke_payload['setup']
+            answer = joke_payload['delivery']
+            await context.send(question)
+            time.sleep(1)
+            await context.send(answer)
+        if joke_payload['type'] == 'single':
+            joke =  joke_payload['joke']
+            await context.send(joke)
 
 @client.command()
 
