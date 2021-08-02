@@ -2,28 +2,35 @@
 
 import time
 import json
+import discord
 import requests
+import logging
 from discord.ext import commands
 from discord.utils import get
 
 client = commands.Bot(command_prefix='!')
+logging.basicConfig(filename='discord_bot.log', format='%(asctime)s %(message)s', encoding='utf-8', level=logging.INFO) # possible info/error/warning/critical/debug
 
 @client.event
 
 async def on_ready():
+    logging.info('bot started')
     print('Im ready')
 
 @client.command()
 @commands.has_role('El-Special')
 
 async def game_channel_create(self, gamename):
-    guild = self.message.guild
 
+    """An administrativ command to create CategoryChannels with channels, and the right permissions set."""
+
+    guild = self.message.guild
+    member = self.message.author
+    logging.info(str(member) + ' tried to create ' + str(gamename))
     gamerole = await guild.create_role(name=gamename)
     junior_admin = get(self.guild.roles, name='Junior Admin')
     admin = get(self.guild.roles, name='Admin')
     senior_admin = get(self.guild.roles, name='Senior Admin')
-    
     place = await guild.create_category_channel(name='<##>' + str(gamename))
 
     await place.set_permissions(
@@ -185,9 +192,14 @@ async def game_channel_create(self, gamename):
 # Der !lsrole Befehl Listet die bereits verfügbaren Rollen auf.
 
 async def lsrole(context):
+
+    """Der !lsrole Befehl Listet die bereits verfügbaren Rollen auf."""
+
     lowest = get(context.guild.roles, name='@everyone')
     highestrole = get(context.guild.roles, name='Groovy')
-    
+    member = context.message.author
+    logging.info(str(member) + ' called lsrole')
+
     for role in context.guild.roles:
         
         if role.position < highestrole.position and role.position > lowest.position:
@@ -200,6 +212,8 @@ async def lsrole(context):
 # written by Pope
 
 async def joke(context):
+    member = context.message.author
+    logging.info(str(member) + ' called joke')
     jokejson = requests.get("https://v2.jokeapi.dev/joke/Any?lang=de")
     joke_payload = jokejson.json()
     if jokejson.status_code == 200:
@@ -221,6 +235,7 @@ async def joke(context):
 
 async def addrole(context, rolename):
     member = context.message.author
+    logging.info(str(member) + ' called addrole')
     role = get(member.guild.roles, name=rolename)
     highestrole = get(context.guild.roles, name='Groovy')
     
