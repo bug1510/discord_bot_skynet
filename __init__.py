@@ -387,7 +387,7 @@ async def joke(context):
             await context.send(joke)
 
 
-maintenance = open('token.json',)
+maintenance = open('C:\Users\ScorpTech\OneDrive\Dokumente\git-repositories\token.json',)
 secret = json.load(maintenance)
 
 client.run(secret['token'])
