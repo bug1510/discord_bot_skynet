@@ -8,7 +8,7 @@ from discord.ext import commands
 from discord.utils import get
 
 client = commands.Bot(command_prefix='!')
-logging.basicConfig(filename='discord_bot.log', format='%(asctime)s %(message)s', encoding='utf-8', level=logging.INFO) # possible info/error/warning/critical/debug
+logging.basicConfig(filename='C:/Users/ScorpTech/OneDrive/Dokumente/git-repositories/discord_bot.log', format='%(asctime)s %(message)s', encoding='utf-8', level=logging.INFO) # possible info/error/warning/critical/debug
 
 @client.event
 
@@ -386,8 +386,7 @@ async def joke(context):
             joke =  joke_payload['joke']
             await context.send(joke)
 
-
-maintenance = open('C:\Users\ScorpTech\OneDrive\Dokumente\git-repositories\token.json',)
+maintenance = open('C:/Users/ScorpTech/OneDrive/Dokumente/git-repositories/token.json',)
 secret = json.load(maintenance)
 
 client.run(secret['token'])
