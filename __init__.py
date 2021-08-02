@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import time
-import discord
 import json
 from discord.ext import commands
 from discord.utils import get
@@ -28,7 +27,6 @@ async def lsrole(context):
             await context.send(role)
             time.sleep(0.66)
 
-
 @client.command()
 
 # Der !addrole Befehl fügt einem Nutzer eine bestimmte Rolle an.
@@ -51,6 +49,34 @@ async def addrole(context, rolename):
     
     else:
         await context.send('Versuch mal lsrole um dir alle für dich, verfügbaren Rollen anzeigen zulassen.')
+
+@client.command()
+
+# Der !add3roles Befehl fügt einem Nutzer drei bestimmte Rollen an.
+# Sicherheitsfunktion zu Testzwecken, kann nach Konfiguration deaktiviert werden.
+# @commands.has_role("Der Architekt")
+
+async def add3roles(context, rolename1, rolename2, rolename3):
+    member = context.message.author
+    role1 = get(member.guild.roles, name=rolename1)
+    role2 = get(member.guild.roles, name=rolename2)
+    role3 = get(member.guild.roles, name=rolename3)
+    botrole = get(context.guild.roles, name='Mr Meeseeks')
+
+    if(role1.position < botrole.position and role2.position < botrole.position and role3.position < botrole.position):
+        await context.send(':sparkles:' + '*poof*' + ':sparkles:')
+        await context.send('Was willst du?')
+        time.sleep(1)
+        await context.send('Die Rollen ' + ', ' + str(rolename1) + ', ' + str(rolename2) + ' und ' + str(rolename3) + '? Oh ja, das kann ich für dich tun!')
+        time.sleep(1)
+        await member.add_roles(role1)
+        await member.add_roles(role2)
+        await member.add_roles(role3)
+        await context.send(':sparkles:' + '*poof*' + ':sparkles:')
+
+    else:
+        await context.send('Versuch mal lsrole um dir alle für dich, verfügbaren Rollen anzeigen zulassen.')
+
 
 @client.command()
 
@@ -92,6 +118,32 @@ async def rmrole(context, rolename):
         await member.remove_roles(role)
         await context.send(':sparkles:' + '*poof*' + ':sparkles:')
 
+@client.command()
+
+# Der !rm3role Befehl entfernt drei bestimmte Rolle von einem Nutzer.
+# Sicherheitsfunktion zu Testzwecken, kann nach Konfiguration deaktiviert werden.
+# @commands.has_role("Der Architekt")
+
+async def rm3roles(context, rolename1, rolename2, rolename3):
+    member = context.message.author
+    role1 = get(member.guild.roles, name=rolename1)
+    role2 = get(member.guild.roles, name=rolename2)
+    role3 = get(member.guild.roles, name=rolename3)
+    botrole = get(context.guild.roles, name='Mr Meeseeks')
+    
+    if(role1.position < botrole.position and role2.position < botrole.position and role3.position < botrole.position):
+        await context.send(':sparkles:' + '*poof*' + ':sparkles:')
+        await context.send('Was willst du?')
+        time.sleep(1)
+        await context.send('Du willst die Rollen ' + str(rolename1) + ', ' + str(rolename2) + ', ' + str(rolename3) + ' nicht mehr? oh ja, das kann ich für dich tun!')
+        time.sleep(1)
+        await member.remove_roles(role1)
+        await member.remove_roles(role2)
+        await member.remove_roles(role3)
+        await context.send(':sparkles:' + '*poof*' + ':sparkles:')
+
+    else:
+        await context.send('Irgendwas ist schief gegangen, überprüfe deine Angaben nochmal.')
 @client.command()
 
 # Der !rmall Befehl enfernt alle Rollen von einem Nutzer.
