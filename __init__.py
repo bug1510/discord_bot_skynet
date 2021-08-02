@@ -2,7 +2,6 @@
 
 import time
 import json
-import discord
 import requests
 import logging
 from discord.ext import commands
@@ -22,7 +21,7 @@ async def on_ready():
 
 async def game_channel_create(self, gamename):
 
-    """An administrativ command to create CategoryChannels with channels, and the right permissions set."""
+    """Dieser Befehl ist administrativ und legt eine ganze Rolle ihre Kategorie und eigene Channel an"""
 
     guild = self.message.guild
     member = self.message.author
@@ -193,7 +192,7 @@ async def game_channel_create(self, gamename):
 
 async def lsrole(context):
 
-    """Der !lsrole Befehl Listet die bereits verfügbaren Rollen auf."""
+    """Dieser Befehl Listet dir die für dich bereits verfügbaren Rollen auf"""
 
     lowest = get(context.guild.roles, name='@everyone')
     highestrole = get(context.guild.roles, name='Groovy')
@@ -208,32 +207,14 @@ async def lsrole(context):
 
 @client.command()
 
-# tell a joke
-# written by Pope
-
-async def joke(context):
-    member = context.message.author
-    logging.info(str(member) + ' called joke')
-    jokejson = requests.get("https://v2.jokeapi.dev/joke/Any?lang=de")
-    joke_payload = jokejson.json()
-    if jokejson.status_code == 200:
-        if joke_payload['type'] == 'twopart':
-            question = joke_payload['setup']
-            answer = joke_payload['delivery']
-            await context.send(question)
-            time.sleep(1)
-            await context.send(answer)
-        if joke_payload['type'] == 'single':
-            joke =  joke_payload['joke']
-            await context.send(joke)
-
-@client.command()
-
 # Der !addrole Befehl fügt einem Nutzer eine bestimmte Rolle an.
 # Sicherheitsfunktion zu Testzwecken, kann nach Konfiguration deaktiviert werden.
 # @commands.has_role("Der Architekt")
 
 async def addrole(context, rolename):
+
+    """addrole fügt dir einfach und schnell eine Gamingrolle hinzu, damit du die richtigen Kategorien siehst"""
+
     member = context.message.author
     logging.info(str(member) + ' called addrole')
     role = get(member.guild.roles, name=rolename)
@@ -258,6 +239,9 @@ async def addrole(context, rolename):
 # @commands.has_role("Der Architekt")
 
 async def add3roles(context, rolename1, rolename2, rolename3):
+
+    """add3roles Funktioniert ähnlich wie addrole nur eben mit 3 Rollen"""
+
     member = context.message.author
     role1 = get(member.guild.roles, name=rolename1)
     role2 = get(member.guild.roles, name=rolename2)
@@ -286,6 +270,9 @@ async def add3roles(context, rolename1, rolename2, rolename3):
 # @commands.has_role("Der Architekt")
 
 async def addall(self):
+
+    """Du glaubst jedes Spiel zu haben? Dann gib dir doch fix einfach alle Gamingrollen um überall mit zu mischen"""
+
     author = self.message.author
     lowest = get(self.guild.roles, name='@everyone')
     highestrole = get(self.guild.roles, name='Groovy')
@@ -306,6 +293,9 @@ async def addall(self):
 # @commands.has_role("Der Architekt")
 
 async def rmrole(context, rolename):
+
+    """rmrole nimmt dir eine Rolle und das Recht eine Kategorie zu sehen, falls du ein Spiel nicht mehr magst ;)"""
+
     member = context.message.author
     role = get(member.guild.roles, name=rolename)
     highestrole = get(context.guild.roles, name='Groovy')
@@ -326,6 +316,9 @@ async def rmrole(context, rolename):
 # @commands.has_role("Der Architekt")
 
 async def rm3roles(context, rolename1, rolename2, rolename3):
+
+    """Ist das Gegenstück zu add3roles und Funktioniert auch so, nur das du am Ende weniger Rollen hast"""
+
     member = context.message.author
     role1 = get(member.guild.roles, name=rolename1)
     role2 = get(member.guild.roles, name=rolename2)
@@ -353,6 +346,9 @@ async def rm3roles(context, rolename1, rolename2, rolename3):
 # @commands.has_role("Der Architekt")
 
 async def rmall(self):
+
+    """Keine Lust mehr auf Gaming? Dann nimm dir doch einfach alle Rollen"""
+
     author = self.message.author
     lowest = get(self.guild.roles, name='@everyone')
     highestrole = get(self.guild.roles, name='Groovy')
@@ -365,6 +361,31 @@ async def rmall(self):
             await author.remove_roles(role)
 
     await self.send(':sparkles:' + '*poof*' + ':sparkles:')
+
+@client.command()
+
+# tell a joke
+# written by Pope
+
+async def joke(context):
+
+    """Langeweile? Mr Meeseeks erzählt dir gerne ein paar Witze"""
+
+    member = context.message.author
+    logging.info(str(member) + ' called joke')
+    jokejson = requests.get("https://v2.jokeapi.dev/joke/Any?lang=de")
+    joke_payload = jokejson.json()
+    if jokejson.status_code == 200:
+        if joke_payload['type'] == 'twopart':
+            question = joke_payload['setup']
+            answer = joke_payload['delivery']
+            await context.send(question)
+            time.sleep(1)
+            await context.send(answer)
+        if joke_payload['type'] == 'single':
+            joke =  joke_payload['joke']
+            await context.send(joke)
+
 
 maintenance = open('token.json',)
 secret = json.load(maintenance)
