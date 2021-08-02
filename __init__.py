@@ -18,15 +18,16 @@ async def on_ready():
 
 # Der !lsrole Befehl Listet die bereits verfügbaren Rollen auf.
 
-async def lsrole(self):
-    lowest = get(self.guild.roles, name='@everyone')
-    botrole = get(self.guild.roles, name='Mr Meeseeks')
+async def lsrole(context):
+    lowest = get(context.guild.roles, name='@everyone')
+    botrole = get(context.guild.roles, name='Mr Meeseeks')
     
-    for role in self.guild.roles:
+    for role in context.guild.roles:
         
         if role.position < botrole.position and role.position > lowest.position:
-            await self.send(role)
+            await context.send(role)
             time.sleep(0.66)
+
 
 @client.command()
 
@@ -111,5 +112,9 @@ async def rmall(self):
 
     await self.send(':sparkles:' + '*poof*' + ':sparkles:')
 
-client.run('ODY0MDYyODA3OTk2MzY2ODYw.YOv_Mg.h2_0lQr26VeAdyvis4D0EcIX3UE')
+maintenance = open('token.json',)
+secret = json.load(maintenance)
 
+client.run(secret['token'])
+
+maintenance.close()
