@@ -1,17 +1,22 @@
 #!/usr/bin/env python3
 
+import os
 import time
+from datetime import datetime
 import json
 import requests
 import logging
 from discord.ext import commands
 from discord.utils import get
 
+today = datetime.now()
+today = today.strftime("%Y%m%d")
+source = os.path.dirname(os.path.abspath(__file__))
+
 client = commands.Bot(command_prefix='!')
 logging.basicConfig(
-    filename='C:/Users/ScorpTech/OneDrive/Dokumente/git-repositories/discord_bot.log',
+    filename= source + '/../logs/' + str(today) + '_discord_bot.log',
     format='%(asctime)s %(message)s',
-    encoding='utf-8',
     level=logging.INFO
     ) # possible info/error/warning/critical/debug
 
@@ -396,7 +401,7 @@ async def joke(context):
             joke =  joke_payload['joke']
             await context.send(joke)
 
-maintenance = open('C:/Users/ScorpTech/OneDrive/Dokumente/git-repositories/token.json',)
+maintenance = open(source + '/../token.json',)
 secret = json.load(maintenance)
 
 client.run(secret['token'])
