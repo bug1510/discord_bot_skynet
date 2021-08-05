@@ -255,6 +255,7 @@ async def addrole(context, rolename):
             # prüfe ob die gewünschte Rolle in der hirarchie höher liegt als die erlaubte
             if role.position < highestrole.position:
                 await member.add_roles(role)
+                await context.send('Rolle ' + str(role) + ' wurde hinzugefügt')
                 logging.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
                 time.sleep(0.5)
             else:
@@ -265,6 +266,7 @@ async def addrole(context, rolename):
         # prüfe ob die gewünschte Rolle in der hirarchie höher liegt als die erlaubte
         if role.position < highestrole.position:
             await member.add_roles(role)
+            await context.send('Rolle ' + str(role) + ' wurde hinzugefügt')
             logging.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
             time.sleep(0.5)
         else:
