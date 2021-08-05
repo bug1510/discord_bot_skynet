@@ -224,56 +224,45 @@ async def lsrole(context):
 
 async def addrole(context, rolename):
 
-    """addrole fügt dir einfach und schnell eine Gamingrolle hinzu, 
+    """addrole fügt dir einfach und schnell eine Gamingrolle oder mehrere Gamingrollen (mit Komma getrennt) hinzu, 
     damit du die richtigen Kategorien siehst"""
+
+    if rolename.find(",") > 0:
+        multi = True
+        para = rolename.split(",")
+    else:
+        multi = False
+        para = rolename
 
     member = context.message.author
     logging.info(str(member) + ' called addrole')
-    role = get(member.guild.roles, name=rolename)
-    highestrole = get(context.guild.roles, name='Groovy')
-    
-    if role.position < highestrole.position:
-        await context.send(':sparkles:' + '*poof*' + ':sparkles:')
-        await context.send('Was willst du?')
-        time.sleep(1)
-        await context.send('Die Rolle ' + str(rolename) + '? oh ja, das kann ich für dich tun!')
-        time.sleep(1)
-        await member.add_roles(role)
-        await context.send(':sparkles:' + '*poof*' + ':sparkles:')
-    
-    else:
-        await context.send('Versuch mal lsrole um dir alle für dich, verfügbaren Rollen anzeigen zulassen.')
-
-@client.command()
-
-# Der !add3roles Befehl fügt einem Nutzer drei bestimmte Rollen an.
-# Sicherheitsfunktion zu Testzwecken, kann nach Konfiguration deaktiviert werden.
-# @commands.has_role("Der Architekt")
-
-async def add3roles(context, rolename1, rolename2, rolename3):
-
-    """add3roles Funktioniert ähnlich wie addrole nur eben mit 3 Rollen"""
-
-    member = context.message.author
-    role1 = get(member.guild.roles, name=rolename1)
-    role2 = get(member.guild.roles, name=rolename2)
-    role3 = get(member.guild.roles, name=rolename3)
     highestrole = get(context.guild.roles, name='Groovy')
 
-    if(role1.position < highestrole.position and role2.position < highestrole.position and role3.position < highestrole.position):
-        await context.send(':sparkles:' + '*poof*' + ':sparkles:')
-        await context.send('Was willst du?')
-        time.sleep(1)
-        await context.send('Die Rollen ' + ', ' + str(rolename1) + ', ' + str(rolename2) + ' und ' + str(rolename3) + '? Oh ja, das kann ich für dich tun!')
-        time.sleep(1)
-        await member.add_roles(role1)
-        await member.add_roles(role2)
-        await member.add_roles(role3)
-        await context.send(':sparkles:' + '*poof*' + ':sparkles:')
+    await context.send(':sparkles:' + '*poof*' + ':sparkles:')
+    await context.send('Was willst du?')
+    time.sleep(1)
 
+    if multi:
+        for e in para:
+            role = get(member.guild.roles, name=e)
+            if role.position < highestrole.position:
+                await member.add_roles(role)
+                logging.info(str(member) + ' hat sich die Rolle ' + role + ' zugewiesen')
+                time.sleep(0.5)
+            else:
+                await context.send('kann die Rolle ' + role + ' nicht hinzufügen')
+                logging.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
     else:
-        await context.send('Versuch mal lsrole um dir alle für dich, verfügbaren Rollen anzeigen zulassen.')
+        role = get(member.guild.roles, name=para)
+        if role.position < highestrole.position:
+            await member.add_roles(role)
+            logging.info(str(member) + ' hat sich die Rolle ' + role + ' zugewiesen')
+            time.sleep(0.5)
+        else:
+            await context.send('kann die Rolle ' + role + ' nicht hinzufügen')
+            logging.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
 
+    await context.send(':sparkles:' + '*poof*' + ':sparkles:')           
 
 @client.command()
 
