@@ -227,13 +227,18 @@ async def addrole(context, rolename):
     """addrole fügt dir einfach und schnell eine Gamingrolle oder mehrere Gamingrollen (mit Komma getrennt) hinzu, 
     damit du die richtigen Kategorien siehst"""
 
+    # prüfe ob ein Komma in rolename vorhanden ist , wenn ja werden mehrere Rollen hinzugefügt
+
     if rolename.find(",") > 0:
+        # mehrere Rollen gefunden
         multi = True
         para = rolename.split(",")
     else:
+        # nur eine Rolle
         multi = False
         para = rolename
 
+    # definiere variablen
     member = context.message.author
     logging.info(str(member) + ' called addrole')
     highestrole = get(context.guild.roles, name='Groovy')
@@ -242,9 +247,12 @@ async def addrole(context, rolename):
     await context.send('Was willst du?')
     time.sleep(1)
 
+    # prüfen ob mehrere Rollen hinzugefügt werden müssen
     if multi:
+        # durchlaufe das array für jeden eintrag
         for e in para:
             role = get(member.guild.roles, name=e)
+            # prüfe ob die gewünschte Rolle in der hirarchie höher liegt als die erlaubte
             if role.position < highestrole.position:
                 await member.add_roles(role)
                 logging.info(str(member) + ' hat sich die Rolle ' + role + ' zugewiesen')
@@ -254,6 +262,7 @@ async def addrole(context, rolename):
                 logging.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
     else:
         role = get(member.guild.roles, name=para)
+        # prüfe ob die gewünschte Rolle in der hirarchie höher liegt als die erlaubte
         if role.position < highestrole.position:
             await member.add_roles(role)
             logging.info(str(member) + ' hat sich die Rolle ' + role + ' zugewiesen')
