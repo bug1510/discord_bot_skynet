@@ -255,20 +255,20 @@ async def addrole(context, rolename):
             # prüfe ob die gewünschte Rolle in der hirarchie höher liegt als die erlaubte
             if role.position < highestrole.position:
                 await member.add_roles(role)
-                logging.info(str(member) + ' hat sich die Rolle ' + role + ' zugewiesen')
+                logging.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
                 time.sleep(0.5)
             else:
-                await context.send('kann die Rolle ' + role + ' nicht hinzufügen')
+                await context.send('kann die Rolle ' + str(role) + ' nicht hinzufügen')
                 logging.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
     else:
         role = get(member.guild.roles, name=para)
         # prüfe ob die gewünschte Rolle in der hirarchie höher liegt als die erlaubte
         if role.position < highestrole.position:
             await member.add_roles(role)
-            logging.info(str(member) + ' hat sich die Rolle ' + role + ' zugewiesen')
+            logging.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
             time.sleep(0.5)
         else:
-            await context.send('kann die Rolle ' + role + ' nicht hinzufügen')
+            await context.send('kann die Rolle ' + str(role) + ' nicht hinzufügen')
             logging.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
 
     await context.send(':sparkles:' + '*poof*' + ':sparkles:')           
