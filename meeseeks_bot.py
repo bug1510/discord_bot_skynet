@@ -10,6 +10,7 @@ from discord.utils import get
 today = datetime.now()
 today = today.strftime("%Y%m%d")
 source = os.path.dirname(os.path.abspath(__file__))
+Version = '0.6.1'
 
 # change no category in !help
 help_command = commands.DefaultHelpCommand(
@@ -20,7 +21,11 @@ help_command = commands.DefaultHelpCommand(
 
 initial_extensions = ['cogs.admin', 'cogs.members', 'cogs.simple']
 
-client = commands.Bot(command_prefix='!', description='Meeseeks Bot | V0.6.1')
+for CogFile in os.listdir('cogs/'):
+    if CogFile.endswith('.py'):
+        initial_extensions.append('cogs.' + CogFile[:-3])
+
+client = commands.Bot(command_prefix='!', description='Meeseeks Bot | V' + Version)
 
 if __name__ == '__main__':
     for extension in initial_extensions:
