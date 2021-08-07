@@ -67,7 +67,7 @@ class MemberCommands(commands.Cog):
                 # prüfe ob die gewünschte Rolle in der hirarchie höher liegt als die erlaubte
                 if role.position < highestrole.position:
                     await member.add_roles(role)
-                    await context.send('Rolle ' + str(role) + ' wurde hinzugefügt')
+                    await context.send('Die Rolle ' + str(role) + ' ? oh ja, das kann ich für dich tun!')
                     #logging.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
                     time.sleep(0.5)
                 else:
@@ -78,7 +78,7 @@ class MemberCommands(commands.Cog):
             # prüfe ob die gewünschte Rolle in der hirarchie höher liegt als die erlaubte
             if role.position < highestrole.position:
                 await member.add_roles(role)
-                await context.send('Rolle ' + str(role) + ' wurde hinzugefügt')
+                await context.send('Die Rolle ' + str(role) + ' ? oh ja, das kann ich für dich tun!')
                 #logging.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
                 time.sleep(0.5)
             else:
@@ -122,49 +122,53 @@ class MemberCommands(commands.Cog):
         """rmrole nimmt dir eine Rolle und das Recht eine Kategorie zu sehen, 
         falls du ein Spiel nicht mehr magst ;)"""
 
-        member = context.message.author
-        role = get(member.guild.roles, name=rolename)
-        highestrole = get(context.guild.roles, name='Groovy')
-        
-        if role.position < highestrole.position:
-            await context.send(':sparkles:' + '*poof*' + ':sparkles:')
-            await context.send('Was willst du?')
-            time.sleep(1)
-            await context.send('Du willst die Rolle ' + str(rolename) + ' nicht mehr? oh ja, das kann ich für dich tun!')
-            time.sleep(1)
-            await member.remove_roles(role)
-            await context.send(':sparkles:' + '*poof*' + ':sparkles:')
+        # prüfe ob ein Komma in rolename vorhanden ist , wenn ja werden mehrere Rollen entfernt
 
-    @commands.command()
-
-    # Der !rm3role Befehl entfernt drei bestimmte Rolle von einem Nutzer.
-    # Sicherheitsfunktion zu Testzwecken, kann nach Konfiguration deaktiviert werden.
-    # @commands.has_role("Der Architekt")
-
-    async def rm3roles(self, context, rolename1, rolename2, rolename3):
-
-        """Ist das Gegenstück zu add3roles und Funktioniert auch so, 
-        nur das du am Ende weniger Rollen hast"""
-
-        member = context.message.author
-        role1 = get(member.guild.roles, name=rolename1)
-        role2 = get(member.guild.roles, name=rolename2)
-        role3 = get(member.guild.roles, name=rolename3)
-        highestrole = get(context.guild.roles, name='Groovy')
-        
-        if(role1.position < highestrole.position and role2.position < highestrole.position and role3.position < highestrole.position):
-            await context.send(':sparkles:' + '*poof*' + ':sparkles:')
-            await context.send('Was willst du?')
-            time.sleep(1)
-            await context.send('Du willst die Rollen ' + str(rolename1) + ', ' + str(rolename2) + ', ' + str(rolename3) + ' nicht mehr? oh ja, das kann ich für dich tun!')
-            time.sleep(1)
-            await member.remove_roles(role1)
-            await member.remove_roles(role2)
-            await member.remove_roles(role3)
-            await context.send(':sparkles:' + '*poof*' + ':sparkles:')
-
+        if rolename.find(",") > 0:
+            # mehrere Rollen gefunden
+            multi = True
+            para = rolename.split(",")
         else:
-            await context.send('Irgendwas ist schief gegangen, überprüfe deine Angaben nochmal.')
+            # nur eine Rolle
+            multi = False
+            para = rolename
+
+        # definiere variablen
+        member = context.message.author
+        #logging.info(str(member) + ' called addrole')
+        highestrole = get(context.guild.roles, name='Groovy')
+
+        await context.send(':sparkles:' + '*poof*' + ':sparkles:')
+        await context.send('Was willst du?')
+        time.sleep(1)
+
+        # prüfen ob mehrere Rollen hinzugefügt werden müssen
+        if multi:
+            # durchlaufe das array für jeden eintrag
+            for e in para:
+                role = get(member.guild.roles, name=e)
+                # prüfe ob die gewünschte Rolle in der hirarchie höher liegt als die erlaubte
+                if role.position < highestrole.position:
+                    await member.remove_roles(role)
+                    await context.send('Du willst die Rolle ' + str(role) + ' nicht mehr? oh ja, das kann ich für dich tun!')
+                    #logging.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
+                    time.sleep(0.5)
+                else:
+                    await context.send('kann die Rolle ' + str(role) + ' nicht entfernen')
+                    #logging.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
+        else:
+            role = get(member.guild.roles, name=para)
+            # prüfe ob die gewünschte Rolle in der hirarchie höher liegt als die erlaubte
+            if role.position < highestrole.position:
+                await member.remove_roles(role)
+                await context.send('Du willst die Rolle ' + str(role) + ' nicht mehr? oh ja, das kann ich für dich tun!')
+                #logging.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
+                time.sleep(0.5)
+            else:
+                await context.send('kann die Rolle ' + str(role) + ' nicht entfernen')
+                #logging.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
+
+        await context.send(':sparkles:' + '*poof*' + ':sparkles:')  
 
     @commands.command()
 
