@@ -12,31 +12,41 @@ today = today.strftime("%Y%m%d")
 source = os.path.dirname(os.path.abspath(__file__))
 Version = '0.6.1'
 
-# change no category in !help
-help_command = commands.DefaultHelpCommand(
-    no_category = 'Commands'
-)
-
 # Das ist die finale Struktur des Meeseeks_Bots und damit Version 1.0
 
-initial_extensions = ['cogs.admin', 'cogs.members', 'cogs.simple']
+initial_extensions = [
+    'cogs.admin',
+    'cogs.members',
+    'cogs.simple'
+    ]
 
-for CogFile in os.listdir('cogs/'):
+for CogFile in os.listdir(source + '/cogs/'):
     if CogFile.endswith('.py'):
-        initial_extensions.append('cogs.' + CogFile[:-3])
+        module = 'cogs.' + CogFile[:-3]
+        if module not in initial_extensions:
+            initial_extensions.append(module)
 
-client = commands.Bot(command_prefix='!', description='Meeseeks Bot | V' + Version)
+# change no category in !help
+help_command = commands.DefaultHelpCommand(no_category = 'Commands')
+
+client = commands.Bot(
+    command_prefix='!',
+    description='Meeseeks Bot | V' + Version,
+    help_command = help_command
+    )
 
 if __name__ == '__main__':
     for extension in initial_extensions:
-        client.load_extension(extension)
+        try:
+            client.load_extension(extension)
+        except:
+            pass
 
 @client.event
 async def on_ready():
 
     await client.change_presence(activity=discord.Activity(name='!help', type=2))
     print('Ich bin bereit')
-
 
 maintenance = open(source + '/../token.json',)
 secret = json.load(maintenance)
