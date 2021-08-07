@@ -11,6 +11,11 @@ today = datetime.now()
 today = today.strftime("%Y%m%d")
 source = os.path.dirname(os.path.abspath(__file__))
 
+# change no category in !help
+help_command = commands.DefaultHelpCommand(
+    no_category = 'Commands'
+)
+
 # Das ist die finale Struktur des Meeseeks_Bots und damit Version 1.0
 
 initial_extensions = ['cogs.admin', 'cogs.members', 'cogs.simple']
