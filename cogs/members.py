@@ -36,7 +36,7 @@ class MemberCommands(commands.Cog):
 
     async def addrole(self, context, rolename):
 
-        """addrole fügt dir einfach und schnell eine Gamingrolle oder mehrere Gamingrollen (mit Komma getrennt) hinzu, 
+        """fügt dir eine, oder mehrere Gamingrollen hinzu (mit Komma getrennt), 
         damit du die richtigen Kategorien siehst"""
 
         # prüfe ob ein Komma in rolename vorhanden ist , wenn ja werden mehrere Rollen hinzugefügt
@@ -119,8 +119,7 @@ class MemberCommands(commands.Cog):
 
     async def rmrole(self, context, rolename):
 
-        """rmrole nimmt dir eine Rolle und das Recht eine Kategorie zu sehen, 
-        falls du ein Spiel nicht mehr magst ;)"""
+        """nimmt dir eine oder mehrere Rollen ab (mit Komma getrennt), um dein Interface sauber zu halten."""
 
         # prüfe ob ein Komma in rolename vorhanden ist , wenn ja werden mehrere Rollen entfernt
 

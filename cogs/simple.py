@@ -9,14 +9,14 @@ class Just4Fun(commands.Cog):
 
     # tell a joke
 
-    async def joke(self,ctx,para="de"):
+    async def joke(self,ctx,language="de"):
 
-        """Langeweile? Mr Meeseeks erzählt dir gerne ein paar Witze """
+        """Langeweile? Mr Meeseeks erzählt dir gerne ein paar Witze | Mögliche Werte für Language sind cs, fr, en, de, es, pt."""
 
         member = ctx.message.author
         #logging.info(str(member) + ' called joke')
         #logging.info('displayname : ' + str(member.display_name))
-        joke_req = requests.get('https://v2.jokeapi.dev/joke/Any?lang=' + para)
+        joke_req = requests.get('https://v2.jokeapi.dev/joke/Any?lang=' + language)
         joke_payload = joke_req.json()
         if joke_req.status_code == 200:
             if joke_payload['type'] == 'twopart':

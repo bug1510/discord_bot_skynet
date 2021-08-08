@@ -169,11 +169,14 @@ class AdminCommands(commands.Cog):
             )
         
         await guild.create_text_channel(name=str(gamename) + '-talk', category=place)
-        await guild.create_voice_channel(name='Fraktion-I', category=place, user_limit=8)
-        await guild.create_voice_channel(name='Fraktion-II', category=place, user_limit=8)
-        await guild.create_voice_channel(name='Fraktion-III', category=place, user_limit=8)
-        await guild.create_voice_channel(name='Fraktion-IV', category=place, user_limit=8)
-        await guild.create_voice_channel(name='Group-Talk', category=place)
+        
+        Sprachkanaele = ['Fraktion-I', 'Fraktion-II', 'Fraktion-III', 'Fraktion-IV', 'Group-Talk']
+        
+        for Kanal in Sprachkanaele:
+            if Kanal.find('Group'):
+                await guild.create_voice_channel(name=Kanal, category=place, user_limit=8)
+            else:
+                await guild.create_voice_channel(name=Kanal, category=place)
 
 def setup(bot):
     bot.add_cog(AdminCommands(bot))
