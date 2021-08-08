@@ -32,7 +32,7 @@ class Just4Fun(commands.Cog):
                 joke_send =  joke_payload['joke']
                 await ctx.send(joke_send)
         else:
-            logger.warn('use failover api')
+            logger.warning('use failover api')
             joke_req = requests.get("https://official-joke-api.appspot.com/jokes/programming/random")
             joke_payload = joke_req.json()
             question = joke_payload['setup']
