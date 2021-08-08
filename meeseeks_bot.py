@@ -48,7 +48,7 @@ async def on_ready():
     await client.change_presence(activity=discord.Activity(name='!help', type=2))
     print('Ich bin bereit')
 
-maintenance = open(source + '/../token.json',)
+maintenance = open('token.json')
 secret = json.load(maintenance)
 
 client.run(secret['token'])
