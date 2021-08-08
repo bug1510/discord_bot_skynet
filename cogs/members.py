@@ -104,12 +104,12 @@ class MemberCommands(commands.Cog):
         
         await context.send(':sparkles:' + '*poof*' + ':sparkles:')
         await context.send('Was willst du? Alle Rollen? Oh ja, das kann ich für dich tun!')
-        for role in self.guild.roles:
+        for role in context.guild.roles:
             
             if role.position < highestrole.position and role.position > lowest.position:
                 await author.add_roles(role)
 
-        await self.send(':sparkles:' + '*poof*' + ':sparkles:')
+        await context.send(':sparkles:' + '*poof*' + ':sparkles:')
 
     @commands.command()
 
@@ -185,7 +185,7 @@ class MemberCommands(commands.Cog):
         
         await context.send(':sparkles:' + '*poof*' + ':sparkles:')
         await context.send('Was willst du? Alle Rollen abgeben? Oh ja, das kann ich für dich tun!')
-        for role in self.guild.roles:
+        for role in context.guild.roles:
             
             if role.position < highestrole.position and role.position > lowest.position:
                 await author.remove_roles(role)
