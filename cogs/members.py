@@ -1,7 +1,8 @@
 import time
 from discord.ext import commands
 from discord.utils import get
-
+import logging
+logger = logging.getLogger(__name__)
 
 class MemberCommands(commands.Cog):
     def __init__(self, bot):
@@ -20,7 +21,7 @@ class MemberCommands(commands.Cog):
         lowest = get(context.guild.roles, name='@everyone')
         highestrole = get(context.guild.roles, name='Groovy')
         member = context.message.author
-        #logging.info(str(member) + ' called lsrole')
+        logger.info(str(member) + ' called lsrole')
 
         for role in context.guild.roles:
             
@@ -52,7 +53,7 @@ class MemberCommands(commands.Cog):
 
         # definiere variablen
         member = context.message.author
-        #logging.info(str(member) + ' called addrole')
+        logger.info(str(member) + ' called addrole')
         highestrole = get(context.guild.roles, name='Groovy')
 
         await context.send(':sparkles:' + '*poof*' + ':sparkles:')
@@ -68,22 +69,22 @@ class MemberCommands(commands.Cog):
                 if role.position < highestrole.position:
                     await member.add_roles(role)
                     await context.send('Die Rolle ' + str(role) + ' ? oh ja, das kann ich für dich tun!')
-                    #logging.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
+                    logger.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
                     time.sleep(0.5)
                 else:
                     await context.send('kann die Rolle ' + str(role) + ' nicht hinzufügen')
-                    #logging.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
+                    logger.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
         else:
             role = get(member.guild.roles, name=para)
             # prüfe ob die gewünschte Rolle in der hirarchie höher liegt als die erlaubte
             if role.position < highestrole.position:
                 await member.add_roles(role)
                 await context.send('Die Rolle ' + str(role) + ' ? oh ja, das kann ich für dich tun!')
-                #logging.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
+                logger.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
                 time.sleep(0.5)
             else:
                 await context.send('kann die Rolle ' + str(role) + ' nicht hinzufügen')
-                #logging.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
+                logger.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
 
         await context.send(':sparkles:' + '*poof*' + ':sparkles:')           
 
@@ -134,7 +135,7 @@ class MemberCommands(commands.Cog):
 
         # definiere variablen
         member = context.message.author
-        #logging.info(str(member) + ' called addrole')
+        logger.info(str(member) + ' called addrole')
         highestrole = get(context.guild.roles, name='Groovy')
 
         await context.send(':sparkles:' + '*poof*' + ':sparkles:')
@@ -150,22 +151,22 @@ class MemberCommands(commands.Cog):
                 if role.position < highestrole.position:
                     await member.remove_roles(role)
                     await context.send('Du willst die Rolle ' + str(role) + ' nicht mehr? oh ja, das kann ich für dich tun!')
-                    #logging.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
+                    logger.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
                     time.sleep(0.5)
                 else:
                     await context.send('kann die Rolle ' + str(role) + ' nicht entfernen')
-                    #logging.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
+                    logger.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
         else:
             role = get(member.guild.roles, name=para)
             # prüfe ob die gewünschte Rolle in der hirarchie höher liegt als die erlaubte
             if role.position < highestrole.position:
                 await member.remove_roles(role)
                 await context.send('Du willst die Rolle ' + str(role) + ' nicht mehr? oh ja, das kann ich für dich tun!')
-                #logging.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
+                logger.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
                 time.sleep(0.5)
             else:
                 await context.send('kann die Rolle ' + str(role) + ' nicht entfernen')
-                #logging.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
+                logger.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
 
         await context.send(':sparkles:' + '*poof*' + ':sparkles:')  
 

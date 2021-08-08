@@ -1,6 +1,7 @@
 from discord.ext import commands
 from discord.utils import get
-
+import logging
+logger = logging.getLogger(__name__)
 
 class AdminCommands(commands.Cog):
     def __init__(self, bot):
@@ -16,7 +17,7 @@ class AdminCommands(commands.Cog):
 
         guild = context.message.guild
         member = context.message.author
-        #logging.info(str(member) + ' tried to create ' + str(gamename))
+        logger.info(str(member) + ' tried to create ' + str(gamename))
         gamerole = await guild.create_role(name=gamename)
         junior_admin = get(context.guild.roles, name='Junior Admin')
         admin = get(context.guild.roles, name='Admin')

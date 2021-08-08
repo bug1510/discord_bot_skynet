@@ -1,6 +1,9 @@
 import time
 import requests
 from discord.ext import commands
+import logging
+logger = logging.getLogger(__name__)
+
 class Just4Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -14,8 +17,8 @@ class Just4Fun(commands.Cog):
         """Langeweile? Mr Meeseeks erzählt dir gerne ein paar Witze | Mögliche Werte für Language sind cs, fr, en, de, es, pt."""
 
         member = ctx.message.author
-        #logging.info(str(member) + ' called joke')
-        #logging.info('displayname : ' + str(member.display_name))
+        logger.info(str(member) + ' called joke')
+        logger.info('displayname : ' + str(member.display_name))
         joke_req = requests.get('https://v2.jokeapi.dev/joke/Any?lang=' + language)
         joke_payload = joke_req.json()
         if joke_req.status_code == 200:
@@ -29,6 +32,7 @@ class Just4Fun(commands.Cog):
                 joke_send =  joke_payload['joke']
                 await ctx.send(joke_send)
         else:
+            logger.warn('use failover api')
             joke_req = requests.get("https://official-joke-api.appspot.com/jokes/programming/random")
             joke_payload = joke_req.json()
             question = joke_payload['setup']
