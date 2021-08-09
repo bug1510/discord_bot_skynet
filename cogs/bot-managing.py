@@ -11,7 +11,7 @@ class BotManaging(commands.Cog):
     @commands.has_role('El-Special')
     async def list_cog(self, context):
         """ list all cogs on server"""
-        for CogFile in os.listdir(source + '/cogs/'):
+        for CogFile in os.listdir(source):
             if CogFile.endswith('.py') and CogFile != 'bot-managing.py':
                 await context.send(CogFile[:-3])
 
