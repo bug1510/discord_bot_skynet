@@ -11,7 +11,7 @@ from discord.utils import get
 today = datetime.now()
 today = today.strftime("%Y%m%d")
 source = os.path.dirname(os.path.abspath(__file__))
-Version = '0.6.1 - ALPHA'
+Version = '0.6.3 - ALPHA'
 BotName = 'Meeseeks Bot | V' + Version
 logpath = source + '/logs/'
 config_file = source + '/token.json'
@@ -67,7 +67,7 @@ logging.basicConfig(
     )
 logger = logging.getLogger(__name__)
 
-# Das ist die finale Struktur des Meeseeks_Bots und damit Version 1.0
+# Das ist die finale Struktur des Meeseeks_Bots
 
 initial_extension = ['cogs.bot-managing']
 
