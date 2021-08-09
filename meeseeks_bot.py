@@ -69,17 +69,13 @@ logger = logging.getLogger(__name__)
 
 # Das ist die finale Struktur des Meeseeks_Bots und damit Version 1.0
 
-initial_extensions = [
-    'cogs.admin',
-    'cogs.members',
-    'cogs.simple'
-    ]
+initial_extension = ['cogs.bot-managing']
 
 for CogFile in os.listdir(source + '/cogs/'):
     if CogFile.endswith('.py'):
         module = 'cogs.' + CogFile[:-3]
-        if module not in initial_extensions:
-            initial_extensions.append(module)
+        if module not in initial_extension:
+            initial_extension.append(module)
             logger.info('append cog - ' + module)
 
 # change no category in !help
@@ -92,7 +88,7 @@ client = commands.Bot(
     )
 
 if __name__ == '__main__':
-    for extension in initial_extensions:
+    for extension in initial_extension:
         try:
             client.load_extension(extension)
             logger.info('cog ' + extension + ' loaded')
