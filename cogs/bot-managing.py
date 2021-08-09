@@ -16,7 +16,7 @@ class BotManaging(commands.Cog):
                 if CogFile.endswith('.py') and CogFile != 'bot-managing.py':
                     await context.send(CogFile[:-3])
         except:
-            await context.send('could not list cogs')
+            logger.warning('could not list cogs')
 
     @commands.command(name='load')
     @commands.has_role('El-Special')
