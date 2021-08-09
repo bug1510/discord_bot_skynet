@@ -7,7 +7,7 @@ class BotManaging(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='load')
+    @commands.command(name='list')
     @commands.has_role('El-Special')
     async def list_cog(self, context):
         """ list all cogs on server"""
@@ -15,6 +15,7 @@ class BotManaging(commands.Cog):
             if CogFile.endswith('.py' and CogFile != 'bot-managing.py' ):
                 await context.send(CogFile[:-3])
 
+    @commands.command(name='load')
     @commands.has_role('El-Special')
     async def load_cog(self, context, extension):
         """verbindet ein noch nicht geladenes Modul um ein neustart des Bots zu vermeiden."""
