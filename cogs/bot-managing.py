@@ -1,5 +1,6 @@
-import logging
+import logging,os
 from discord.ext import commands
+source = os.path.dirname(os.path.abspath(__file__))
 
 logger = logging.getLogger(__name__)
 class BotManaging(commands.Cog):
@@ -7,6 +8,13 @@ class BotManaging(commands.Cog):
         self.bot = bot
 
     @commands.command(name='load')
+    @commands.has_role('El-Special')
+    async def list_cog(self, context):
+        """ list all cogs on server"""
+        for CogFile in os.listdir(source + '/cogs/'):
+            if CogFile.endswith('.py' and CogFile != 'bot-managing.py' ):
+                await context.send(CogFile[:-3])
+
     @commands.has_role('El-Special')
     async def load_cog(self, context, extension):
         """verbindet ein noch nicht geladenes Modul um ein neustart des Bots zu vermeiden."""
