@@ -71,6 +71,7 @@ logger = logging.getLogger(__name__)
 
 initial_extension = ['cogs.bot-managing']
 
+# load all cogs in ./cogs/
 for CogFile in os.listdir(source + '/cogs/'):
     if CogFile.endswith('.py'):
         module = 'cogs.' + CogFile[:-3]
