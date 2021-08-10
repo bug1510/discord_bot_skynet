@@ -45,7 +45,7 @@ class Just4Fun(commands.Cog):
             await ctx.send(answer)
         
     @commands.command()
-    async def catpic(self,context):
+    async def cat(self,context):
 
         """Du willst was süßes sehen? Dann lass dir ein Kätzchen zeigen."""
         cat_pic = requests.get('https://cataas.com/cat?json=true')
@@ -63,7 +63,7 @@ class Just4Fun(commands.Cog):
 
     @commands.command()
 
-    async def catpic2(self,ctx):
+    async def cat2(self,ctx):
 
         """Du willst was süßes sehen? Dann lass dir ein Kätzchen zeigen."""
         # download file
