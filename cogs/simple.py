@@ -1,9 +1,10 @@
-import time
+import time,os
 import requests
+import discord
 from discord.ext import commands
 import logging
 logger = logging.getLogger(__name__)
-
+source = os.path.dirname(os.path.abspath(__file__))
 class Just4Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -40,6 +41,25 @@ class Just4Fun(commands.Cog):
             await ctx.send(question)
             time.sleep(0.5)
             await ctx.send(answer)
+
+    @commands.command()
+
+    async def cat(self,ctx):
+
+        # download file
+        CacheFile = source + '/../cat.jpg'
+        URLFile = requests.get('http://thecatapi.com/api/images/get?format=src&type=jpg')
+
+        with open(CacheFile,'wb') as file:
+            file.write(URLFile.content)
+
+        embed = discord.Embed(title='Cute Cat',
+                              color=discord.Color.blue())
+
+        file = discord.File(CacheFile, filename="cat.png")
+        embed.set_image(url="attachment://cat.png")
+
+        await ctx.send(file=file,embed=embed)
 
 
 def setup(bot):
