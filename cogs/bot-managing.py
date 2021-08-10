@@ -24,6 +24,7 @@ class BotManaging(commands.Cog):
                               description=ListModulesField,
                               color=discord.Color.blue())
         await context.send(embed=embed)
+        await context.message.delete()
 
 
     @commands.command(name='load')
@@ -43,6 +44,7 @@ class BotManaging(commands.Cog):
             await context.send(embed=fmbed)
             logger.warning(str(member) + ' tried to load the cog ' + extension + ' and it could not be loaded')
             pass
+        await context.message.delete()
 
     @commands.command(name='unload')
     @commands.has_role('El-Special')
@@ -65,6 +67,7 @@ class BotManaging(commands.Cog):
             except:
                 await context.send(embed=fmbed)
                 logger.warning(str(member) + ' tried to unload the cog ' + extension + ' and it could not be unloaded')
+        await context.message.delete()
 
     @commands.command(name='reload')
     @commands.has_role('El-Special')
@@ -82,6 +85,7 @@ class BotManaging(commands.Cog):
         except:
             await context.send(embed=fmbed)
             logger.warning(str(member) + ' tried to reload the cog ' + extension + ' and it could not be reloaded')
-
+        await context.message.delete()
+        
 def setup(bot):
     bot.add_cog(BotManaging(bot))
