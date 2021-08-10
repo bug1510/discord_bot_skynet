@@ -63,8 +63,9 @@ class Just4Fun(commands.Cog):
 
     @commands.command()
 
-    async def cat(self,ctx):
+    async def catpic2(self,ctx):
 
+        """Du willst was süßes sehen? Dann lass dir ein Kätzchen zeigen."""
         # download file
         CacheFile = source + '/../cat.jpg'
         URLFile = requests.get('http://thecatapi.com/api/images/get?format=src&type=jpg')
