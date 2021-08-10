@@ -1,4 +1,3 @@
-from discord import channel
 import discord
 from discord.ext import commands
 from discord.utils import get
@@ -231,10 +230,11 @@ class AdminCommands(commands.Cog):
         admin = context.message.author
         embed = discord.Embed(
             title='!ACHTUNG!',
-            description=f'{number} alte Nachrichten wurden aus diesem Chat von deinem Admin: {admin} gelöscht',
+            description=f'{number} alte Nachrichten wurden aus diesem Chat gelöscht,\nvon deinem Admin: {admin}',
             color=discord.Color.dark_red())
 
         await channel.purge(limit=int(number), oldest_first=True, bulk=False)
+        await context.message.delete()
         await context.send(embed=embed)
 
 
