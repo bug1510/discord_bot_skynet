@@ -43,6 +43,23 @@ class Just4Fun(commands.Cog):
             await ctx.send(question)
             time.sleep(0.5)
             await ctx.send(answer)
+        
+    @commands.command()
+    async def catpic(self,context):
+
+        """Du willst was süßes sehen? Dann lass dir ein Kätzchen zeigen."""
+        cat_pic = requests.get('https://cataas.com/cat?json=true')
+        cat_pic_json = cat_pic.json()
+        pic_url = cat_pic_json['url']
+        mbed = discord.Embed(
+            title='Cutie',
+            description='meow',
+            color=discord.Color.purple()
+            )
+        mbed.set_image(
+            url= 'https://cataas.com/' + str(pic_url)
+        )
+        await context.send(embed=mbed)
 
     @commands.command()
 
