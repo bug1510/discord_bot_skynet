@@ -3,3 +3,4 @@ logs
 *.log
 cogs/__pycache__
 *.jpg
+*.mp3

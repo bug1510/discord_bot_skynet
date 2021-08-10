@@ -16,7 +16,7 @@ class Just4Fun(commands.Cog):
     async def joke(self,ctx,language="de"):
 
         """Langeweile? Mr Meeseeks erzählt dir gerne ein paar Witze | Mögliche Werte für Language sind cs, fr, en, de, es, pt."""
-
+        EmbededMessage = ''
         member = ctx.message.author
         await ctx.message.delete()
         logger.info(str(member) + ' called joke')
@@ -27,22 +27,27 @@ class Just4Fun(commands.Cog):
             if joke_payload['type'] == 'twopart':
                 question = joke_payload['setup']
                 answer = joke_payload['delivery']
-                await ctx.send(question)
-                time.sleep(0.5)
-                await ctx.send(answer)
+                EmbededMessage = 'Q : ' + question + '\n'
+                EmbededMessage += 'A : ' + answer + '\n'
             if joke_payload['type'] == 'single':
                 joke_send =  joke_payload['joke']
-                await ctx.send(joke_send)
+                EmbededMessage = joke_send
         else:
             logger.warning('use failover api')
             joke_req = requests.get("https://official-joke-api.appspot.com/jokes/programming/random")
             joke_payload = joke_req.json()
-            question = joke_payload['setup']
-            answer = joke_payload['punchline']
-            await ctx.send(question)
-            time.sleep(0.5)
-            await ctx.send(answer)
+            EmbededMessage = 'Q : ' + joke_payload['setup'] + '\n'
+            EmbededMessage += 'A : ' + joke_payload['punchline'] + '\n'
         
+        embed = discord.Embed(title='J O K E',
+                              description=EmbededMessage,
+                              color=discord.Color.blue())
+
+        file = discord.File(source + "/../img/lol.png", filename="lol.png")
+        embed.set_thumbnail(url="attachment://lol.png")
+        await ctx.send(file=file,embed=embed)
+        await ctx.message.delete()
+
         
     @commands.command()
     async def cat(self,context):
