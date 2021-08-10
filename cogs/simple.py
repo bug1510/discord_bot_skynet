@@ -73,7 +73,7 @@ class Just4Fun(commands.Cog):
         with open(CacheFile,'wb') as file:
             file.write(URLFile.content)
 
-        embed = discord.Embed(title='Cute Cat',
+        embed = discord.Embed(title='Random Cat',
                               color=discord.Color.blue())
 
         file = discord.File(CacheFile, filename="cat.png")
@@ -81,6 +81,23 @@ class Just4Fun(commands.Cog):
 
         await ctx.send(file=file,embed=embed)
 
+    @commands.command()
+
+    async def dog(self,ctx):
+
+        """ süße Hunde gibts hier """
+        dog_pic = requests.get('https://random.dog/woof.json')
+        dog_pic_json = dog_pic.json()
+        dog_pic_url = dog_pic_json['url']
+        print(dog_pic_url)
+        embed = discord.Embed(
+            title='Random Dog',
+            color=discord.Color.blue()
+            )
+        embed.set_image(
+            url = dog_pic_url
+        )
+        await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Just4Fun(bot))
