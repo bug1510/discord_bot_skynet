@@ -195,7 +195,8 @@ class AdminCommands(commands.Cog):
         except:
             logger.warning('While creating the Channels for ' + str(place) + ' went something wrong please check input or config.')
             await context.send('Beim erstellen der Channels für ' + str(place) + ' ist etwas schief gegangen, überprüfe bitte deine Angaben oder die Konfiguration.')
-
+        await context.message.delete()
+        
     @commands.command('gcd')
     @commands.has_role('El-Special')
 
@@ -223,6 +224,7 @@ class AdminCommands(commands.Cog):
         except:
             logger.warning(str(member) + ' tried to delete ' + str(gamename) + ' but it failed')
             await context.send('Da ist wohl etwas schief gelaufen überprüfe ob du alles richtig geschrieben hast!')
+        await context.message.delete()
 
     @commands.command()
     @commands.has_role('El-Special')
@@ -236,7 +238,7 @@ class AdminCommands(commands.Cog):
 
         await channel.purge(limit=int(number), oldest_first=True, bulk=False)
         await context.send(embed=embed)
-
+        await context.message.delete()
 
 
 

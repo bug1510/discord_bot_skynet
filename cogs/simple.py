@@ -70,7 +70,7 @@ class Just4Fun(commands.Cog):
         """Du willst was süßes sehen? Dann lass dir ein Kätzchen zeigen."""
 
         # download file
-        CacheFile = source + '/tmp/cat.jpg'
+        CacheFile = source + '/../tmp/cat.jpg'
         URLFile = requests.get('http://thecatapi.com/api/images/get?format=src&type=jpg')
 
         with open(CacheFile,'wb') as file:
@@ -111,13 +111,18 @@ class Just4Fun(commands.Cog):
 
     #    """ top secret """
 
-        CacheFile = source + '/tmp/sound.mp3'
+        CacheFile = source + '/../tmp/sound.mp3'
         URLFile = requests.get('http://api.pleaseclown.me/')
         with open(CacheFile,'wb') as file:
             file.write(URLFile.content)
 
-        sourcePlayer = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(CacheFile))
-        ctx.voice_client.play(sourcePlayer, after=lambda e: print(f'Player error: {e}') if e else None)
+        guild = ctx.guild
+        voice_client: discord.VoiceClient = discord.utils.get(bot.voice_clients, guild=guild)
+        audio_source = discord.FFmpegPCMAudio(CacheFile)
+        if not voice_client.is_playing():
+            voice_client.play(audio_source, after=None)
+        await ctx.message.delete()
+        
 
 def setup(bot):
     bot.add_cog(Just4Fun(bot))
