@@ -1,4 +1,5 @@
 import logging,os
+import discord
 from discord.ext import commands
 source = os.path.dirname(os.path.abspath(__file__))
 
@@ -11,12 +12,19 @@ class BotManaging(commands.Cog):
     @commands.has_role('El-Special')
     async def list_cog(self, context):
         """ list all cogs on server"""
+        ListRolesField = ''
         try:
             for CogFile in os.listdir(source):
                 if CogFile.endswith('.py') and CogFile != 'bot-managing.py':
-                    await context.send(CogFile[:-3])
+                    ListRolesField += '* ' + str(CogFile[:-3]) + '\n'
         except:
             logger.warning('could not list cogs')
+        
+        embed = discord.Embed(title='List Roles',
+                              description=ListRolesField,
+                              color=discord.Color.orange())
+        await context.send(embed=embed)
+
 
     @commands.command(name='load')
     @commands.has_role('El-Special')
