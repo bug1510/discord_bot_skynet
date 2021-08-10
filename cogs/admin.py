@@ -1,3 +1,5 @@
+from discord import channel
+import discord
 from discord.ext import commands
 from discord.utils import get
 import logging
@@ -221,6 +223,22 @@ class AdminCommands(commands.Cog):
         except:
             logger.warning(str(member) + ' tried to delete ' + str(gamename) + ' but it failed')
             await context.send('Da ist wohl etwas schief gelaufen überprüfe ob du alles richtig geschrieben hast!')
+
+    @commands.command()
+    @commands.has_role('El-Special')
+    async def clear(self, context, number):
+        channel = context.message.channel
+        admin = context.message.author
+        embed = discord.Embed(
+            title='!ACHTUNG!',
+            description=f'{number} alte Nachrichten wurden aus diesem Chat von deinem Admin: {admin} gelöscht',
+            color=discord.Color.dark_red())
+
+        await channel.purge(limit=int(number), oldest_first=True, bulk=False)
+        await context.send(embed=embed)
+
+
+
 
 def setup(bot):
     bot.add_cog(AdminCommands(bot))
