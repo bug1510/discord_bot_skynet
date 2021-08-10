@@ -1,9 +1,10 @@
-import discord
+import discord,os
 from discord import client
 from discord.ext import commands
 from discord.utils import get
 import logging,platform,psutil
 logger = logging.getLogger(__name__)
+source = os.path.dirname(os.path.abspath(__file__))
 
 class InfoCommands(commands.Cog):
     def __init__(self, bot):
@@ -32,8 +33,11 @@ class InfoCommands(commands.Cog):
         embed.add_field(name='Memory Informations',
                         value=RamInfoField,
                         inline=False) 
-        
-        await context.send(embed=embed)
+
+        file = discord.File(source + "/../img/confidential.png", filename="confidential.png")
+        embed.set_image(url="attachment://image.png")
+
+        await context.send(file=file,embed=embed)
 
 def setup(bot):
     bot.add_cog(InfoCommands(bot))
