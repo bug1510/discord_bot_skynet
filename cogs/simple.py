@@ -1,4 +1,4 @@
-import time,os,requests,discord,logging,pafy
+import time,os,requests,discord,logging
 from discord.ext.commands import bot
 from discord.ext import commands
 from discord.utils import get
@@ -90,7 +90,7 @@ class Just4Fun(commands.Cog):
     async def dog(self,ctx):
 
         """ süße Hunde gibts hier """
-        
+
         dog_pic = requests.get('https://random.dog/woof.json')
         dog_pic_json = dog_pic.json()
         dog_pic_url = dog_pic_json['url']
@@ -105,6 +105,12 @@ class Just4Fun(commands.Cog):
         await ctx.send(embed=embed)
         await ctx.message.delete()
 
+    @commands.command()
+
+    async def clown(self,ctx):
+
+        """ top secret """
+        
 
 def setup(bot):
     bot.add_cog(Just4Fun(bot))
