@@ -1,4 +1,6 @@
 import time
+from typing import List
+import discord
 from discord.ext import commands
 from discord.utils import get
 import logging
@@ -22,12 +24,20 @@ class MemberCommands(commands.Cog):
         highestrole = get(context.guild.roles, name='Groovy')
         member = context.message.author
         logger.info(str(member) + ' called lsrole')
+        ListRolesField = ''
 
         for role in context.guild.roles:
-            
             if role.position < highestrole.position and role.position > lowest.position:
-                await context.send(role)
-                time.sleep(0.75)
+                ListRolesField += str(role) + '\n'
+            else:
+                pass
+
+        embed = discord.Embed(
+            title='List of Gamingroles',
+            description=ListRolesField,
+            color=discord.Color.blue()
+        )
+        await context.send(embed=embed)
 
     @commands.command()
 

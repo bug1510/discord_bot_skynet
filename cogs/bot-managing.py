@@ -12,16 +12,16 @@ class BotManaging(commands.Cog):
     @commands.has_role('El-Special')
     async def list_cog(self, context):
         """ list all cogs on server"""
-        ListRolesField = ''
+        ListModulesField = ''
         try:
             for CogFile in os.listdir(source):
                 if CogFile.endswith('.py') and CogFile != 'bot-managing.py':
-                    ListRolesField += '* ' + str(CogFile[:-3]) + '\n'
+                    ListModulesField += '* ' + str(CogFile[:-3]) + '\n'
         except:
             logger.warning('could not list cogs')
         
-        embed = discord.Embed(title='List Roles',
-                              description=ListRolesField,
+        embed = discord.Embed(title='List of Modules',
+                              description=ListModulesField,
                               color=discord.Color.blue())
         await context.send(embed=embed)
 
