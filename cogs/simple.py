@@ -70,7 +70,7 @@ class Just4Fun(commands.Cog):
         """Du willst was süßes sehen? Dann lass dir ein Kätzchen zeigen."""
 
         # download file
-        CacheFile = source + '/../tmp/cat.jpg'
+        CacheFile = source + '/tmp/cat.jpg'
         URLFile = requests.get('http://thecatapi.com/api/images/get?format=src&type=jpg')
 
         with open(CacheFile,'wb') as file:
@@ -105,19 +105,19 @@ class Just4Fun(commands.Cog):
         await ctx.send(embed=embed)
         await ctx.message.delete()
 
-    #@commands.command()
+    @commands.command()
 
-    #async def clown(self,ctx):
+    async def clown(self,ctx):
 
     #    """ top secret """
 
-    #    CacheFile = source + '/../tmp/sound.mp3'
-    #    URLFile = requests.get('http://api.pleaseclown.me/')
-    #    with open(CacheFile,'wb') as file:
-    #        file.write(URLFile.content)
+        CacheFile = source + '/tmp/sound.mp3'
+        URLFile = requests.get('http://api.pleaseclown.me/')
+        with open(CacheFile,'wb') as file:
+            file.write(URLFile.content)
 
-        # sourcePlayer = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(CacheFile))
-        # ctx.voice_client.play(sourcePlayer, after=lambda e: print(f'Player error: {e}') if e else None)
+        sourcePlayer = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(CacheFile))
+        ctx.voice_client.play(sourcePlayer, after=lambda e: print(f'Player error: {e}') if e else None)
 
 def setup(bot):
     bot.add_cog(Just4Fun(bot))
