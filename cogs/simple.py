@@ -114,20 +114,23 @@ class Just4Fun(commands.Cog):
 
     async def clown(self,ctx):
 
-    #    """ top secret """
+        """ top secret """
 
         CacheFile = source + '/../tmp/sound.mp3'
         URLFile = requests.get('http://api.pleaseclown.me/')
         with open(CacheFile,'wb') as file:
             file.write(URLFile.content)
 
-        guild = ctx.guild
-        voice_client: discord.VoiceClient = discord.utils.get(bot.voice_clients, guild=guild)
-        audio_source = discord.FFmpegPCMAudio(CacheFile)
-        if not voice_client.is_playing():
-            voice_client.play(audio_source, after=None)
-        await ctx.message.delete()
+        # need ffmpeg to play sound !
+        # on windows ffmpeg must be in the path var
+
+        voicechannel = discord.utils.get(ctx.guild.channels, name='quatschen')
+        vc = await voicechannel.connect()
+        vc.play(discord.FFmpegPCMAudio(CacheFile), after=lambda e: print('done', e))
         
+
+
+        await ctx.message.delete()
 
 def setup(bot):
     bot.add_cog(Just4Fun(bot))
