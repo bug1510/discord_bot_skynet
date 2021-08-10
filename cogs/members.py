@@ -38,6 +38,7 @@ class MemberCommands(commands.Cog):
             color=discord.Color.blue()
         )
         await context.send(embed=embed)
+        await context.message.delete()
 
     @commands.command()
 
@@ -96,7 +97,8 @@ class MemberCommands(commands.Cog):
                 await context.send('kann die Rolle ' + str(role) + ' nicht hinzufügen')
                 logger.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
 
-        await context.send(':sparkles:' + '*poof*' + ':sparkles:')           
+        await context.send(':sparkles:' + '*poof*' + ':sparkles:')
+        await context.message.delete()           
 
     @commands.command()
 
@@ -121,6 +123,7 @@ class MemberCommands(commands.Cog):
                 await author.add_roles(role)
 
         await context.send(':sparkles:' + '*poof*' + ':sparkles:')
+        await context.message.delete()
 
     @commands.command()
 
@@ -178,7 +181,8 @@ class MemberCommands(commands.Cog):
                 await context.send('kann die Rolle ' + str(role) + ' nicht entfernen')
                 logger.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
 
-        await context.send(':sparkles:' + '*poof*' + ':sparkles:')  
+        await context.send(':sparkles:' + '*poof*' + ':sparkles:')
+        await context.message.delete()  
 
     @commands.command()
 
@@ -202,6 +206,7 @@ class MemberCommands(commands.Cog):
                 await author.remove_roles(role)
 
         await context.send(':sparkles:' + '*poof*' + ':sparkles:')
+        await context.message.delete()
 
 
 def setup(bot):

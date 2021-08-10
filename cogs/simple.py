@@ -1,4 +1,4 @@
-import time,os,requests,discord,logging
+import time,os,requests,discord,logging,asyncio
 from discord.ext.commands import bot
 from discord.ext import commands
 from discord.utils import get
@@ -109,7 +109,19 @@ class Just4Fun(commands.Cog):
 
     async def clown(self,ctx):
 
-        """ top secret """
+    #    """ top secret """
+
+        CacheFile = source + '/../tmp/sound.mp3'
+        URLFile = requests.get('http://api.pleaseclown.me/')
+        with open(CacheFile,'wb') as file:
+            file.write(URLFile.content)
+
+        guild = ctx.guild
+        voice_client: discord.VoiceClient = discord.utils.get(bot.voice_clients, guild=guild)
+        audio_source = discord.FFmpegPCMAudio(CacheFile)
+        if not voice_client.is_playing():
+            voice_client.play(audio_source, after=None)
+        await ctx.message.delete()
         
 
 def setup(bot):

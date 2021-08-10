@@ -35,9 +35,11 @@ class InfoCommands(commands.Cog):
                         inline=False) 
 
         file = discord.File(source + "/../img/confidential.png", filename="confidential.png")
-        embed.set_image(url="attachment://image.png")
+        embed.set_thumbnail(url="attachment://confidential.png")
 
         await context.send(file=file,embed=embed)
+        
+        await context.message.delete()
 
 def setup(bot):
     bot.add_cog(InfoCommands(bot))
