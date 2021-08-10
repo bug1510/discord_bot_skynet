@@ -32,10 +32,11 @@ class BotManaging(commands.Cog):
         """verbindet ein noch nicht geladenes Modul um ein neustart des Bots zu vermeiden."""
         extension_path = 'cogs.' + extension
         member = context.message.author
+        mbed = discord.Embed(title='Load erfolgreich', description=f'Das Modul "{extension}" ist nun benutzbar.')
 
         try:
             self.bot.load_extension(extension_path)
-            await context.send('Das Modul ' + extension_path + ' wurde erfolgreich geladen.')
+            await context.send(embed=mbed)
             logger.info('cog ' + extension + ' loaded by ' + str(member))
         except:
             await context.send('Das angegebene Modul ' + extension + ' existiert nicht, oder hat einen anderen Namen.')
@@ -48,6 +49,7 @@ class BotManaging(commands.Cog):
         """trennt ein laufendes Modul um es ohne Impact berabeiten oder entfernen zu können."""
         extension_path = 'cogs.' + extension
         member = context.message.author
+        mbed = discord.Embed(title='Unload erfolgreich', description=f'Das Modul "{extension}" ist nun nicht mehr benutzbar.')
 
         if extension == 'bot-managing':
             await context.send('Dies ist eine Anti-Lockout-Rule um die Grundfunktionen des Bots zu schützen.')
@@ -55,7 +57,7 @@ class BotManaging(commands.Cog):
         else:
             try:
                 self.bot.unload_extension(extension_path)
-                await context.send('Das Modul ' + extension_path + ' wurde erfolgreich getrennt.')
+                await context.send(embed=mbed)
                 logger.info('cog ' + extension + ' unloaded by ' + str(member))
             except:
                 await context.send('Das angegebene Modul ' + extension + ' existiert nicht, oder hat einen anderen Namen.')
@@ -67,10 +69,11 @@ class BotManaging(commands.Cog):
         """lädt ein Modul neu wenn es sich geändert haben sollte."""
         extension_path = 'cogs.' + extension
         member = context.message.author
-        
+        mbed = discord.Embed(title='Reload erfolgreich', description=f'Das Modul "{extension}" ist nun wieder benutzbar.')
+
         try:
             self.bot.reload_extension(extension_path)
-            await context.send('Das Modul ' + extension_path + ' wurde erfolgreich neu geladen.')
+            await context.send(embed=mbed)
             logger.info('cog ' + extension + ' reloaded by ' + str(member))
         except:
             await context.send('Das angegebene Modul ' + extension + ' existiert nicht, oder hat einen anderen Namen.')
