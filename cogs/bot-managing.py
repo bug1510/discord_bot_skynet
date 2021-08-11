@@ -1,6 +1,7 @@
 import logging,os
 import discord
 from discord.ext import commands
+from discord.ext.commands.errors import ExtensionAlreadyLoaded, ExtensionFailed, ExtensionNotFound, ExtensionNotLoaded, NoEntryPointError
 source = os.path.dirname(os.path.abspath(__file__))
 
 logger = logging.getLogger(__name__)
@@ -34,15 +35,31 @@ class BotManaging(commands.Cog):
         extension_path = 'cogs.' + extension
         member = context.message.author
         smbed = discord.Embed(title='Load erfolgreich', description=f'Das Modul "{extension}" ist nun benutzbar.', color=discord.Color.green())
-        fmbed = discord.Embed(title='Load fehlgeschlagen', description=f'Das Modul "{extension}" existiert nicht oder ist falsch geschrieben.', color=discord.Color.red())
+        NFmbed = discord.Embed(title='Load fehlgeschlagen', description=f'Das Modul "{extension}" existiert nicht', color=discord.Color.red())
+        ALmbed = discord.Embed(title='Load fehlgeschlagen', description=f'Das Modul "{extension}" ist bereits geladen', color=discord.Color.red())
+        NEmbed = discord.Embed(title='Load fehlgeschlagen', description=f'Das Modul "{extension}" hat keine Setup Funtion', color=discord.Color.red())
+        Fmbed = discord.Embed(title='Load fehlgeschlagen', description=f'Das Modul "{extension}" hatte ein Problem beim ausführen der Setup Funktion', color=discord.Color.red())
+
 
         try:
             self.bot.load_extension(extension_path)
             await context.send(embed=smbed)
             logger.info('cog ' + extension + ' loaded by ' + str(member))
-        except:
-            await context.send(embed=fmbed)
-            logger.warning(str(member) + ' tried to load the cog ' + extension + ' and it could not be loaded')
+        except ExtensionNotFound:
+            await context.send(embed=NFmbed)
+            logger.warning(str(member) + ' tried to load the cog ' + extension + ' but it doesnt exist')
+            pass
+        except ExtensionAlreadyLoaded:
+            await context.send(embed=ALmbed)
+            logger.warning(str(member) + ' tried to load the cog ' + extension + ' but its allready loaded')
+            pass
+        except NoEntryPointError:
+            await context.send(embed=NEmbed)
+            logger.warning(str(member) + ' tried to load the cog ' + extension + ' but it has no setup funtion')
+            pass
+        except ExtensionFailed:
+            await context.send(embed=Fmbed)
+            logger.warning(str(member) + ' tried to load the cog ' + extension + ' but the setup function had an execution error')
             pass
         await context.message.delete()
 
@@ -53,8 +70,9 @@ class BotManaging(commands.Cog):
         extension_path = 'cogs.' + extension
         member = context.message.author
         smbed = discord.Embed(title='Unload erfolgreich', description=f'Das Modul "{extension}" ist nun nicht mehr benutzbar.', color=discord.Color.green())
-        fmbed = discord.Embed(title='Unload fehlgeschlagen', description=f'Das Modul "{extension}" existiert nicht oder ist falsch geschrieben.', color=discord.Color.red())
-        wmbed = discord.Embed(title='Dein Ernst?', description='Dies ist eine Anti-Lockout-Rule um die Grundfunktionen des Bots zu schützen.', color=discord.Color.orange())
+        NFmbed = discord.Embed(title='Unload fehlgeschlagen', description=f'Das Modul "{extension}" existiert nicht oder ist falsch geschrieben.', color=discord.Color.red())
+        NLmbed = discord.Embed(title='Unload fehlgeschlagen', description=f'Das Modul "{extension}" konnte nicht unloaded werden da es nie geladen war', color=discord.Color.red())
+        wmbed = discord.Embed(title='Dein Ernst?', description='Was glaubst du was passiert wenn du das hier entfernst? Denk doch mal nach!', color=discord.Color.orange())
 
         if extension == 'bot-managing':
             await context.send(embed=wmbed)
@@ -64,10 +82,16 @@ class BotManaging(commands.Cog):
                 self.bot.unload_extension(extension_path)
                 await context.send(embed=smbed)
                 logger.info('cog ' + extension + ' unloaded by ' + str(member))
-            except:
-                await context.send(embed=fmbed)
-                logger.warning(str(member) + ' tried to unload the cog ' + extension + ' and it could not be unloaded')
-        await context.message.delete()
+            except ExtensionNotFound:
+                await context.send(embed=NFmbed)
+                logger.warning(str(member) + ' tried to unload the cog ' + extension + ' but it doesnt exist')
+                pass
+            except ExtensionNotLoaded:
+                await context.send(embed=NLmbed)
+                logger.warning(str(member) + ' tried to unload the cog ' + extension + ' but it was not loaded in the first place')
+                pass
+
+            await context.message.delete()
 
     @commands.command(name='reload')
     @commands.has_role('El-Special')
@@ -76,15 +100,28 @@ class BotManaging(commands.Cog):
         extension_path = 'cogs.' + extension
         member = context.message.author
         smbed = discord.Embed(title='Reload erfolgreich', description=f'Das Modul "{extension}" ist nun wieder benutzbar.', color=discord.Color.green())
-        fmbed = discord.Embed(title='Reload fehlgeschlagen', description=f'Das Modul "{extension}" existiert nicht oder ist falsch geschrieben.', color=discord.Color.red())
+        NLmbed = discord.Embed(title='Reload fehlgeschlagen', description=f'Das Modul "{extension}" konnte nicht reloaded werden da es nie geladen war', color=discord.Color.red())
+        NFmbed = discord.Embed(title='Reload fehlgeschlagen', description=f'Das Modul "{extension}" existiert nicht oder ist falsch geschrieben', color=discord.Color.red())
+        NEmbed = discord.Embed(title='Reload fehlgeschlagen', description=f'Das Modu "{extension}" hat keine Setup Funtion', color=discord.Color.red())
+        Fmbed = discord.Embed(title='Load fehlgeschlagen', description=f'Das Modul "{extension}" hatte ein Problem beim ausführen der Setup Funktion', color=discord.Color.red())
 
         try:
             self.bot.reload_extension(extension_path)
             await context.send(embed=smbed)
             logger.info('cog ' + extension + ' reloaded by ' + str(member))
-        except:
-            await context.send(embed=fmbed)
-            logger.warning(str(member) + ' tried to reload the cog ' + extension + ' and it could not be reloaded')
+        except ExtensionNotLoaded:
+            await context.send(embed=NLmbed)
+            logger.warning(str(member) + ' tried to reload the cog ' + extension + ' but it was not loaded in the first place')
+        except ExtensionNotFound:
+            await context.send(embed=NFmbed)
+            logger.warning(str(member) + ' tried to reload the cog ' + extension + ' but it doesnt exist')
+        except NoEntryPointError:
+            await context.send(embed=NEmbed)
+            logger.warning(str(member) + ' tried to reload the cog ' + extension + ' but it has no setup funtion')
+        except ExtensionFailed:
+            await context.send(embed=Fmbed)
+            logger.warning(str(member) + ' tried to reload the cog ' + extension + ' but the setup function had an execution error')
+
         await context.message.delete()
         
 def setup(bot):

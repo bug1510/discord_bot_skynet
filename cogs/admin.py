@@ -236,7 +236,6 @@ class AdminCommands(commands.Cog):
             color=discord.Color.dark_red())
 
         await channel.purge(limit=int(number), oldest_first=True, bulk=False)
-        await context.message.delete()
         await context.send(embed=embed)
         await context.message.delete()
 
