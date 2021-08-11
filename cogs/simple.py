@@ -122,9 +122,15 @@ class Just4Fun(commands.Cog):
         URLFile = requests.get('http://api.pleaseclown.me/')
         with open(CacheFile,'wb') as file:
             file.write(URLFile.content)
-
-        # need ffmpeg to play sound !
-        # on windows ffmpeg must be in the path var
+        
+        #############################################
+        # need ffmpeg to play sound !               #
+        # on windows ffmpeg must be in the path var #
+        # ----------------------------------------- #
+        # pip install mutagen                       #
+        # pip install ffmpeg                        #
+        # apt install ffmpeg
+        #############################################
 
         voicechannel = discord.utils.get(ctx.guild.channels, name='quatschen')
         vc = await voicechannel.connect()
