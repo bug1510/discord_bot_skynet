@@ -1,4 +1,6 @@
-import time,os,requests,discord,logging,asyncio
+import time,os,requests,discord,logging
+import mutagen
+from mutagen.mp3 import MP3
 from discord.ext.commands import bot
 from discord.ext import commands
 from discord.utils import get
@@ -127,7 +129,11 @@ class Just4Fun(commands.Cog):
         voicechannel = discord.utils.get(ctx.guild.channels, name='quatschen')
         vc = await voicechannel.connect()
         vc.play(discord.FFmpegPCMAudio(CacheFile), after=lambda e: print('done', e))
-        
+        # Get Time
+        mf = MP3(CacheFile)
+        TrackLength = int(mf.info.length) + 1  
+        time.sleep(TrackLength)
+        await vc.disconnect()
 
 
         await ctx.message.delete()
