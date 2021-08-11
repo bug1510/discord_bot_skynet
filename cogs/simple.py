@@ -43,7 +43,7 @@ class Just4Fun(commands.Cog):
         
         embed = discord.Embed(title='J O K E',
                               description=EmbededMessage,
-                              color=discord.Color.blue())
+                              color=discord.Color.purple())
 
         file = discord.File(source + "/../img/lol.png", filename="lol.png")
         embed.set_thumbnail(url="attachment://lol.png")
@@ -84,7 +84,7 @@ class Just4Fun(commands.Cog):
             file.write(URLFile.content)
 
         embed = discord.Embed(title='Random Cat',
-                              color=discord.Color.blue())
+                              color=discord.Color.purple())
 
         file = discord.File(CacheFile, filename="cat.png")
         embed.set_image(url="attachment://cat.png")
@@ -104,7 +104,7 @@ class Just4Fun(commands.Cog):
         print(dog_pic_url)
         embed = discord.Embed(
             title='Random Dog',
-            color=discord.Color.blue()
+            color=discord.Color.purple()
             )
         embed.set_image(
             url = dog_pic_url
@@ -129,7 +129,7 @@ class Just4Fun(commands.Cog):
         # ----------------------------------------- #
         # pip install mutagen                       #
         # pip install ffmpeg                        #
-        # apt install ffmpeg
+        # apt install ffmpeg                        #
         #############################################
 
         voicechannel = discord.utils.get(ctx.guild.channels, name='quatschen')
@@ -140,8 +140,6 @@ class Just4Fun(commands.Cog):
         TrackLength = int(mf.info.length) + 1  
         time.sleep(TrackLength)
         await vc.disconnect()
-
-
         await ctx.message.delete()
 
 def setup(bot):
