@@ -1,6 +1,7 @@
 import time
 from typing import List
 import discord
+from discord import member
 from discord.ext import commands
 from discord.utils import get
 import logging
@@ -112,17 +113,28 @@ class MemberCommands(commands.Cog):
         Dann gib dir doch fix einfach alle Gamingrollen um überall mit zu mischen"""
 
         author = context.message.author
+        nick = author.display_name
         lowest = get(context.guild.roles, name='@everyone')
         highestrole = get(context.guild.roles, name='Groovy')
-        
-        await context.send(':sparkles:' + '*poof*' + ':sparkles:')
-        await context.send('Was willst du? Alle Rollen? Oh ja, das kann ich für dich tun!')
+        smbed = discord.Embed(
+            title=':sparkles:' + '*poof*' + ':sparkles:',
+            description='Ich bin Mr Meeseeks, , schaut mich an.\nAlle Rollen? Oh ja, das kann ich für dich tun!',
+            color=discord.Color.green()
+            )
+        addedroles = ''
+
         for role in context.guild.roles:
-            
             if role.position < highestrole.position and role.position > lowest.position:
                 await author.add_roles(role)
-
-        await context.send(':sparkles:' + '*poof*' + ':sparkles:')
+                addedroles += str(role) + '\n'
+        
+        addedroles += ' \n'
+        smbed.add_field(
+            name=f'@{nick}´s neue Rollen',
+            value=addedroles+':sparkles:' + '*poof*' + ':sparkles:',
+            inline=False
+            )
+        await context.send(embed=smbed)
         await context.message.delete()
 
     @commands.command()
