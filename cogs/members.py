@@ -118,7 +118,7 @@ class MemberCommands(commands.Cog):
         highestrole = get(context.guild.roles, name='Groovy')
         smbed = discord.Embed(
             title=':sparkles:' + '*poof*' + ':sparkles:',
-            description='Ich bin Mr Meeseeks, , schaut mich an.\nAlle Rollen? Oh ja, das kann ich für dich tun!',
+            description='Ich bin Mr Meeseeks, schaut mich an.\nAlle Rollen? Oh ja, das kann ich für dich tun!',
             color=discord.Color.green()
             )
         addedroles = ''
@@ -212,7 +212,7 @@ class MemberCommands(commands.Cog):
         highestrole = get(context.guild.roles, name='Groovy')
         smbed = discord.Embed(
             title=':sparkles:' + '*poof*' + ':sparkles:',
-            description='Ich bin Mr Meeseeks, , schaut mich an.\nAlle Rollen abgeben?\nOh ja, das kann ich für dich tun!',
+            description='Ich bin Mr Meeseeks, schaut mich an.\nAlle Rollen abgeben?\nOh ja, das kann ich für dich tun!',
             color=discord.Color.dark_orange()
             )
         addedroles = ''
