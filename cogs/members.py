@@ -207,17 +207,28 @@ class MemberCommands(commands.Cog):
         """Keine Lust mehr auf Gaming? Dann nimm dir doch einfach alle Rollen"""
 
         author = context.message.author
+        nick = author.display_name
         lowest = get(context.guild.roles, name='@everyone')
         highestrole = get(context.guild.roles, name='Groovy')
-        
-        await context.send(':sparkles:' + '*poof*' + ':sparkles:')
-        await context.send('Was willst du? Alle Rollen abgeben? Oh ja, das kann ich für dich tun!')
+        smbed = discord.Embed(
+            title=':sparkles:' + '*poof*' + ':sparkles:',
+            description='Ich bin Mr Meeseeks, , schaut mich an.\nAlle Rollen abgeben?\nOh ja, das kann ich für dich tun!',
+            color=discord.Color.dark_orange()
+            )
+        addedroles = ''
+
         for role in context.guild.roles:
-            
             if role.position < highestrole.position and role.position > lowest.position:
                 await author.remove_roles(role)
-
-        await context.send(':sparkles:' + '*poof*' + ':sparkles:')
+                addedroles += str(role) + '\n'
+        
+        addedroles += ' \n'
+        smbed.add_field(
+            name=f'@{nick}´s entfernte Rollen',
+            value=addedroles+':sparkles:' + '*poof*' + ':sparkles:',
+            inline=False
+            )
+        await context.send(embed=smbed)
         await context.message.delete()
 
 
