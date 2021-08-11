@@ -229,7 +229,7 @@ class AdminCommands(commands.Cog):
     @commands.has_role('El-Special')
     async def clear(self, context, number):
         channel = context.message.channel
-        admin = context.message.author
+        admin = context.message.author.display_name
         embed = discord.Embed(
             title='!ACHTUNG!',
             description=f'{number} alte Nachrichten wurden aus diesem Chat gelöscht,\nvon deinem Admin: {admin}',
