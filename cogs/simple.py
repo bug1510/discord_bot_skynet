@@ -1,4 +1,4 @@
-import time,os,requests,discord,logging
+import time,os,requests,discord,logging,random
 import mutagen
 from mutagen.mp3 import MP3
 from discord.ext.commands import bot
@@ -140,6 +140,53 @@ class Just4Fun(commands.Cog):
         TrackLength = int(mf.info.length) + 1  
         time.sleep(TrackLength)
         await vc.disconnect()
+        await ctx.message.delete()
+
+    @commands.command()
+
+    async def xkcd(self,ctx,pic='random'):
+        
+        """ show random pic from xkcd (Nerd Comics) 
+            you could call this command with the number of an picture or random
+            default : random """
+
+        if pic == 'random':
+            # Get Highest Pic
+            JsonHighReq = requests.get('https://xkcd.com/info.0.json')
+            if JsonHighReq.status_code == 200:
+                JsonHighAna = JsonHighReq.json()
+                JsonHighNum = JsonHighAna['num']
+                logging.info(' xkcd - highest number : ' + str(JsonHighNum))
+                # get random Pic
+                RandomNum = random.randrange(1,int(JsonHighNum),1)
+                logging.info(' xkcd - random number : ' + str(RandomNum))
+                RndUrl = 'https://xkcd.com/' + str(RandomNum) + '/info.0.json'
+                RandomPictureReq = requests.get(RndUrl)
+                logging.info(' xkcd - random url : ' + RndUrl)
+                if RandomPictureReq.status_code == 200:
+                    RandomPictureAna = RandomPictureReq.json()
+                    PictureURL = RandomPictureAna['img']
+                else:
+                    logging.error( 'xkcd statuscode : ' + str(RandomPictureReq.status_code))    
+            else:
+                logging.error( 'xkcd statuscode : ' + str(JsonHighReq.status_code))
+        else:
+            RndUrl = 'https://xkcd.com/' + str(pic) + '/info.0.json'
+            RandomPictureReq = requests.get(RndUrl)
+            logging.info(' xkcd - url : ' + RndUrl)
+            if RandomPictureReq.status_code == 200:
+                    RandomPictureAna = RandomPictureReq.json()
+                    PictureURL = RandomPictureAna['img']
+            else:
+                logging.error( 'xkcd statuscode : ' + str(RandomPictureReq.status_code))
+
+        # output
+        embed = discord.Embed(title='xkcd.com',
+                            color=discord.Color.purple())
+        embed.set_image(
+            url = PictureURL 
+        )
+        await ctx.send(embed=embed)
         await ctx.message.delete()
 
 def setup(bot):
