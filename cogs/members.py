@@ -22,7 +22,7 @@ class MemberCommands(commands.Cog):
         """Dieser Befehl Listet dir die für dich bereits verfügbaren Rollen auf"""
 
         lowest = get(context.guild.roles, name='@everyone')
-        highestrole = get(context.guild.roles, name='Groovy')
+        highestrole = get(context.guild.roles, name='Nutzer')
         member = context.message.author
         logger.info(str(member) + ' called lsrole')
         ListRolesField = ''
@@ -66,7 +66,7 @@ class MemberCommands(commands.Cog):
         # definiere variablen
         member = context.message.author
         logger.info(str(member) + ' called addrole')
-        highestrole = get(context.guild.roles, name='Groovy')
+        highestrole = get(context.guild.roles, name='Nutzer')
 
         await context.send(':sparkles:' + '*poof*' + ':sparkles:')
         await context.send('Was willst du?')
@@ -115,7 +115,7 @@ class MemberCommands(commands.Cog):
         author = context.message.author
         nick = author.display_name
         lowest = get(context.guild.roles, name='@everyone')
-        highestrole = get(context.guild.roles, name='Groovy')
+        highestrole = get(context.guild.roles, name='Nutzer')
         smbed = discord.Embed(
             title=':sparkles:' + '*poof*' + ':sparkles:',
             description='Ich bin Mr Meeseeks, schaut mich an.\nAlle Rollen? Oh ja, das kann ich für dich tun!',
@@ -161,7 +161,7 @@ class MemberCommands(commands.Cog):
         # definiere variablen
         member = context.message.author
         logger.info(str(member) + ' called addrole')
-        highestrole = get(context.guild.roles, name='Groovy')
+        highestrole = get(context.guild.roles, name='Nutzer')
 
         await context.send(':sparkles:' + '*poof*' + ':sparkles:')
         await context.send('Was willst du?')
@@ -209,7 +209,7 @@ class MemberCommands(commands.Cog):
         author = context.message.author
         nick = author.display_name
         lowest = get(context.guild.roles, name='@everyone')
-        highestrole = get(context.guild.roles, name='Groovy')
+        highestrole = get(context.guild.roles, name='Nutzer')
         smbed = discord.Embed(
             title=':sparkles:' + '*poof*' + ':sparkles:',
             description='Ich bin Mr Meeseeks, schaut mich an.\nAlle Rollen abgeben?\nOh ja, das kann ich für dich tun!',
