@@ -1,0 +1,8 @@
+{
+    "highestSelfGiveableRole": "Nutzer",
+    "standardTextChannels": [],
+    "standardVoiceChannels": ["Fraktion-I", "Fraktion-II", "Fraktion-III", "Fraktion-IV"],
+    "userLimit": 8,
+    "maintananceRole": "El-Special",
+    "token": "your token"
+}
