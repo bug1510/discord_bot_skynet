@@ -14,8 +14,11 @@ source = os.path.dirname(os.path.abspath(__file__))
 Version = '0.6.3 - ALPHA'
 BotName = 'Meeseeks Bot | V' + Version
 logpath = source + '/logs/'
-config_file = source + '/token.json'
+config_file = source + '/config.json'
 
+conf = open(config_file)
+maintenance = json.load(conf)
+conf.close()
 
 def usage():
     print("""
@@ -83,7 +86,7 @@ for CogFile in os.listdir(source + '/cogs/'):
 help_command = commands.DefaultHelpCommand(no_category = 'Commands')
 
 client = commands.Bot(
-    command_prefix='!',
+    command_prefix='.',
     description='Meeseeks Bot | V' + Version,
     help_command = help_command
     )
@@ -106,9 +109,4 @@ async def on_ready():
     logger.info('config file : ' + config_file)
     logger.info('log path : ' + logpath)
 
-maintenance = open(config_file)
-secret = json.load(maintenance)
-
-client.run(secret['token'])
-
-maintenance.close()
+client.run(maintenance['token'])
