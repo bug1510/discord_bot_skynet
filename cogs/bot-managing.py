@@ -1,8 +1,14 @@
-import logging,os
+import logging, os, json
 import discord
 from discord.ext import commands
 from discord.ext.commands.errors import ExtensionAlreadyLoaded, ExtensionFailed, ExtensionNotFound, ExtensionNotLoaded, NoEntryPointError
 source = os.path.dirname(os.path.abspath(__file__))
+
+config_file = source + '/../config.json'
+
+conf = open(config_file)
+maintenance = json.load(conf)
+conf.close()
 
 logger = logging.getLogger(__name__)
 class BotManaging(commands.Cog):
@@ -10,7 +16,7 @@ class BotManaging(commands.Cog):
         self.bot = bot
 
     @commands.command(name='list')
-    @commands.has_role('El-Special')
+    @commands.has_role(maintenance['maintananceRole'])
     async def list_cog(self, context):
         """ list all cogs on server"""
         ListModulesField = ''
@@ -29,7 +35,7 @@ class BotManaging(commands.Cog):
 
 
     @commands.command(name='load')
-    @commands.has_role('El-Special')
+    @commands.has_role(maintenance['maintananceRole'])
     async def load_cog(self, context, extension):
         """verbindet ein noch nicht geladenes Modul um ein neustart des Bots zu vermeiden."""
         extension_path = 'cogs.' + extension
@@ -64,7 +70,7 @@ class BotManaging(commands.Cog):
         await context.message.delete()
 
     @commands.command(name='unload')
-    @commands.has_role('El-Special')
+    @commands.has_role(maintenance['maintananceRole'])
     async def unload_cog(self, context, extension):
         """trennt ein laufendes Modul um es ohne Impact berabeiten oder entfernen zu können."""
         extension_path = 'cogs.' + extension
@@ -94,7 +100,7 @@ class BotManaging(commands.Cog):
             await context.message.delete()
 
     @commands.command(name='reload')
-    @commands.has_role('El-Special')
+    @commands.has_role(maintenance['maintananceRole'])
     async def reload_cog(self, context, extension):
         """lädt ein Modul neu wenn es sich geändert haben sollte."""
         extension_path = 'cogs.' + extension
