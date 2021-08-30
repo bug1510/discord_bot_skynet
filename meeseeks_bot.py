@@ -11,7 +11,7 @@ from discord.utils import get
 today = datetime.now()
 today = today.strftime("%Y%m%d")
 source = os.path.dirname(os.path.abspath(__file__))
-Version = '0.6.3 - ALPHA'
+Version = '0.6.5 - ALPHA'
 BotName = 'Meeseeks Bot | V' + Version
 logpath = source + '/logs/'
 config_file = source + '/config.json'
@@ -86,7 +86,7 @@ for CogFile in os.listdir(source + '/cogs/'):
 help_command = commands.DefaultHelpCommand(no_category = 'Commands')
 
 client = commands.Bot(
-    command_prefix='.',
+    command_prefix='!',
     description='Meeseeks Bot | V' + Version,
     help_command = help_command
     )
