@@ -2,5 +2,7 @@
 logs
 *.log
 cogs/__pycache__
+leveling/__pycache__
+*.db
 *.jpg
 *.mp3
