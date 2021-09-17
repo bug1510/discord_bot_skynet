@@ -9,7 +9,6 @@ maintenance = json.load(conf)
 conf.close()
 
 logger = logging.getLogger(__name__)
-
 class Events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
