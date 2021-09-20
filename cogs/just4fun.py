@@ -20,8 +20,8 @@ class Just4Fun(commands.Cog):
     @commands.command()
     # tell a joke
     async def joke(self, ctx, language="de"):
-
         """Langeweile? Mr Meeseeks erzählt dir gerne ein paar Witze | Mögliche Werte für Language sind cs, fr, en, de, es, pt."""
+
         EmbededMessage = ''
         member = ctx.message.author
         await ctx.message.delete()
@@ -58,7 +58,6 @@ class Just4Fun(commands.Cog):
 
     @commands.command()
     async def cat(self, context):
-
         """Du willst was süßes sehen? Dann lass dir ein Kätzchen zeigen."""
 
         cat_pic = requests.get('https://cataas.com/cat?json=true')
@@ -77,7 +76,6 @@ class Just4Fun(commands.Cog):
 
     @commands.command()
     async def cat2(self, ctx):
-
         """Du willst was süßes sehen? Dann lass dir ein Kätzchen zeigen."""
 
         # download file
@@ -99,7 +97,6 @@ class Just4Fun(commands.Cog):
 
     @commands.command()
     async def dog(self, ctx):
-
         """ süße Hunde gibts hier """
 
         dog_pic = requests.get('https://random.dog/woof.json')
@@ -118,10 +115,10 @@ class Just4Fun(commands.Cog):
 
     @commands.command()
     async def xkcd(self, ctx, pic='random'):
-
         """ show random pic from xkcd (Nerd Comics) 
             you could call this command with the number of an picture or random
             default : random """
+            
         err = 0
         print('request picture from xkcd.com')
         if pic == 'random':

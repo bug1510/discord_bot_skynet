@@ -19,7 +19,6 @@ class Sounds(commands.Cog):
 
     @commands.command()
     async def clown(self, ctx):
-
         """ top secret """
 
         CacheFile = source + '/../tmp/sound.mp3'
