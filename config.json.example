@@ -1,9 +1,9 @@
 {
+    "twitchLink": "None",
     "maxLevel": 65,
     "expGainingRate": 2, 
     "helpCommandCategorie": "Help",
-    "leveling": true,
-    "curseWords": ["Fuck", "Fick", "ficken"],
+    "curseWords": ["Fuck", "Fick", "ficken", "Nutte"],
     "highestSelfGiveableRole": "Nutzer",
     "standardTextChannels": [],
     "standardVoiceChannels": ["Fraktion-I", "Fraktion-II", "Fraktion-III", "Fraktion-IV"],
