@@ -1,11 +1,7 @@
-import sqlite3, os, json
+import sqlite3, os
+from meeseeks_bot import maintenance
 
 source = os.path.dirname(os.path.abspath(__file__))
-config_file = source + '/../config.json'
-
-conf = open(config_file)
-maintenance = json.load(conf)
-conf.close()
 
 async def create_user(message):
     guild_id = message.author.guild.id
@@ -69,3 +65,17 @@ async def exp_gain(message, rate=maintenance['expGainingRate']):
         con.close()
     else:
         return
+
+async def get_rank(ctx):
+    guild_id = ctx.message.author.guild.id
+    dc_user_id = ctx.message.author.id
+
+    con = sqlite3.connect(f'{guild_id}.db')
+    cur = con.cursor()
+    cur.execute(
+        "SELECT * FROM leveling WHERE dc_user_id = $1",
+        (dc_user_id,))
+    entry = cur.fetchone()
+    con.close()
+
+    return entry
