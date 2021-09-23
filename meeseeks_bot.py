@@ -97,7 +97,7 @@ class MeeseeksCore(commands.Bot):
             usage()
             sys.exit(2)
 
-client = MeeseeksCore(command_prefix='.', description=maintenance['botName'] + maintenance['version'], help_command = commands.DefaultHelpCommand(no_category = 'Help'))
+client = MeeseeksCore(command_prefix='!', description=maintenance['botName'] + maintenance['version'], help_command = commands.DefaultHelpCommand(no_category = 'Help'))
 
 if __name__ == '__main__':
     client.run(maintenance['token'])
