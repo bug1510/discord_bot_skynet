@@ -4,7 +4,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from maintenance.embed_builder import build_embed
 
-class BotCommands(commands.Cog):
+class NightClubCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -77,4 +77,4 @@ class BotCommands(commands.Cog):
             await ctx.channel.send(":coin:  **Zahl!**  :coin:")
 
 def setup(bot):
-    bot.add_cog(BotCommands(bot))
+    bot.add_cog(NightClubCommands(bot))
