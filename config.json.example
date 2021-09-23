@@ -9,5 +9,8 @@
     "standardVoiceChannels": ["Fraktion-I", "Fraktion-II", "Fraktion-III", "Fraktion-IV"],
     "userLimit": 8,
     "maintananceRole": "El-Special",
+    "modules": ["cogs.bot"],
+    "version": "0.7.5 - ALPHA",
+    "botName": "Meeseeks Bot | V/",
     "token": "your token"
 }
