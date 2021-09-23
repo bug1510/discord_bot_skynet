@@ -3,6 +3,8 @@ logs
 *.log
 cogs/__pycache__
 leveling/__pycache__
+maintenance/__pycache__
+__pycache__
 *.db
 *.jpg
 *.mp3
