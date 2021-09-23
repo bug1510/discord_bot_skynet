@@ -54,7 +54,7 @@ class MeeseeksCore(commands.Bot):
     async def on_ready(self):
         await self.init_logger()
         await self.init_modules()
-        await client.change_presence(activity=discord.Activity(name='.help', type=2))
+        await client.change_presence(activity=discord.Activity(name='!help', type=2))
         self.logger.info('bot started')
         self.logger.info('config file : ' + config_file)
         self.logger.info('log path : ' + logpath)
