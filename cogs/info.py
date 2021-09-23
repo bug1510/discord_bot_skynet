@@ -1,16 +1,11 @@
-import discord,os, json
+import discord,os
 from discord import colour
 from discord.ext import commands
-from discord.utils import get
 import logging,platform,psutil
+from meeseeks_bot import maintenance
+
 logger = logging.getLogger(__name__)
 source = os.path.dirname(os.path.abspath(__file__))
-
-config_file = source + '/../config.json'
-
-conf = open(config_file)
-maintenance = json.load(conf)
-conf.close()
 
 class InfoCommands(commands.Cog):
     def __init__(self, bot):
