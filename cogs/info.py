@@ -15,8 +15,9 @@ class InfoCommands(commands.Cog):
     async def get_serverinfo(self, context):
         """ Show Server Informations """
         embed = discord.Embed(title='Serverinformations',
-                              description='Informations about the Backend Server',
-                              color=discord.Color.orange())
+        description='Informations about the Backend Server',
+        color=discord.Color.orange()
+        )
 
         SystemInfoField = 'Platform : ' + platform.system() + '\n'
         SystemInfoField += 'Version  : ' + platform.version() + '\n'
