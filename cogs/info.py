@@ -62,21 +62,14 @@ class InfoCommands(commands.Cog):
             number_of_roles += 1
 
         embed = discord.Embed(title=f'Info about {guild_name}',color=colour.Color.blurple())
-
         embed.set_thumbnail(url=guild_icon)
-
         embed.add_field(name='Owner', value=guild_owner, inline=True)
-        
         embed.add_field(name='Number of Roles', value=number_of_roles, inline=True)
-
         embed.add_field(name='Number of Members(including Bots)', value=guild_members, inline=True)
-
         embed.add_field(name=f'Twitch Link of {guild_owner}', value=twitch_url, inline=True)
 
         await ctx.send(embed=embed)
-
         await ctx.message.delete()
-
 
 def setup(bot):
     bot.add_cog(InfoCommands(bot))
