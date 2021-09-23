@@ -379,17 +379,5 @@ class AdminCommands(commands.Cog):
         await channel.purge(limit=int(number), oldest_first=True, bulk=False)
         await context.send(embed=embed)
 
-    @commands.command(name='leveling_on')
-    @commands.is_owner()
-    async def init_leveling_db(self, ctx):
-        guild_id = ctx.message.author.guild.id
-        con = sqlite3.connect(f'{guild_id}.db')
-        cur = con.cursor()
-        cur.execute("""Create Table IF NOT EXISTS leveling
-        (dc_user_nick text, dc_user_id integer, tw_user_nick text, tw_user_id integer, level integer NOT NULL DEFAULT 1, exp integer NOT NULL DEFAULT 0)""")
-        con.commit()
-        con.close()
-
-
 def setup(bot):
     bot.add_cog(AdminCommands(bot))
