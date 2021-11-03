@@ -59,15 +59,13 @@ class CommunityCommands(commands.Cog):
         '''Erstellt dir und deinen Freunden einen Temporären Raum.'''
         guild = ctx.message.guild
         member = ctx.message.author
-        tmp_cat_name = 'Temp-Channels'
+        tmp_cat_name = maintenance['tmpCatName']
         category = get(guild.categories, name=tmp_cat_name)
-        r = random.randint(1, 10000000)
-
 
         if not category:
             category = await guild.create_category_channel(name=tmp_cat_name, position=0)
         userlimit = maintenance['userLimit']
-        tmp_channel = await guild.create_voice_channel(name='tmp-channel' + str(r), category=category, user_limit=userlimit)
+        tmp_channel = await guild.create_voice_channel(name=maintenance['tempChannelName'], category=category, user_limit=userlimit)
 
         await member.move_to(tmp_channel)
         await ctx.message.delete()
@@ -75,7 +73,7 @@ class CommunityCommands(commands.Cog):
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
         guild = member.guild
-        category = get(guild.categories, name='Temp-Channels')
+        category = get(guild.categories, name=maintenance['tmpCatName'])
         for vc in category.voice_channels:
             vs = vc.voice_states
             if not vs:
