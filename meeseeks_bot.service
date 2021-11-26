@@ -5,8 +5,8 @@ After=network.target
 
 [Service]
 Type=simple
-User=meeseeksbot
-Group=meeseeksbot
+User=pi
+Group=pi
 ExecStart=/usr/bin/python3 /home/pi/mr.meeseeks_bot/meeseeks_bot.py
 
 [Install]
