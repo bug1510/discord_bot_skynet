@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import discord, os, json, sys, getopt, logging
 from discord.ext import commands
 from datetime import datetime

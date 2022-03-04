@@ -365,7 +365,7 @@ class AdminCommands(commands.Cog):
 
     @commands.command()
     @commands.has_role(maintenance['maintananceRole'])
-    async def clear(self, context, number):
+    async def clear(self, context, number=50):
         channel = context.message.channel
         member = context.message.author
         user = context.message.author.display_name

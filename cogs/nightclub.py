@@ -4,6 +4,9 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from maintenance.embed_builder import build_embed
 
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
+
 class NightClubCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
