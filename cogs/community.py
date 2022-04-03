@@ -76,8 +76,9 @@ class CommunityCommands(commands.Cog):
         category = get(guild.categories, name=maintenance['tmpCatName'])
         for vc in category.voice_channels:
             vs = vc.voice_states
-            if not vs:
-                await vc.delete()
+            if str(vc)==maintenance['tempChannelName']:
+                if not vs:
+                    await vc.delete()
 
 def setup(bot):
     bot.add_cog(CommunityCommands(bot))

@@ -1,13 +1,13 @@
 [Unit]
-Description=Discord Bot build be some dude
+Description=Discord Bot build by some dude
 After=network.target
 
 
 [Service]
 Type=simple
-User=pi
-Group=pi
-ExecStart=/usr/bin/python3 /home/pi/mr.meeseeks_bot/meeseeks_bot.py
+User=meeseeks
+Group=meeseeks
+ExecStart=python3 /home/meeseeks/mbot/meeseeks_bot.py
 
 [Install]
 WantedBy=multi-user.target
