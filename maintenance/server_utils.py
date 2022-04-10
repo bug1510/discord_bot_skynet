@@ -125,6 +125,7 @@ async def set_standard_permission_for_cat(guild, place, role, embed):
 async def create_textchannel(guild, name, place, embed):
 
     counter = 0
+    tc = ''
 
     try:
         for c in name:
