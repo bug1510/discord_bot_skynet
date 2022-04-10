@@ -17,22 +17,22 @@ class AdminCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='gcc')
+    @commands.command(name='cspace')
     @commands.has_role(maintenance['maintananceRole'])
 
-    async def game_channel_create(self, ctx, space_name):
+    async def create_space(self, ctx, space_name):
 
-        """Dieser Befehl ist administrativ und legt eine ganze Rolle ihre Kategorie und eigene Channel an"""
+        """Legt eine Kategorie eine Rolle dazu und ihre Channel an"""
 
         guild = ctx.message.guild
         member = ctx.message.author
-        logger.info(str(member) + ' tried to create category ' + str(space_name))
+        logger.info(f'{member} tried to create a space {space_name}')
 
         user_icon = ctx.message.author.avatar_url_as(static_format='png', size=128)
 
         user = member.display_name
         embed = discord.Embed(
-            title = 'GameChannelCreate',
+            title = 'Create Space',
             description = f'Das Erstellen wurde von {user} ausgelöst.',
             color = discord.Color.dark_gold()
             )
@@ -52,15 +52,19 @@ class AdminCommands(commands.Cog):
         await ctx.send(embed=embed)
         await ctx.message.delete()
         
-    @commands.command('gcd')
+    @commands.command('dspace')
     @commands.has_role(maintenance['maintananceRole'])
 
-    async def game_channel_delete(self, ctx, space_name):
+    async def delete_space(self, ctx, space_name):
 
-        """Dieser Befehl ist administrativ und entfernt eine Rolle ihre Kategorie und alle Channel darin"""
+        """Löscht eine Kategorie ihre Rolle und die dazugehörigen Channel an"""
         
         guild = ctx.message.guild
         member = ctx.message.author
+
+        logger.info(f'{member} tried to delete a space {space_name}')
+
+
         role = get(guild.roles, name=space_name)
         place = get(guild.categories, name=str(space_name))
         user = member.display_name
@@ -68,7 +72,7 @@ class AdminCommands(commands.Cog):
         user_icon = ctx.message.author.avatar_url_as(static_format='png', size=128)
 
         embed = discord.Embed(
-            title = 'GameChannelDelete',
+            title = 'Delete Space',
             description = f'Das Löschen wurde von {user} ausgelöst.',
             color = discord.Color.dark_gold()
             )
