@@ -1,4 +1,4 @@
-from unicodedata import category, name
+from itertools import count
 import discord, logging, os, json
 from discord.utils import get
 
@@ -21,20 +21,20 @@ async def create_category(guild, name, member, embed):
 
     try:
         place = await guild.create_category_channel(name=str(name))
-        logger.info('Category ' + str(place) + ' was created by ' + str(member))
-        embed = embed.add_field(
+        logger.info(f'Category {place} was created by {member}')
+        embed.add_field(
             name= '!Success creating Category!',
-            value= 'Die Kategorie ' + str(place) + ' wurde erstellt.',
+            value= f'Die Kategorie {place} wurde erstellt.',
             inline=False
         )
 
         return place, embed
 
-    except:
-        logger.warning('Category ' + str(place) + ' wasnt created')
-        embed = embed.add_field(
+    except Exception as e:
+        logger.warning(f'Category {place} wasnt created due to an error: {e}')
+        embed.add_field(
             name= '!Failure creating Category!',
-            value= 'Die Kategorie ' + str(place) + ' konnte nicht erstellt.',
+            value= f'Die Kategorie {place} konnte nicht erstellt werden. \n{e}',
             inline=False
         )
 
@@ -44,20 +44,20 @@ async def create_role(guild, name, member, embed):
     
     try:
         role = await guild.create_role(name=name)
-        logger.info(str(member) + ' created category bound role ' + str(name) + ' successfully')
-        embed = embed.add_field(
-            name= '!Success creating Category connected Role!',
-            value= 'Die Rolle ' + str(name) + ' wurde erstellt.',
+        logger.info(f'{member} created role {name} successfully')
+        embed.add_field(
+            name= '!Success creating Role!',
+            value= f'Die Rolle {role} wurde erstellt.',
             inline=False
         )
 
         return role, embed
     
-    except:
-        logger.info(str(member) + ' tried to create category bound role ' + str(name) + ' but it failed')
-        embed = embed.add_field(
+    except Exception as e:
+        logger.info(f'{member} tried to create role {name} but it failed due to an error: {e}')
+        embed.add_field(
             name= '!Failure creating Category connected Role!',
-            value= 'Die Rolle ' + str(name) + ' wurde nicht erstellt,\nbitte prüfe deine Konfiguration.',
+            value= f'Die Rolle {name} wurde nicht erstellt,\n{e}.',
             inline=False
         )
 
@@ -107,17 +107,17 @@ async def set_standard_permission_for_cat(guild, place, role, embed):
                 request_to_speak=file_role['request_to_speak']
                 )
         
-        logger.info('Permissions for the category ' + str(place) + ' were set')
-        embed = embed.add_field(
+        logger.info(f'Permissions for the category {place} were set')
+        embed.add_field(
             name= '!Success setting Permissions!',
-            value= 'Die Berechtigungen für die Kategorie ' + str(place) + ' wurden gesetzt.',
+            value= f'Die Berechtigungen für die Kategorie {place} wurden gesetzt.',
             inline=False
         )
-    except:
-        logger.warning('Failed to set Permissions for the Categorie ' + str(place))
-        embed = embed.add_field(
+    except Exception as e:
+        logger.warning(f'Failed to set Permissions for the Categorie {place} due to an error: {e}')
+        embed.add_field(
             name= '!Failure setting Permissions!',
-            value= 'Beim setzen der Berechtigung für die Kategorie\n ' + str(place) + ' ist etwas schief gelaufen bitte überprüfe die Config.',
+            value= f'Beim setzen der Berechtigungen für die Kategorie {place}\n ist etwas schief gelaufen.\n {e}',
             inline=False
         )
     finally:
@@ -125,121 +125,186 @@ async def set_standard_permission_for_cat(guild, place, role, embed):
 
 async def create_textchannel(guild, name, place, embed):
 
+    counter = 0
+
     try:
-        tc = maintenance['standardTextChannels']
-
-        await guild.create_text_channel(name=str(name), category=place)
-
-        for c in tc:
+        for c in name:
             await guild.create_text_channel(name=c, category=place)
-
-        logger.info('The Text Channel for ' + str(place) + ' was created')
-        embed = embed.add_field(
-            name= '!Success creating Text Channels!',
-            value= 'Der Textkanal für ' + str(place) + ' wurde erstellt',
-            inline=False
-        )
-
-    except:
-        logger.warning('While creating the Test Channel for ' + str(place) + ' went something wrong please check your server config.')
-        embed = embed.add_field(
-            name= '!Failure creating Text Channels!',
-            value= 'Beim erstellen des Textkanals für ' + str(place) + ' ist etwas schief gegangen,\nüberprüfe bitte deine Server Konfiguration.',
-            inline=False
-        )
-    finally:
-        return embed
-
-async def create_voicechannel(guild, name, place, embed):
-
-    try:
-        if name == '0':
-            vc = maintenance['standardVoiceChannels']
-
-            for c in vc:
-                userlimit = maintenance['userLimit']
-                await guild.create_voice_channel(name=c, category=place, user_limit=userlimit)
-            
-            logger.info('The Voice Channels for ' + str(place) + ' were created')
-            embed = embed.add_field(
-                name= '!Success creating Voice Channels!',
-                value= 'Die Sprachkanäle für ' + str(place) + ' wurden erstellt.',
+            counter + 1
+        if counter == 1:
+            logger.info(f'The Text Channel for {place} was created')
+            embed.add_field(
+                name= '!Success creating Text Channel!',
+                value= f'Der Textkanal für {place} wurde erstellt',
                 inline=False
             )
         else:
-            userlimit = maintenance['userLimit']
-            await guild.create_voice_channel(name=name, category=place, user_limit=userlimit)
-    
-    except:
-        logger.warning('While creating the Voice Channels for ' + str(place) + ' went something wrong please check your server config.')
-        embed = embed.add_field(
-            name= '!Failure creating Voice Channels',
-            value= 'Beim erstellen der Sprachkanäle für ' + str(place) + ' ist etwas schief gegangen,\nüberprüfe bitte deine Server Konfiguration.',
+            logger.info(f'The Text Channels for {place} was created')
+            embed.add_field(
+                name= '!Success creating Text Channel!',
+                value= f'Der Textkanal für {place} wurde erstellt',
+                inline=False
+            )
+    except Exception as e:
+        logger.warning(f'While creating the Text Channels for {place} went something wrong: {e}.')
+        embed.add_field(
+            name= '!Failure creating Text Channels!',
+            value= f'Beim erstellen der Textkanäle für {place} ist etwas schief gegangen,\nüberprüfe bitte deine Server Konfiguration.',
             inline=False
         )
-
+        embed.add_field(
+            name='Error',
+            value=e
+        )
     finally:
         return embed
 
-async def delete_voicechannel(place, name, member):
+async def create_voicechannel(guild, name, userlimit, place, embed):
+
+    counter = 0
 
     try:
-        for vc in place.voice_channels:
-            await vc.delete(reason=None)
-        
-        logger.info(str(member) + ' deleted all Voice Channels from the Category ' + str(name) + ' successfully')
-        embed = embed.add_field(
-            name= '!Success deleting Voice Channels!',
-            value= 'Die Voice Channels für ' + str(place) + ' wurden gelöscht.',
-            inline=False
-        )
-    except:
-        logger.warning(str(member) + ' tried to delete all Voice Channels from the Category ' + str(name) + ' but it failed')
-        embed = embed.add_field(
-            name= '!Failure deleting Voice Channels',
-            value= 'Beim löschen der Voice Channels für ' + str(place) + ' ist etwas schief gegangen,\nüberprüfe bitte deine Server Konfiguration.',
-            inline=False
-        )
+        for c in name:
+            await guild.create_voice_channel(name=c, category=place, user_limit=userlimit)
+            counter + 1 
 
-async def delete_textchannel(place, name, member):    
-    try:
-        for tc in place.text_channels:
-            await tc.delete(reason=None)
-        
-        logger.info(str(member) + ' deleted all Text Channels from the Category ' + str(name) + ' successfully')
-        embed = embed.add_field(
-            name= '!Success deleting Text Channels!',
-            value= 'Die Text Channels aus ' + str(place) + ' wurden gelöscht',
-            inline=False
-        )
-    except:
-        logger.warning(str(member) + ' tried to delete all Text Channels from the Category' + str(name) + ' but it failed')
-        embed = embed.add_field(
-            name= '!Failure deleting Text Channels',
-            value= 'Beim löschen der Text Channels für ' + str(place) + ' ist etwas schief gegangen,\nüberprüfe bitte deine Server Konfiguration.',
-            inline=False
-        )
+        if counter == 1:
+            logger.info(f'The Voice Channel for {place} were created')
+            embed.add_field(
+                name= '!Success creating Voice Channel!',
+                value= f'Die Sprachkanal für {place} wurden erstellt.',
+                inline=False
+            )
 
-async def delete_category(place, name, member):
+        else:
+            logger.info(f'The Voice Channels for {place} were created')
+            embed.add_field(
+                name= '!Success creating Voice Channels!',
+                value= f'Die Sprachkanäle für {place} wurden erstellt.',
+                inline=False
+            )
+    except Exception as e:
+        logger.warning(f'While creating the Voice Channels for {place} went something wrong: {e}.')
+        embed.add_field(
+            name= '!Failure creating Voice Channels',
+            value= f'Beim erstellen der Sprachkanäle für {place} ist etwas schief gegangen,\nüberprüfe bitte deine Server Konfiguration.',
+            inline=False
+        )
+        embed.add_field(
+            name='Error',
+            value=e
+        )
+    finally:
+        return embed
+
+async def delete_voicechannel(place, name, member, embed):
+
+    if str(name) == 'all':
+        try:
+            for vc in place.voice_channels:
+                await vc.delete(reason=None)
+
+            logger.info(f'{member} deleted all Voice Channels from the Category {place} successfully')
+            embed.add_field(
+                name= '!Success deleting Voice Channels!',
+                value= f'Die Sprachkanäle in {place} wurden gelöscht.',
+                inline=False
+            )
+        except Exception as e:
+            logger.warning(f'{member} tried to delete all Voice Channels from the Category {place} but it failed due to an error: {e}')
+            embed.add_field(
+                name= '!Failure deleting Voice Channels',
+                value= f'Beim löschen der Sprachkanäle in {place} ist etwas schief gegangen,\n{e}.',
+                inline=False
+            )
+        finally:
+            return embed
+    else:
+        try:
+            vc = get(place.voice_channels, name=str(name))
+            await vc.delete()
+
+            logger.info(f'{member} deleted Voice Channel {name} from the Category {place} successfully')
+            embed.add_field(
+                name= '!Success deleting Voice Channel!',
+                value= f'Der Sprachkanal {name} in {place} wurde gelöscht.',
+                inline=False
+            )
+        except Exception as e:
+            logger.warning(f'{member} tried to delete Voice Channel {name} from the Category {place} but it failed due to an error: {e}')
+            embed.add_field(
+                name= '!Failure deleting Voice Channel',
+                value= f'Beim löschen des Sprachkanals {name} in {place} ist etwas schief gegangen,\n{e}.',
+                inline=False
+            )
+        finally:
+            return embed
+
+async def delete_textchannel(place, name, member, embed):    
+    
+    if str(name) == 'all':
+        try:
+            for tc in place.text_channels:
+                await tc.delete(reason=None)
+            
+            logger.info(f'{member} deleted all Text Channels from the Category {place} successfully')
+            embed.add_field(
+                name= '!Success deleting Text Channels!',
+                value= f'Die Textkanäle aus {place} wurden gelöscht',
+                inline=False
+            )
+        except Exception as e:
+            logger.warning(f'{member} tried to delete all Text Channels from the Category {place} but it failed due to an error: {e}')
+            embed.add_field(
+                name= '!Failure deleting Text Channels',
+                value= f'Beim löschen der Textkanäle für {place} ist etwas schief gegangen,\n{e}.',
+                inline=False
+            )
+        finally:
+            return embed
+    else:
+        try:
+            tc = get(place.text_channels, name=str(name))
+            await tc.delete()
+
+            logger.info(f'{member} deleted Text Channel {name} from the Category {place} successfully')
+            embed.add_field(
+                name= '!Success deleting Text Channel!',
+                value= f'Der Textkanal {name} in {place} wurde gelöscht.',
+                inline=False
+            )
+        except Exception as e:
+            logger.warning(f'{member} tried to delete Text Channel {name} from the Category {place} but it failed due to an error: {e}')
+            embed.add_field(
+                name= '!Failure deleting Text Channel',
+                value= f'Beim löschen des Textkanals {name} in {place} ist etwas schief gegangen,\n{e}.',
+                inline=False
+            )
+        finally:
+            return embed
+
+async def delete_category(place, member, embed):
 
     try:
         await place.delete(reason=None)
 
-        logger.info(str(member) + ' deleted the Category ' + str(name) + ' successfully')
-        embed = embed.add_field(
+        logger.info(f'{member} deleted the Category {place} successfully')
+        embed.add_field(
             name= '!Success deleting Category!',
-            value= 'Die Kategorie ' + str(place) + ' wurde gelöscht.',
+            value= f'Die Kategorie {place} wurde gelöscht.',
             inline=False
         )
-    except:
-        logger.warning(str(member) + ' tried to delete the Category ' + str(name) + ' but it failed')
-        embed = embed.add_field(
+    except Exception as e:
+        logger.warning(f'{member} tried to delete the Category {place} but it failed due to an error: {e}')
+        embed.add_field(
             name= '!Failure deleting Category!',
-            value= f'Beim löschen der Kategorie {place} ist etwas schief gegangen,\nüberprüfe bitte deine Server Konfiguration.',
+            value= f'Beim löschen der Kategorie {place} ist etwas schief gegangen,\n{e}.',
             inline=False
         )
+    finally:
+        return embed
 
-async def delete_role(role, name, member):
+async def delete_role(role, member, embed):
 
     try:
         await role.delete(reason=None)
@@ -250,10 +315,12 @@ async def delete_role(role, name, member):
             value= f'Die Rolle {role} wurde gelöscht.',
             inline=False
         )
-    except:
-        logger.warning(f'{member} tried to delete the role {name} but it failed')
+    except Exception as e:
+        logger.warning(f'{member} tried to delete the role {role} but it failed due to an error: {e}')
         embed = embed.add_field(
             name= '!Failure deleting Role!',
-            value= f'Beim löschen der Rolle {role} ist etwas schief gelaufen.',
+            value= f'Beim löschen der Rolle {role} ist etwas schief gelaufen,\n{e}.',
             inline=False
         )
+    finally:
+        return embed
