@@ -1,7 +1,9 @@
-import discord, os, json, sqlite3
+import discord, os, json, logging
 from discord.ext import commands
 from discord.utils import get
-import logging
+
+import maintenance.server_utils as su
+
 logger = logging.getLogger(__name__)
 
 source = os.path.dirname(os.path.abspath(__file__))
@@ -18,16 +20,14 @@ class AdminCommands(commands.Cog):
     @commands.command(name='gcc')
     @commands.has_role(maintenance['maintananceRole'])
 
-    async def game_channel_create(self, context, gamename):
+    async def game_channel_create(self, ctx, space_name):
 
         """Dieser Befehl ist administrativ und legt eine ganze Rolle ihre Kategorie und eigene Channel an"""
 
-        guild = context.message.guild
-        member = context.message.author
-        logger.info(str(member) + ' tried to create category ' + str(gamename))
-        junior_admin = get(context.guild.roles, name='Junior Admin')
-        admin = get(context.guild.roles, name='Admin')
-        senior_admin = get(context.guild.roles, name='Senior Admin')
+        guild = ctx.message.guild
+        member = ctx.message.author
+        logger.info(str(member) + ' tried to create category ' + str(space_name))
+
         user = member.display_name
         embed = discord.Embed(
             title = 'GameChannelCreate',
@@ -35,243 +35,18 @@ class AdminCommands(commands.Cog):
             color = discord.Color.dark_gold()
             )
 
-        try:
-            gamerole = await guild.create_role(name=gamename)
-            logger.info(str(member) + ' created category bound role ' + str(gamename) + ' successfully')
-            embed = embed.add_field(
-                name= '!Success creating Category connected Role!',
-                value= 'Die Rolle ' + str(gamename) + ' wurde erstellt.',
-                inline=False
-            )
-        except:
-            logger.info(str(member) + ' tried to create category bound role ' + str(gamename) + ' but it failed')
-            embed = embed.add_field(
-                name= '!Failure creating Category connected Role!',
-                value= 'Die Rolle ' + str(gamename) + ' wurde nicht erstellt,\nbitte prüfe deine Konfiguration.',
-                inline=False
-            )
+        place, embed = await su.create_category(guild=guild, name=space_name, member=member, embed=embed)
 
-        try:
-            place = await guild.create_category_channel(name='<##>' + str(gamename))
-            logger.info('Category ' + str(place) + ' was created by ' + str(member))
-            embed = embed.add_field(
-                name= '!Success creating Category!',
-                value= 'Der Game Channel ' + str(place) + ' wurde erstellt.',
-                inline=False
-            )
-        except:
-            logger.warning('Category ' + str(place) + ' wasnt created')
-            embed = embed.add_field(
-                name= '!Failure creating Category!',
-                value= 'Der Game Channel ' + str(place) + ' konnte nicht erstellt.',
-                inline=False
-            )
+        role, embed = await su.create_role(guild=guild, name=space_name, member=member, embed=embed)
 
-        try:
-            await place.set_permissions(
-                guild.default_role,
+        embed = await su.set_standard_permission_for_cat(guild=guild, place=place, role=role, embed=embed)
 
-                view_channel=False,
-                manage_channels=False,
-                manage_permissions=False,
-                manage_webhooks=False,
-                create_instant_invite=False,
-                send_messages=False,
-                embed_links=False,
-                attach_files=False,
-                add_reactions=False,
-                use_external_emojis=False,
-                mention_everyone=False,
-                manage_messages=False,
-                read_message_history=False,
-                send_tts_messages=False,
-                use_slash_commands=False,
-                connect=False,
-                speak=False,
-                stream=False,
-                use_voice_activation=False,
-                priority_speaker=False,
-                mute_members=False,
-                deafen_members=False,
-                move_members=False,
-                request_to_speak=False
-                )
-            
-            await place.set_permissions(
-                gamerole,
+        embed = await su.create_textchannel(guild=guild, name=space_name, place=place, embed=embed)
 
-                view_channel=True,
-                manage_channels=False,
-                manage_permissions=False,
-                manage_webhooks=False,
-                create_instant_invite=False,
-                send_messages=True,
-                embed_links=False,
-                attach_files=False,
-                add_reactions=True,
-                use_external_emojis=True,
-                mention_everyone=False,
-                manage_messages=False,
-                read_message_history=True,
-                send_tts_messages=True,
-                use_slash_commands=False,
-                connect=True,
-                speak=True,
-                stream=True,
-                use_voice_activation=True,
-                priority_speaker=False,
-                mute_members=False,
-                deafen_members=False,
-                move_members=False,
-                request_to_speak=True
-                )
-            
-            await place.set_permissions(
-                junior_admin,
+        embed = await su.create_voicechannel(guild=guild, name=space_name, place=place, embed=embed)
 
-                view_channel=True,
-                manage_channels=False,
-                manage_permissions=False,
-                manage_webhooks=False,
-                create_instant_invite=False,
-                send_messages=True,
-                embed_links=False,
-                attach_files=False,
-                add_reactions=True,
-                use_external_emojis=True,
-                mention_everyone=True,
-                manage_messages=True,
-                read_message_history=True,
-                send_tts_messages=True,
-                use_slash_commands=False,
-                connect=True,
-                speak=True,
-                stream=True,
-                use_voice_activation=True,
-                priority_speaker=False,
-                mute_members=True,
-                deafen_members=True,
-                move_members=True,
-                request_to_speak=True
-                )
-            
-            await place.set_permissions(
-                admin,
-
-                view_channel=True,
-                manage_channels=False,
-                manage_permissions=False,
-                manage_webhooks=False,
-                create_instant_invite=False,
-                send_messages=True,
-                embed_links=True,
-                attach_files=False,
-                add_reactions=True,
-                use_external_emojis=True,
-                mention_everyone=True,
-                manage_messages=True,
-                read_message_history=True,
-                send_tts_messages=True,
-                use_slash_commands=True,
-                connect=True,
-                speak=True,
-                stream=True,
-                use_voice_activation=True,
-                priority_speaker=True,
-                mute_members=True,
-                deafen_members=True,
-                move_members=True,
-                request_to_speak=True
-                )
-            
-            await place.set_permissions(
-                senior_admin,
-
-                view_channel=True,
-                manage_channels=True,
-                manage_permissions=False,
-                manage_webhooks=False,
-                create_instant_invite=False,
-                send_messages=True,
-                embed_links=True,
-                attach_files=True,
-                add_reactions=True,
-                use_external_emojis=True,
-                mention_everyone=True,
-                manage_messages=True,
-                read_message_history=True,
-                send_tts_messages=True,
-                use_slash_commands=True,
-                connect=True,
-                speak=True,
-                stream=True,
-                use_voice_activation=True,
-                priority_speaker=True,
-                mute_members=True,
-                deafen_members=True,
-                move_members=True,
-                request_to_speak=True
-                )
-
-            logger.info('Permissions for the category ' + str(place) + ' were set')
-            embed = embed.add_field(
-                name= '!Success setting Permissions!',
-                value= 'Die Berechtigungen für den Game Channel ' + str(place) + ' gesetzt.',
-                inline=False
-            )
-        except:
-            logger.warning('Failed to set Permissions for the Categorie ' + str(place))
-            embed = embed.add_field(
-                name= '!Failure setting Permissions!',
-                value= 'Beim setzen der Berechtigung für den Game Channel\n ' + str(place) + ' ist etwas schief gelaufen bitte überprüfe die Config.',
-                inline=False
-            )
-
-        try:
-            tc = maintenance['standardTextChannels']
-
-            await guild.create_text_channel(name=str(gamename), category=place)
-
-            for c in tc:
-                await guild.create_text_channel(name=c, category=place)
-
-            logger.info('The Text Channel for ' + str(place) + ' was created')
-            embed = embed.add_field(
-                name= '!Success creating Text Channels!',
-                value= 'Der Text Channel für ' + str(place) + ' wurde erstellt',
-                inline=False
-            )
-        except:
-            logger.warning('While creating the Test Channel for ' + str(place) + ' went something wrong please check your server config.')
-            embed = embed.add_field(
-                name= '!Failure creating Text Channels!',
-                value= 'Beim erstellen des Text Channel für ' + str(place) + ' ist etwas schief gegangen,\nüberprüfe bitte deine Server Konfiguration.',
-                inline=False
-            )
-
-        try:
-            vc = maintenance['standardVoiceChannels']
-
-            for c in vc:
-                userlimit = maintenance['userLimit']
-                await guild.create_voice_channel(name=c, category=place, user_limit=userlimit)
-            
-            logger.info('The Voice Channels for ' + str(place) + ' were created')
-            embed = embed.add_field(
-                name= '!Success creating Voice Channels!',
-                value= 'Die Voice Channels für ' + str(place) + ' wurden erstellt.',
-                inline=False
-            )
-        except:
-            logger.warning('While creating the Voice Channels for ' + str(place) + ' went something wrong please check your server config.')
-            embed = embed.add_field(
-                name= '!Failure creating Voice Channels',
-                value= 'Beim erstellen der Voice Channels für ' + str(place) + ' ist etwas schief gegangen,\nüberprüfe bitte deine Server Konfiguration.',
-                inline=False
-            )
-            
-        await context.send(embed=embed)
-        await context.message.delete()
+        await ctx.send(embed=embed)
+        await ctx.message.delete()
         
     @commands.command('gcd')
     @commands.has_role(maintenance['maintananceRole'])
