@@ -1,4 +1,3 @@
-from itertools import count
 import discord, logging, os, json
 from discord.utils import get
 
