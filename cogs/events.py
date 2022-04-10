@@ -1,6 +1,8 @@
 import json, os, logging, discord
 from discord.ext import commands
 
+logger = logging.getLogger('SkyNet-Core')
+
 source = os.path.dirname(os.path.abspath(__file__))
 config_file = source + '/../config.json'
 
@@ -8,7 +10,6 @@ conf = open(config_file)
 maintenance = json.load(conf)
 conf.close()
 
-logger = logging.getLogger(__name__)
 class Events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

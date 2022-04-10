@@ -1,9 +1,10 @@
-import discord, random, time
+import discord, sqlite3, json, os, logging
 from discord.ext import commands
 from discord.utils import get
-import sqlite3, json, os
 from leveling.lvl import exp_gain, get_rank
 import maintenance.server_utils as su
+
+logger = logging.getLogger('SkyNet-Core')
 
 source = os.path.dirname(os.path.abspath(__file__))
 config_file = source + '/../config.json'
@@ -63,7 +64,7 @@ class CommunityCommands(commands.Cog):
         place = get(guild.categories, name=maintenance['tmpCatName'])
 
         embed = discord.Embed(title='empty', color=discord.Color.dark_grey())
-        
+
         if not place:
             place = await su.create_category(guild=guild, name=maintenance['tmpCatName'], member='SkyNet Bot', embed=embed)
         vc, embed = await su.create_voicechannel(guild=guild, name=maintenance['tempChannelName'], userlimit=userlimit, place=place, embed=embed)

@@ -1,10 +1,10 @@
-import discord,os
+import discord, os, logging, platform, psutil
 from discord import colour
 from discord.ext import commands
-import logging,platform,psutil
 from meeseeks_bot import maintenance
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('SkyNet-Core')
+
 source = os.path.dirname(os.path.abspath(__file__))
 
 class InfoCommands(commands.Cog):

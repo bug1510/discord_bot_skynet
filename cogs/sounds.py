@@ -1,15 +1,9 @@
-import time
-import os
-import requests
-import discord
-import logging
-import random
+import time, os, requests, discord, logging
 from mutagen.mp3 import MP3
-from discord.ext.commands import bot
 from discord.ext import commands
-from discord.utils import get
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('SkyNet-Core')
+
 source = os.path.dirname(os.path.abspath(__file__))
 
 

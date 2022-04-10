@@ -1,10 +1,11 @@
-import random, discord
+import random, discord, ssl, logging
 from discord.ext import commands
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from maintenance.embed_builder import build_embed
 
-import ssl
+logger = logging.getLogger('SkyNet-Core')
+
 ssl._create_default_https_context = ssl._create_unverified_context
 
 class NightClubCommands(commands.Cog):

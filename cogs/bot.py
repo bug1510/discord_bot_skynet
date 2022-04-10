@@ -4,7 +4,7 @@ from maintenance.embed_builder import build_embed
 from discord.ext import commands
 
 source = os.path.dirname(os.path.abspath(__file__))
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('SkyNet-Core')
 
 class BotCommands(commands.Cog):
     def __init__(self, bot):

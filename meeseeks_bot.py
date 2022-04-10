@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from logging.handlers import TimedRotatingFileHandler
 import discord, os, json, sys, getopt, logging
 from discord.ext import commands
 from datetime import datetime
@@ -27,15 +28,27 @@ class MeeseeksCore(commands.Bot):
 
     async def init_logger(self):
         # logging
-        ## check log folder 
+        ## check log folder
+
         if not os.path.exists(logpath):
             os.makedirs(logpath)
-        logging.basicConfig(
-            filename= logpath + '/' + str(today) + '_discord_bot.log',
-            format='%(asctime)s - %(name)s - %(levelname)s | %(message)s',
-            level=logging.INFO
+
+        self.logger = logging.getLogger('SkyNet-Core')
+        self.logger.setLevel(logging.INFO)
+
+        format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s | %(message)s')
+
+        rotatinglogs = TimedRotatingFileHandler(
+            filename=logpath + '/' + str(today) + '_discord_bot.log',
+            when="midnight",
+            interval=1,
+            backupCount=5
             )
-        self.logger = logging.getLogger(__name__)
+        rotatinglogs.setLevel(logging.INFO)
+        rotatinglogs.setFormatter(format)
+
+        self.logger.addHandler(rotatinglogs)
+
 
     async def init_modules(self):
         #this loop collects all modules in cogs and put them in initial_extension

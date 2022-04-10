@@ -5,7 +5,8 @@ from discord import member
 from discord.ext import commands
 from discord.utils import get
 import logging
-logger = logging.getLogger(__name__)
+
+logger = logging.getLogger('SkyNet-Core')
 
 class MemberCommands(commands.Cog):
     def __init__(self, bot):
