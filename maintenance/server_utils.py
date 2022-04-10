@@ -139,7 +139,7 @@ async def create_textchannel(guild, name, place, embed):
                 inline=False
             )
         else:
-            logger.info(f'The Text Channels for {place} was created')
+            logger.info(f'The Text Channels for {place} were created')
             embed.add_field(
                 name= '!Success creating Text Channel!',
                 value= f'Der Textkanal für {place} wurde erstellt',
@@ -164,13 +164,13 @@ async def create_voicechannel(guild, name, userlimit, place, embed):
     counter = 0
     vc = ''
 
-    try:
+    try:    
         for c in name:
             vc = await guild.create_voice_channel(name=c, category=place, user_limit=userlimit)
-            counter + 1 
+            counter = counter + 1 
 
         if counter == 1:
-            logger.info(f'The Voice Channel for {place} were created')
+            logger.info(f'The Voice Channel for {place} was created')
             embed.add_field(
                 name= '!Success creating Voice Channel!',
                 value= f'Die Sprachkanal für {place} wurden erstellt.',
