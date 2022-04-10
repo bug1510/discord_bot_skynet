@@ -9,3 +9,4 @@ __pycache__
 *.jpg
 *.mp3
 meeseeks_venv
+cogs/jfw.py

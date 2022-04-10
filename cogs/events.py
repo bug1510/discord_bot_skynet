@@ -1,5 +1,6 @@
 import json, os, logging, discord
 from discord.ext import commands
+import maintenance.embed_builder as meb
 
 logger = logging.getLogger('SkyNet-Core.Events')
 
@@ -33,6 +34,13 @@ class Events(commands.Cog):
                 inline=False
                 )
                 await channel.send(embed=embed)
+
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
+
+        embed = await meb.build_embed(title='Na huch!', description='Das ist leider schief gegangen!\n Versuch es doch mal mit !help', color=discord.Color.red())
+        embed.add_field(name='Es lag wohl hier dran:', value=error)
+        await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Events(bot))
