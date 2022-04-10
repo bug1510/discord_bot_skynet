@@ -19,7 +19,6 @@ conf.close()
 initial_extension = maintenance['modules']
 
 intents = discord.Intents.default()
-intents.voice_states = True
 intents.members = True
 
 class MeeseeksCore(commands.Bot):
@@ -114,7 +113,8 @@ class MeeseeksCore(commands.Bot):
 
 client = MeeseeksCore(command_prefix='!', 
 description=maintenance['botName'] + maintenance['version'],
-help_command = commands.DefaultHelpCommand(no_category = 'Help')
+help_command = commands.DefaultHelpCommand(no_category = 'Help'),
+intents=intents
 )
 
 if __name__ == '__main__':
