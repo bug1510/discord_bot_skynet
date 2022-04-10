@@ -2,7 +2,7 @@ import time, os, requests, discord, logging
 from mutagen.mp3 import MP3
 from discord.ext import commands
 
-logger = logging.getLogger('SkyNet-Core')
+logger = logging.getLogger('SkyNet-Core.Sounds')
 
 source = os.path.dirname(os.path.abspath(__file__))
 

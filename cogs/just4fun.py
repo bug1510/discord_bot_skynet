@@ -9,7 +9,7 @@ from discord.ext.commands import bot
 from discord.ext import commands
 from discord.utils import get
 
-logger = logging.getLogger('SkyNet-Core')
+logger = logging.getLogger('SkyNet-Core.Just4Fun')
 
 source = os.path.dirname(os.path.abspath(__file__))
 

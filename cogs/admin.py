@@ -4,7 +4,7 @@ from discord.utils import get
 
 import maintenance.server_utils as su
 
-logger = logging.getLogger('SkyNet-Core')
+logger = logging.getLogger('SkyNet-Core.AdminCommands')
 
 source = os.path.dirname(os.path.abspath(__file__))
 config_file = source + '/../config.json'

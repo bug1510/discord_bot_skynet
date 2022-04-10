@@ -3,7 +3,7 @@ from discord import colour
 from discord.ext import commands
 from meeseeks_bot import maintenance
 
-logger = logging.getLogger('SkyNet-Core')
+logger = logging.getLogger('SkyNet-Core.InfoCommands')
 
 source = os.path.dirname(os.path.abspath(__file__))
 

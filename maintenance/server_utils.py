@@ -1,7 +1,7 @@
 import discord, logging, os, json
 from discord.utils import get
 
-logger = logging.getLogger('SkyNet-Core')
+logger = logging.getLogger('SkyNet-Core.Server_Utils')
 
 source = os.path.dirname(os.path.abspath(__file__))
 config_file = source + '/../config.json'

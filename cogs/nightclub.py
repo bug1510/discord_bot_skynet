@@ -4,7 +4,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from maintenance.embed_builder import build_embed
 
-logger = logging.getLogger('SkyNet-Core')
+logger = logging.getLogger('SkyNet-Core.NightClubCommands')
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
