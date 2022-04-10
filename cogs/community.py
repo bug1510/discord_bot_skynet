@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord.utils import get
 import sqlite3, json, os
 from leveling.lvl import exp_gain, get_rank
+import maintenance.server_utils as su
 
 source = os.path.dirname(os.path.abspath(__file__))
 config_file = source + '/../config.json'
@@ -55,30 +56,42 @@ class CommunityCommands(commands.Cog):
             return
 
     @commands.command(name='tcc')
-    async def create_temp_channel(self, ctx):
+    async def create_temp_channel(self, ctx, userlimit=0):
         '''Erstellt dir und deinen Freunden einen Temporären Raum.'''
         guild = ctx.message.guild
         member = ctx.message.author
-        tmp_cat_name = maintenance['tmpCatName']
-        category = get(guild.categories, name=tmp_cat_name)
+        place = get(guild.categories, name=maintenance['tmpCatName'])
 
-        if not category:
-            category = await guild.create_category_channel(name=tmp_cat_name, position=0)
-        userlimit = maintenance['userLimit']
-        tmp_channel = await guild.create_voice_channel(name=maintenance['tempChannelName'], category=category, user_limit=userlimit)
+        embed = discord.Embed(title='empty', color=discord.Color.dark_grey())
+        
+        if not place:
+            place = await su.create_category(guild=guild, name=maintenance['tmpCatName'], member='SkyNet Bot', embed=embed)
+        vc, embed = await su.create_voicechannel(guild=guild, name=maintenance['tempChannelName'], userlimit=userlimit, place=place, embed=embed)
 
-        await member.move_to(tmp_channel)
+        try:
+            await member.move_to(vc)
+        except:
+            return
+        
         await ctx.message.delete()
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
         guild = member.guild
-        category = get(guild.categories, name=maintenance['tmpCatName'])
-        for vc in category.voice_channels:
+        place = get(guild.categories, name=maintenance['tmpCatName'])
+
+        embed = discord.Embed(title='empty', color=discord.Color.dark_grey())
+
+        tmp_channel_name = ''
+
+        for c in maintenance['tempChannelName']:
+            tmp_channel_name += c
+
+        for vc in place.voice_channels:
             vs = vc.voice_states
-            if str(vc)==maintenance['tempChannelName']:
+            if str(vc) == str(tmp_channel_name):
                 if not vs:
-                    await vc.delete()
+                    await su.delete_voicechannel(place=place, name=vc, member='SkyNet Bot', embed=embed)
 
 def setup(bot):
     bot.add_cog(CommunityCommands(bot))

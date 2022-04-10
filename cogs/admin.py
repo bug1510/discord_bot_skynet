@@ -28,6 +28,9 @@ class AdminCommands(commands.Cog):
         member = ctx.message.author
         logger.info(f'{member} tried to create a space {space_name}')
 
+        tc = ''
+        vc = ''
+
         user_icon = ctx.message.author.avatar_url_as(static_format='png', size=128)
 
         user = member.display_name
@@ -45,9 +48,9 @@ class AdminCommands(commands.Cog):
 
         embed = await su.set_standard_permission_for_cat(guild=guild, place=place, role=role, embed=embed)
 
-        embed = await su.create_textchannel(guild=guild, name=maintenance['standardTextChannels'], place=place, embed=embed)
+        tc, embed = await su.create_textchannel(guild=guild, name=maintenance['standardTextChannels'], place=place, embed=embed)
 
-        embed = await su.create_voicechannel(guild=guild, name=maintenance['standardVoiceChannels'],userlimit=maintenance['userLimit'], place=place, embed=embed)
+        vc, embed = await su.create_voicechannel(guild=guild, name=maintenance['standardVoiceChannels'],userlimit=maintenance['userLimit'], place=place, embed=embed)
 
         await ctx.send(embed=embed)
         await ctx.message.delete()

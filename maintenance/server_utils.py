@@ -128,7 +128,7 @@ async def create_textchannel(guild, name, place, embed):
 
     try:
         for c in name:
-            await guild.create_text_channel(name=c, category=place)
+            tc = await guild.create_text_channel(name=c, category=place)
             counter + 1
         if counter == 1:
             logger.info(f'The Text Channel for {place} was created')
@@ -156,15 +156,16 @@ async def create_textchannel(guild, name, place, embed):
             value=e
         )
     finally:
-        return embed
+        return tc, embed
 
 async def create_voicechannel(guild, name, userlimit, place, embed):
 
     counter = 0
+    vc = ''
 
     try:
         for c in name:
-            await guild.create_voice_channel(name=c, category=place, user_limit=userlimit)
+            vc = await guild.create_voice_channel(name=c, category=place, user_limit=userlimit)
             counter + 1 
 
         if counter == 1:
@@ -194,7 +195,7 @@ async def create_voicechannel(guild, name, userlimit, place, embed):
             value=e
         )
     finally:
-        return embed
+        return vc, embed
 
 async def delete_voicechannel(place, name, member, embed):
 
