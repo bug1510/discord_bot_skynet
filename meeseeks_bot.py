@@ -9,7 +9,7 @@ today = datetime.now()
 today = today.strftime("%Y%m%d")
 source = os.path.dirname(os.path.abspath(__file__))
 logpath = source + '/logs/'
-config_file = source + '/config.json'
+config_file = source + '/data/config.json'
 
 conf = open(config_file, "r")
 maintenance = json.load(conf)
@@ -38,7 +38,7 @@ class MeeseeksCore(commands.Bot):
         format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s | %(message)s')
 
         rotatinglogs = TimedRotatingFileHandler(
-            filename=logpath + '/' + str(today) + '_discord_bot.log',
+            filename=logpath + '/skynet_bot.log',
             when="midnight",
             interval=1,
             backupCount=5

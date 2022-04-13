@@ -1,6 +1,6 @@
 import logging, os, discord
 from meeseeks_bot import maintenance
-from maintenance.embed_builder import build_embed
+from utils.embed_builder import build_embed
 from discord.ext import commands
 
 source = os.path.dirname(os.path.abspath(__file__))

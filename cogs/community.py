@@ -2,12 +2,12 @@ import discord, sqlite3, json, os, logging
 from discord.ext import commands
 from discord.utils import get
 from leveling.lvl import exp_gain, get_rank
-import maintenance.server_utils as su
+import utils.server_utils as su
 
 logger = logging.getLogger('SkyNet-Core.CommunityCommands')
 
 source = os.path.dirname(os.path.abspath(__file__))
-config_file = source + '/../config.json'
+config_file = source + '/../data/config.json'
 
 conf = open(config_file)
 maintenance = json.load(conf)
@@ -22,7 +22,7 @@ class CommunityCommands(commands.Cog):
     async def init_leveling_db(self, ctx):
         '''Initialisiert das Leveling auf deinem Server. Also viel Spaß!'''
         guild_id = ctx.message.author.guild.id
-        con = sqlite3.connect(f'{guild_id}.db')
+        con = sqlite3.connect(f'{source}/../data/{guild_id}.db')
         cur = con.cursor()
         cur.execute("""Create Table IF NOT EXISTS leveling
         (dc_user_nick text, dc_user_id integer, tw_user_nick text, tw_user_id integer, level integer NOT NULL DEFAULT 1, exp integer NOT NULL DEFAULT 0)""")

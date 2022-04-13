@@ -4,9 +4,9 @@ from discord.utils import get
 logger = logging.getLogger('SkyNet-Core.Server_Utils')
 
 source = os.path.dirname(os.path.abspath(__file__))
-config_file = source + '/../config.json'
+config_file = source + '/../data/config.json'
 
-permissions_file = source + '/permissions.json'
+permissions_file = source + '/../data/permissions.json'
 
 conf = open(config_file)
 maintenance = json.load(conf)
