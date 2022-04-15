@@ -76,7 +76,7 @@ class MeeseeksCore(commands.Bot):
 
     def usage():
         print("""
-            Meeseeks Bot - have fun to use
+            SkyNet Bot - have fun to use
             
             usage:
 
@@ -86,9 +86,9 @@ class MeeseeksCore(commands.Bot):
 
             example:
 
-                use mbot.json as config and write logfile to /var/log/
+                use sbot.json as config and write logfile to /var/log/
 
-                meeseeks_bot.py -c /home/dev/document/mbot.json -l /var/log/
+                skynet_bot.py -c /home/dev/document/sbot.json -l /var/log/
 
         """)
 

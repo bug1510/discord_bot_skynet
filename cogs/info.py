@@ -1,7 +1,7 @@
 import discord, os, logging, platform, psutil
 from discord import colour
 from discord.ext import commands
-from meeseeks_bot import maintenance
+from skynet_bot import maintenance
 
 logger = logging.getLogger('SkyNet-Core.InfoCommands')
 

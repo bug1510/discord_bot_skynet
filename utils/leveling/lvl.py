@@ -1,5 +1,5 @@
 import sqlite3, os
-from meeseeks_bot import maintenance
+from skynet_bot import maintenance
 
 source = os.path.dirname(os.path.abspath(__file__))
 
