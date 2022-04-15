@@ -34,7 +34,7 @@ class InfoCommands(commands.Cog):
                         value=RamInfoField,
                         inline=False) 
 
-        file = discord.File(source + "/../img/confidential.png", filename="confidential.png")
+        file = discord.File(source + "/../data/img/confidential.png", filename="confidential.png")
         embed.set_thumbnail(url="attachment://confidential.png")
 
         await context.send(file=file,embed=embed)

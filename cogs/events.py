@@ -1,11 +1,11 @@
 import json, os, logging, discord
 from discord.ext import commands
-import utils.embed_builder as meb
+import utils.maintenance.embed_builder as meb
 
 logger = logging.getLogger('SkyNet-Core.Events')
 
 source = os.path.dirname(os.path.abspath(__file__))
-config_file = source + '/../data/config.json'
+config_file = source + '/../data/config/config.json'
 
 conf = open(config_file)
 maintenance = json.load(conf)

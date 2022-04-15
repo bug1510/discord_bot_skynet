@@ -15,7 +15,7 @@ class Sounds(commands.Cog):
     async def clown(self, ctx):
         """ top secret """
 
-        CacheFile = source + '/../tmp/sound.mp3'
+        CacheFile = source + '/../data/tmp/sound.mp3'
         URLFile = requests.get('http://api.pleaseclown.me/')
         with open(CacheFile, 'wb') as file:
             file.write(URLFile.content)

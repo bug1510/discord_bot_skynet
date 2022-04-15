@@ -2,7 +2,7 @@ import random, discord, ssl, logging
 from discord.ext import commands
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-from utils.embed_builder import build_embed
+from utils.maintenance.embed_builder import build_embed
 
 logger = logging.getLogger('SkyNet-Core.NightClubCommands')
 

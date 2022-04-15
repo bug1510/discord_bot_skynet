@@ -9,7 +9,7 @@ today = datetime.now()
 today = today.strftime("%Y%m%d")
 source = os.path.dirname(os.path.abspath(__file__))
 logpath = source + '/logs/'
-config_file = source + '/data/config.json'
+config_file = source + '/data/config/config.json'
 
 conf = open(config_file, "r")
 maintenance = json.load(conf)

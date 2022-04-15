@@ -52,7 +52,7 @@ class Just4Fun(commands.Cog):
                               description=EmbededMessage,
                               color=discord.Color.purple())
 
-        file = discord.File(source + "/../img/lol.png", filename="lol.png")
+        file = discord.File(source + "/../data/img/lol.png", filename="lol.png")
         embed.set_thumbnail(url="attachment://lol.png")
         await ctx.send(file=file, embed=embed)
         await ctx.message.delete()

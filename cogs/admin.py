@@ -5,12 +5,12 @@ import logging
 from discord.ext import commands
 from discord.utils import get
 
-import utils.server_utils as su
+import utils.maintenance.server_utils as su
 
 logger = logging.getLogger('SkyNet-Core.AdminCommands')
 
 source = os.path.dirname(os.path.abspath(__file__))
-config_file = source + '/../data/config.json'
+config_file = source + '/../data/config/config.json'
 
 conf = open(config_file)
 maintenance = json.load(conf)
