@@ -1,90 +1,133 @@
-import time
-from typing import List
-from unicodedata import name
-import discord
-from discord import member
-from discord.ext import commands
 from discord.utils import get
 import logging
+import os
+import json
 
 logger = logging.getLogger('SkyNet-Core.Member_Utils')
 
-async def adding_roles(member, roles, embed):
+source = os.path.dirname(os.path.abspath(__file__))
+config_file = source + '/../../data/config/config.json'
+
+conf = open(config_file)
+maintenance = json.load(conf)
+conf.close()
+
+async def adding_roles(guild, member, roles, embed):
+
+    highestrole = get(guild.roles, name=maintenance['highestSelfGiveableRole'])
+    lowestrole = get(guild.roles, name=maintenance['lowestSelfGiveableRole'])
 
     added_roles = ''
     not_added_roles = ''
+    
+    try:
+        if roles == 'All':
+            for role in guild.roles:
+                if role.position < highestrole.position and role.position > lowestrole.position:
+                    await member.add_roles(role)
+                    added_roles += str(role) + '\n'
 
-    if roles.find(",") > 0:
-        para = roles.split(",")
-    else:
-        para = [roles]
-
-    for e in para:
-        role = get(member.guild.roles, name=e)
-        # prüfe ob die gewünschte Rolle in der hirarchie höher liegt als die erlaubte
-        if role.position < highestrole.position:
-            await member.add_roles(role)
-            
             embed.add_field(
-                name='!Success adding roles!',
-                value=added_roles
+                name=f'@{member}´s neue Rollen',
+                value=added_roles,
+                inline=False
                 )
-            
-            logger.info(f'{member} hat die Rolle {role} zugewiesen bekommen')
+                
+        elif roles.find(",") > 0:
+            para = roles.split(",")
         else:
-            
-            embed.add_field(
-                name='!Error adding Roles!',
-                value=not_added_roles
-                )
-            logger.info(f'{member} hat versucht eine Rolle hinzuzufügen die höher als die, welche erlaubt sind')
-            
+            para = [roles]
 
-async def removing_roles(member, roles, embed):
-
-        if role.find(",") > 0:
-            # mehrere Rollen gefunden
-            multi = True
-            para = role.split(",")
-        else:
-            # nur eine Rolle
-            multi = False
-            para = role
-
-        # definiere variablen
-        member = ctx.message.author
-        logger.info(str(member) + ' called addrole')
-        highestrole = get(ctx.guild.roles, name='Nutzer')
-
-        await ctx.send(':sparkles:' + '*poof*' + ':sparkles:')
-        await ctx.send('Was willst du?')
-        time.sleep(1)
-
-        # prüfen ob mehrere Rollen hinzugefügt werden müssen
-        if multi:
-            # durchlaufe das array für jeden eintrag
-            for e in para:
-                role = get(member.guild.roles, name=e)
-                # prüfe ob die gewünschte Rolle in der hirarchie höher liegt als die erlaubte
-                if role.position < highestrole.position:
-                    await member.remove_roles(role)
-                    await ctx.send('Du willst die Rolle ' + str(role) + ' nicht mehr? oh ja, das kann ich für dich tun!')
-                    logger.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
-                    time.sleep(0.5)
-                else:
-                    await ctx.send('kann die Rolle ' + str(role) + ' nicht entfernen')
-                    logger.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
-        else:
-            role = get(member.guild.roles, name=para)
-            # prüfe ob die gewünschte Rolle in der hirarchie höher liegt als die erlaubte
-            if role.position < highestrole.position:
-                await member.remove_roles(role)
-                await ctx.send('Du willst die Rolle ' + str(role) + ' nicht mehr? oh ja, das kann ich für dich tun!')
-                logger.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
-                time.sleep(0.5)
+        for e in para:
+            role = get(member.guild.roles, name=e)
+            # prüfe ob die gewünschte Rolle in der hirarchie höher oder niedriger liegt als die erlaubte
+            if role.position < highestrole.position and role.position > lowestrole.position:
+                await member.add_roles(role)
+                
+                embed.add_field(
+                    name='!Success adding roles!',
+                    value=added_roles
+                    )
+                
+                logger.info(f'{member} hat die Rolle {role} zugewiesen bekommen')
             else:
-                await ctx.send('kann die Rolle ' + str(role) + ' nicht entfernen')
-                logger.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
+                
+                embed.add_field(
+                    name='!Error adding Roles!',
+                    value=not_added_roles
+                    )
+                logger.warning(f'{member} hat versucht eine Rolle zu bekommen die nicht gemanagt ist.')
+    except Exception as e:
+        logger.warning(f'While adding roles to {member} went something wrong: {e}.')
+        embed.add_field(
+            name= '!Failure adding Roles',
+            value= f'Beim hinzufügen der Rollen ist etwas schief gegangen,\nüberprüfe bitte deine Eingabe.',
+            inline=False
+        )
+        embed.add_field(
+            name='Error',
+            value=e
+        )
+    finally:
+        return embed
 
-        await ctx.send(':sparkles:' + '*poof*' + ':sparkles:')
-        await ctx.message.delete()  
+async def removing_roles(guild, member, roles, embed):
+
+    highestrole = get(guild.roles, name=maintenance['highestSelfGiveableRole'])
+    lowestrole = get(guild.roles, name=maintenance['lowestSelfGiveableRole'])
+
+    removed_roles = ''
+    not_removed_roles = ''
+
+    try:
+        if roles == 'All':
+            for role in guild.roles:
+                if role.position < highestrole.position and role.position > lowestrole.position:
+                    await member.remove_roles(role)
+                    removed_roles += str(role) + '\n'
+
+            embed.add_field(
+                name=f'@{member}´s neue Rollen',
+                value=removed_roles,
+                inline=False
+                )
+        
+        if roles.find(",") > 0:
+            para = roles.split(",")
+        else:
+            para = [roles]
+
+        for e in para:
+            role = get(member.guild.roles, name=e)
+            # prüfe ob die gewünschte Rolle in der hirarchie höher oder niedriger liegt als die erlaubte
+            if role.position < highestrole.position and role.position > lowestrole.position:
+                await member.remove_roles(role)
+                
+                embed.add_field(
+                    name='!Success adding roles!',
+                    value=removed_roles
+                    )
+                
+                logger.info(f'{member} hat die Rolle {role} zugewiesen bekommen')
+            else:
+                
+                embed.add_field(
+                    name='!Error adding Roles!',
+                    value=not_removed_roles
+                    )
+                logger.warning(f'{member} hat versucht eine Rolle zu bekommen die nicht gemanagt ist.')
+
+    except Exception as e:
+        logger.warning(f'While removing roles from {member} went something wrong: {e}.')
+        embed.add_field(
+            name= '!Failure removing Roles',
+            value= f'Beim entfernen der Rollen ist etwas schief gegangen,\nüberprüfe bitte deine Eingabe.',
+            inline=False
+        )
+        embed.add_field(
+            name='Error',
+            value=e
+        )
+
+    finally:
+        return embed

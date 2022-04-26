@@ -1,10 +1,7 @@
-import time
-from typing import List
 import discord
-from discord import member
 from discord.ext import commands
-from discord.utils import get
 import logging
+import utils.member.member_utils as mu
 
 logger = logging.getLogger('SkyNet-Core.MemberCommands')
 
@@ -12,140 +9,81 @@ class MemberCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # Die folgenden Zeilen sind das Rollen Feature des Kirkland Meeseeks.
+    # @commands.command()
+    # async def lsrole(self, context):
+
+    #     """Dieser Befehl Listet dir die für dich bereits verfügbaren Rollen auf"""
+
+    #     lowest = get(context.guild.roles, name='@everyone')
+    #     highestrole = get(context.guild.roles, name='Nutzer')
+    #     member = context.message.author
+    #     logger.info(str(member) + ' called lsrole')
+    #     ListRolesField = ''
+
+    #     for role in context.guild.roles:
+    #         if role.position < highestrole.position and role.position > lowest.position:
+    #             ListRolesField += str(role) + '\n'
+    #         else:
+    #             pass
+
+    #     embed = discord.Embed(
+    #         title='List of Gamingroles',
+    #         description=ListRolesField,
+    #         color=discord.Color.blue()
+    #     )
+    #     await context.send(embed=embed)
+    #     await context.message.delete()
 
     @commands.command()
+    async def addrole(self, ctx, roles, member=None):
 
-    # Der !lsrole Befehl Listet die bereits verfügbaren Rollen auf.
+        """Vergibt eine oder mehrere Rollen. Gib All an für Alle verfügbaren Rollen (Mit Komma getrennt aber ohne Leerzeichen angeben!)"""
 
-    async def lsrole(self, context):
+        if member:
+            member = member
+        else:
+            member = ctx.message.author
 
-        """Dieser Befehl Listet dir die für dich bereits verfügbaren Rollen auf"""
+        guild = ctx.message.guild
+        user = ctx.message.author.display_name
 
-        lowest = get(context.guild.roles, name='@everyone')
-        highestrole = get(context.guild.roles, name='Nutzer')
-        member = context.message.author
-        logger.info(str(member) + ' called lsrole')
-        ListRolesField = ''
-
-        for role in context.guild.roles:
-            if role.position < highestrole.position and role.position > lowest.position:
-                ListRolesField += str(role) + '\n'
-            else:
-                pass
+        logger.info(str(member) + ' called addrole')
 
         embed = discord.Embed(
-            title='List of Gamingroles',
-            description=ListRolesField,
-            color=discord.Color.blue()
-        )
-        await context.send(embed=embed)
-        await context.message.delete()
+            title='Adding Roles',
+            description=f'{user} hat hinzufügen von Rollen ausgelöst.',
+            color=discord.Color.dark_gold()
+            )
 
-    @commands.command()
-
-    # Der !addrole Befehl fügt einem Nutzer eine bestimmte Rolle an.
-    # Sicherheitsfunktion zu Testzwecken, kann nach Konfiguration deaktiviert werden.
-    # @commands.has_role("Der Architekt")
-
-    async def addrole(self, ctx, role):
-
-        """fügt dir eine, oder mehrere Gamingrollen hinzu (mit Komma getrennt), 
-        damit du die richtigen Kategorien siehst"""
-
-        member = ctx.message.author
-        logger.info(str(member) + ' called addrole')
-        highestrole = get(ctx.guild.roles, name='Nutzer')
+        mu.adding_roles(guild=guild, member=member, roles=roles, embed=embed)
 
         await ctx.send(embed=embed)
-        # prüfe ob ein Komma in rolename vorhanden ist , wenn ja werden mehrere Rollen hinzugefügt
-
-          
 
     @commands.command()
+    async def rmrole(self, ctx, roles, member=None):
 
-    # Der !addall Befehl fügt einem Nutzer alle Verfügbaren Rollen an.
-    # Sicherheitsfunktion zu Testzwecken, kann nach Konfiguration deaktiviert werden.
-    # @commands.has_role("Der Architekt")
+        """Entfernt eine oder mehrere Rollen. Gib All an für Alle verfügbaren Rollen (Mit Komma getrennt aber ohne Leerzeichen angeben!)"""
 
-    async def addall(self, context):
+        if member:
+            member = member
+        else:
+            member = ctx.message.author
 
-        """Du glaubst jedes Spiel zu haben? 
-        Dann gib dir doch fix einfach alle Gamingrollen um überall mit zu mischen"""
+        guild = ctx.message.guild
+        user = ctx.message.author.display_name
+        member = ctx.message.author
 
-        author = context.message.author
-        nick = author.display_name
-        lowest = get(context.guild.roles, name='@everyone')
-        highestrole = get(context.guild.roles, name='Nutzer')
-        smbed = discord.Embed(
-            title=':sparkles:' + '*poof*' + ':sparkles:',
-            description='Ich bin Mr Meeseeks, schaut mich an.\nAlle Rollen? Oh ja, das kann ich für dich tun!',
-            color=discord.Color.green()
+        logger.info(str(member) + ' called rmrole')
+
+        embed = discord.Embed(
+            title='Removing Roles',
+            description=f'{user} hat das entfernen von Rollen ausgelöst.',
+            color=discord.Color.dark_gold()
             )
-        addedroles = ''
 
-        for role in context.guild.roles:
-            if role.position < highestrole.position and role.position > lowest.position:
-                await author.add_roles(role)
-                addedroles += str(role) + '\n'
-        
-        addedroles += ' \n'
-        smbed.add_field(
-            name=f'@{nick}´s neue Rollen',
-            value=addedroles+':sparkles:' + '*poof*' + ':sparkles:',
-            inline=False
-            )
-        await context.send(embed=smbed)
-        await context.message.delete()
+        mu.removing_roles(guild=guild, member=member, roles=roles, embed=embed)
 
-    @commands.command()
-
-    # Der !rmrole Befehl entfernt eine bestimmte Rolle von einem Nutzer.
-    # Sicherheitsfunktion zu Testzwecken, kann nach Konfiguration deaktiviert werden.
-    # @commands.has_role("Der Architekt")
-
-    async def rmrole(self, context, rolename):
-
-        """nimmt dir eine oder mehrere Rollen ab (mit Komma getrennt), um dein Interface sauber zu halten."""
-
-        # prüfe ob ein Komma in rolename vorhanden ist , wenn ja werden mehrere Rollen entfernt
-
-
-    @commands.command()
-
-    # Der !rmall Befehl enfernt alle Rollen von einem Nutzer.
-    # Sicherheitsfunktion zu Testzwecken, kann nach Konfiguration deaktiviert werden.
-    # @commands.has_role("Der Architekt")
-
-    async def rmall(self, context):
-
-        """Keine Lust mehr auf Gaming? Dann nimm dir doch einfach alle Rollen"""
-
-        author = context.message.author
-        nick = author.display_name
-        lowest = get(context.guild.roles, name='@everyone')
-        highestrole = get(context.guild.roles, name='Nutzer')
-        smbed = discord.Embed(
-            title=':sparkles:' + '*poof*' + ':sparkles:',
-            description='Ich bin Mr Meeseeks, schaut mich an.\nAlle Rollen abgeben?\nOh ja, das kann ich für dich tun!',
-            color=discord.Color.dark_orange()
-            )
-        addedroles = ''
-
-        for role in context.guild.roles:
-            if role.position < highestrole.position and role.position > lowest.position:
-                await author.remove_roles(role)
-                addedroles += str(role) + '\n'
-        
-        addedroles += ' \n'
-        smbed.add_field(
-            name=f'@{nick}´s entfernte Rollen',
-            value=addedroles+':sparkles:' + '*poof*' + ':sparkles:',
-            inline=False
-            )
-        await context.send(embed=smbed)
-        await context.message.delete()
-
+        await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(MemberCommands(bot))
