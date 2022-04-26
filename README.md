@@ -1,4 +1,4 @@
-# Meeseeks Bot
+# SkyNet Bot
 
 the mindblowing Way to manage your Discord Server
 
