@@ -5,7 +5,7 @@ import logging
 from discord.ext import commands
 from discord.utils import get
 
-import utils.maintenance.server_utils as su
+import utils.server.server_utils as su
 
 logger = logging.getLogger('SkyNet-Core.AdminCommands')
 

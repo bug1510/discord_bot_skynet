@@ -48,59 +48,19 @@ class MemberCommands(commands.Cog):
     # Sicherheitsfunktion zu Testzwecken, kann nach Konfiguration deaktiviert werden.
     # @commands.has_role("Der Architekt")
 
-    async def addrole(self, context, rolename):
+    async def addrole(self, ctx, role):
 
         """fügt dir eine, oder mehrere Gamingrollen hinzu (mit Komma getrennt), 
         damit du die richtigen Kategorien siehst"""
 
+        member = ctx.message.author
+        logger.info(str(member) + ' called addrole')
+        highestrole = get(ctx.guild.roles, name='Nutzer')
+
+        await ctx.send(embed=embed)
         # prüfe ob ein Komma in rolename vorhanden ist , wenn ja werden mehrere Rollen hinzugefügt
 
-        if rolename.find(",") > 0:
-            # mehrere Rollen gefunden
-            multi = True
-            para = rolename.split(",")
-        else:
-            # nur eine Rolle
-            multi = False
-            para = rolename
-
-        # definiere variablen
-        member = context.message.author
-        logger.info(str(member) + ' called addrole')
-        highestrole = get(context.guild.roles, name='Nutzer')
-
-        await context.send(':sparkles:' + '*poof*' + ':sparkles:')
-        await context.send('Was willst du?')
-        time.sleep(1)
-
-        # prüfen ob mehrere Rollen hinzugefügt werden müssen
-        if multi:
-            # durchlaufe das array für jeden eintrag
-            for e in para:
-                role = get(member.guild.roles, name=e)
-                # prüfe ob die gewünschte Rolle in der hirarchie höher liegt als die erlaubte
-                if role.position < highestrole.position:
-                    await member.add_roles(role)
-                    await context.send('Die Rolle ' + str(role) + ' ? oh ja, das kann ich für dich tun!')
-                    logger.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
-                    time.sleep(0.5)
-                else:
-                    await context.send('kann die Rolle ' + str(role) + ' nicht hinzufügen')
-                    logger.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
-        else:
-            role = get(member.guild.roles, name=para)
-            # prüfe ob die gewünschte Rolle in der hirarchie höher liegt als die erlaubte
-            if role.position < highestrole.position:
-                await member.add_roles(role)
-                await context.send('Die Rolle ' + str(role) + ' ? oh ja, das kann ich für dich tun!')
-                logger.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
-                time.sleep(0.5)
-            else:
-                await context.send('kann die Rolle ' + str(role) + ' nicht hinzufügen')
-                logger.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
-
-        await context.send(':sparkles:' + '*poof*' + ':sparkles:')
-        await context.message.delete()           
+          
 
     @commands.command()
 
@@ -150,52 +110,6 @@ class MemberCommands(commands.Cog):
 
         # prüfe ob ein Komma in rolename vorhanden ist , wenn ja werden mehrere Rollen entfernt
 
-        if rolename.find(",") > 0:
-            # mehrere Rollen gefunden
-            multi = True
-            para = rolename.split(",")
-        else:
-            # nur eine Rolle
-            multi = False
-            para = rolename
-
-        # definiere variablen
-        member = context.message.author
-        logger.info(str(member) + ' called addrole')
-        highestrole = get(context.guild.roles, name='Nutzer')
-
-        await context.send(':sparkles:' + '*poof*' + ':sparkles:')
-        await context.send('Was willst du?')
-        time.sleep(1)
-
-        # prüfen ob mehrere Rollen hinzugefügt werden müssen
-        if multi:
-            # durchlaufe das array für jeden eintrag
-            for e in para:
-                role = get(member.guild.roles, name=e)
-                # prüfe ob die gewünschte Rolle in der hirarchie höher liegt als die erlaubte
-                if role.position < highestrole.position:
-                    await member.remove_roles(role)
-                    await context.send('Du willst die Rolle ' + str(role) + ' nicht mehr? oh ja, das kann ich für dich tun!')
-                    logger.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
-                    time.sleep(0.5)
-                else:
-                    await context.send('kann die Rolle ' + str(role) + ' nicht entfernen')
-                    logger.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
-        else:
-            role = get(member.guild.roles, name=para)
-            # prüfe ob die gewünschte Rolle in der hirarchie höher liegt als die erlaubte
-            if role.position < highestrole.position:
-                await member.remove_roles(role)
-                await context.send('Du willst die Rolle ' + str(role) + ' nicht mehr? oh ja, das kann ich für dich tun!')
-                logger.info(str(member) + ' hat sich die Rolle ' + str(role) + ' zugewiesen')
-                time.sleep(0.5)
-            else:
-                await context.send('kann die Rolle ' + str(role) + ' nicht entfernen')
-                logger.info(str(member) + ' hat versucht sich eine Rolle hinzuzufügen die höher als die erlaubt ist')    
-
-        await context.send(':sparkles:' + '*poof*' + ':sparkles:')
-        await context.message.delete()  
 
     @commands.command()
 

@@ -1,6 +1,6 @@
 import json, os, logging, discord
 from discord.ext import commands
-import utils.maintenance.embed_builder as meb
+import utils.server.embed_builder as meb
 
 logger = logging.getLogger('SkyNet-Core.Events')
 

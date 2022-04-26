@@ -2,7 +2,7 @@ import discord, sqlite3, json, os, logging
 from discord.ext import commands
 from discord.utils import get
 from utils.leveling.lvl import exp_gain, get_rank
-import utils.maintenance.server_utils as su
+import utils.server.server_utils as su
 
 logger = logging.getLogger('SkyNet-Core.CommunityCommands')
 

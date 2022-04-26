@@ -2,7 +2,7 @@ import logging
 import os
 import discord
 from skynet_bot import maintenance
-from utils.maintenance.embed_builder import build_embed
+from utils.server.embed_builder import build_embed
 from discord.ext import commands
 
 source = os.path.dirname(os.path.abspath(__file__))
