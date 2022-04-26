@@ -77,7 +77,6 @@ async def removing_roles(guild, member, roles, embed):
     lowestrole = get(guild.roles, name=maintenance['lowestSelfGiveableRole'])
 
     removed_roles = ''
-    not_removed_roles = ''
 
     try:
         if roles == 'All':
@@ -87,7 +86,7 @@ async def removing_roles(guild, member, roles, embed):
                     removed_roles += str(role) + '\n'
 
             embed.add_field(
-                name=f'@{member}´s neue Rollen',
+                name=f'@{member}´s entfernte Rollen',
                 value=removed_roles,
                 inline=False
                 )
@@ -99,23 +98,15 @@ async def removing_roles(guild, member, roles, embed):
 
         for e in para:
             role = get(member.guild.roles, name=e)
-            # prüfe ob die gewünschte Rolle in der hirarchie höher oder niedriger liegt als die erlaubte
             if role.position < highestrole.position and role.position > lowestrole.position:
                 await member.remove_roles(role)
                 
                 embed.add_field(
-                    name='!Success adding roles!',
+                    name='!Success removing roles!',
                     value=removed_roles
                     )
                 
-                logger.info(f'{member} hat die Rolle {role} zugewiesen bekommen')
-            else:
-                
-                embed.add_field(
-                    name='!Error adding Roles!',
-                    value=not_removed_roles
-                    )
-                logger.warning(f'{member} hat versucht eine Rolle zu bekommen die nicht gemanagt ist.')
+                logger.info(f'{member} hat die Rolle {role} entfernt bekommen')
 
     except Exception as e:
         logger.warning(f'While removing roles from {member} went something wrong: {e}.')
