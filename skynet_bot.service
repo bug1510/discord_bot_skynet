@@ -5,9 +5,9 @@ After=network.target
 
 [Service]
 Type=simple
-User=meeseeks
-Group=meeseeks
-ExecStart=python3 /home/meeseeks/mbot/meeseeks_bot.py
+User=skynet
+Group=skynet
+ExecStart=python3 /home/skynet/sbot/skynet_bot.py
 
 [Install]
 WantedBy=multi-user.target

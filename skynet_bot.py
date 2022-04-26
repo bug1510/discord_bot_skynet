@@ -21,7 +21,7 @@ initial_extension = maintenance['modules']
 intents = discord.Intents.default()
 intents.members = True
 
-class MeeseeksCore(commands.Bot):
+class SkynetCore(commands.Bot):
     def __init__(self, **options):
         super().__init__(**options)
 
@@ -111,7 +111,7 @@ class MeeseeksCore(commands.Bot):
             usage()
             sys.exit(2)
 
-client = MeeseeksCore(command_prefix='!', 
+client = SkynetCore(command_prefix='!', 
 description=maintenance['botName'] + maintenance['version'],
 help_command = commands.DefaultHelpCommand(no_category = 'Help'),
 intents=intents

@@ -1,13 +1,9 @@
-import time
 import os
 import requests
 import discord
 import logging
 import random
-from mutagen.mp3 import MP3
-from discord.ext.commands import bot
 from discord.ext import commands
-from discord.utils import get
 
 logger = logging.getLogger('SkyNet-Core.Just4Fun')
 
@@ -21,7 +17,7 @@ class Just4Fun(commands.Cog):
     @commands.command()
     # tell a joke
     async def joke(self, ctx, language="de"):
-        """Langeweile? Mr Meeseeks erzählt dir gerne ein paar Witze | Mögliche Werte für Language sind cs, fr, en, de, es, pt."""
+        """Langeweile? Skynet erzählt dir gerne ein paar Witze | Mögliche Werte für Language sind cs, fr, en, de, es, pt."""
 
         EmbededMessage = ''
         member = ctx.message.author

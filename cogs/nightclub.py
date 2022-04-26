@@ -49,7 +49,7 @@ class NightClubCommands(commands.Cog):
 
     @commands.command(name='bottle')
     async def flaschen_drehen(self, ctx, playernames):
-        """Du möchtest Flaschen drehen? Kein Problem der MeeseeksBot macht das für dich"""
+        """Du möchtest Flaschen drehen? Kein Problem Skynet macht das für dich"""
         try:
             if playernames.find(",") > 0:
                 # Spieler gefunden
