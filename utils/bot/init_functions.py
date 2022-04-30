@@ -6,6 +6,8 @@ import discord, os, json, sys, getopt, logging
 from discord.ext import commands
 from datetime import datetime
 
+
+
 today = datetime.now()
 today = today.strftime("%Y%m%d")
 source = os.path.dirname(os.path.abspath(__file__))
@@ -25,15 +27,15 @@ conf = open(config_file)
 maintenance = json.load(conf)
 conf.close()
 
-async def init_logger(self):
+async def init_logger(logpath):
     # logging
     ## check log folder
 
     if not os.path.exists(logpath):
         os.makedirs(logpath)
 
-    self.logger = logging.getLogger('SkyNet-Core')
-    self.logger.setLevel(logging.INFO)
+    logger = logging.getLogger('SkyNet-Core')
+    logger.setLevel(logging.INFO)
 
     format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s | %(message)s')
 
@@ -46,10 +48,15 @@ async def init_logger(self):
     rotatinglogs.setLevel(logging.INFO)
     rotatinglogs.setFormatter(format)
 
-    self.logger.addHandler(rotatinglogs)
+    logger.addHandler(rotatinglogs)
 
-async def init_modules(self):
-    #this loop collects all modules in cogs and put them in initial_extension
+    return logger
+
+async def init_modules(client):
+    
+    #check your config.json file for standard entries
+    initial_extension = maintenance['modules']
+    
     for CogFile in os.listdir(source + '/cogs/'):
         if CogFile.endswith('.py'):
             module = 'cogs.' + CogFile[:-3]
