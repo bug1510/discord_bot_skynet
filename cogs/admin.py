@@ -25,8 +25,6 @@ class AdminCommands(commands.Cog):
     async def create_space(self, ctx, space_name):
         """Legt eine Kategorie eine Rolle dazu und ihre Channel an"""
 
-        logger.info(f'{member} tried to create a space {space_name}')
-
         guild = ctx.message.guild
         member = ctx.message.author
         tc = ''
@@ -37,6 +35,8 @@ class AdminCommands(commands.Cog):
             static_format='png',
             size=128
         )
+
+        logger.info(f'{member} tried to create a space {space_name}')
 
         embed = discord.Embed(
             title='Create Space',
@@ -87,8 +87,6 @@ class AdminCommands(commands.Cog):
     async def delete_space(self, ctx, space_name):
         """Löscht eine Kategorie ihre Rolle und die dazugehörigen Channel an"""
 
-        logger.info(f'{member} tried to delete a space {space_name}')
-
         guild = ctx.message.guild
         member = ctx.message.author
         user = member.display_name
@@ -107,6 +105,8 @@ class AdminCommands(commands.Cog):
             static_format='png',
             size=128
         )
+
+        logger.info(f'{member} tried to delete a space {space_name}')
 
         embed = discord.Embed(
             title='Delete Space',
