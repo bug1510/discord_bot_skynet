@@ -8,5 +8,5 @@ __pycache__
 *.db
 *.jpg
 *.mp3
-meeseeks_venv
+skynet_venv
 cogs/jfw.py
