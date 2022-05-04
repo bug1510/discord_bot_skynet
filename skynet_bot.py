@@ -4,7 +4,7 @@ from logging.handlers import TimedRotatingFileHandler
 import discord, os, json, sys, getopt, logging
 from discord.ext import commands
 from datetime import datetime
-import utils.bot.init_functions as inf
+
 today = datetime.now()
 today = today.strftime("%Y%m%d")
 source = os.path.dirname(os.path.abspath(__file__))
@@ -22,14 +22,55 @@ class SkynetCore(commands.Bot):
     def __init__(self, **options):
         super().__init__(**options)
 
+    async def init_logger(self):
+        # logging
+        ## check log folder
+
+        if not os.path.exists(logpath):
+            os.makedirs(logpath)
+
+        self.logger = logging.getLogger('SkyNet-Core')
+        self.logger.setLevel(logging.INFO)
+
+        format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s | %(message)s')
+
+        rotatinglogs = TimedRotatingFileHandler(
+            filename=logpath + '/skynet_bot.log',
+            when="midnight",
+            interval=1,
+            backupCount=5
+            )
+        rotatinglogs.setLevel(logging.INFO)
+        rotatinglogs.setFormatter(format)
+
+        self.logger.addHandler(rotatinglogs)
+
+
+    async def init_modules(self, initial_extension=maintenance['modules']):
+        #this loop collects all modules in cogs and put them in initial_extension
+        for CogFile in os.listdir(source + '/cogs/'):
+            if CogFile.endswith('.py'):
+                module = 'cogs.' + CogFile[:-3]
+                if module not in initial_extension:
+                    initial_extension.append(module)
+                    self.logger.info('append cog - ' + module)
+
+        #this loop loads the extension in the bot
+        for extension in initial_extension:
+            try:
+                client.load_extension(extension)
+            except Exception as e:
+                print(e)
+
     async def on_ready(self):
-        self.logger = await inf.init_logger()
+        await self.init_logger()
         await self.init_modules()
         await client.change_presence(activity=discord.Activity(name='!help', type=2))
         self.logger.info('bot started')
         self.logger.info('config file : ' + config_file)
         self.logger.info('log path : ' + logpath)
         print('initiated')
+
 
     def usage():
         print("""

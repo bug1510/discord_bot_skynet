@@ -27,50 +27,6 @@ conf = open(config_file)
 maintenance = json.load(conf)
 conf.close()
 
-async def init_logger(logpath):
-    # logging
-    ## check log folder
-
-    if not os.path.exists(logpath):
-        os.makedirs(logpath)
-
-    logger = logging.getLogger('SkyNet-Core')
-    logger.setLevel(logging.INFO)
-
-    format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s | %(message)s')
-
-    rotatinglogs = TimedRotatingFileHandler(
-        filename=logpath + '/skynet_bot.log',
-        when="midnight",
-        interval=1,
-        backupCount=5
-        )
-    rotatinglogs.setLevel(logging.INFO)
-    rotatinglogs.setFormatter(format)
-
-    logger.addHandler(rotatinglogs)
-
-    return logger
-
-async def init_modules(client):
-    
-    #check your config.json file for standard entries
-    initial_extension = maintenance['modules']
-    
-    for CogFile in os.listdir(source + '/cogs/'):
-        if CogFile.endswith('.py'):
-            module = 'cogs.' + CogFile[:-3]
-            if module not in initial_extension:
-                initial_extension.append(module)
-                self.logger.info('append cog - ' + module)
-
-    #this loop loads the extension in the bot
-    for extension in initial_extension:
-        try:
-            client.load_extension(extension)
-        except Exception as e:
-            print(e)
-
 async def init_vote_roles_on(self, ctx):
     guild = ctx.message.author.guild
     channel = get(guild.channels, name='rollenverteilung')
