@@ -2,7 +2,6 @@ import random, discord, ssl, logging
 from discord.ext import commands
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-from utils.server.embed_builder import build_embed
 
 logger = logging.getLogger('SkyNet-Core.NightClubCommands')
 
@@ -55,14 +54,14 @@ class NightClubCommands(commands.Cog):
                 # Spieler gefunden
                 para = playernames.split(",")
                 win = random.choice(para)
-                embed = await build_embed(title='Flasche gedreht', description='Und sie zeigt auf?:', color=discord.Color.purple())
+                embed = discord.Embed(title='Flasche gedreht', description='Und sie zeigt auf?:', color=discord.Color.purple())
                 embed.add_field(name=f'{win}', value=':sparkles:')
             else:
                 # zu wenig Spieler
-                embed = await build_embed(title='Flaschen drehen', description='Das ist leider schief gegangen!', color=discord.Color.red())
+                embed = discord.Embed(title='Flaschen drehen', description='Das ist leider schief gegangen!', color=discord.Color.red())
                 embed.add_field(name='Du bist wohl leider alleine?!', value='Such dir doch ein paar Freunde zum spielen.')
         except Exception as e:
-            embed = await build_embed(title='Flaschen drehen', description='Das ist leider schief gegangen!', color=discord.Color.red())
+            embed = discord.Embed(title='Flaschen drehen', description='Das ist leider schief gegangen!', color=discord.Color.red())
             embed.add_field(name='Error', value=e)
             embed.add_field(name='Probier es doch mal so:', value='spin_the_bottle spieler1,spieler2,spieler3,...')
         finally:

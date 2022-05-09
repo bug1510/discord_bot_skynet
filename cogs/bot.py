@@ -2,7 +2,6 @@ import logging
 import os
 import discord
 from skynet_bot import maintenance
-from utils.server.embed_builder import build_embed
 from discord.ext import commands
 
 source = os.path.dirname(os.path.abspath(__file__))
@@ -53,7 +52,7 @@ class BotCommands(commands.Cog):
         try:
             self.bot.load_extension(extension_path)
 
-            embed = await build_embed(
+            embed = discord.Embed(
                 title='Load erfolgreich',
                 description=f'Das Modul {extension} ist nun benutzbar.',
                 color=discord.Color.green()
@@ -62,7 +61,7 @@ class BotCommands(commands.Cog):
             logger.info(f'cog {extension} loaded by {member}')
 
         except Exception as e:
-            embed = await build_embed(
+            embed = discord.Embed(
                 title='Load fehlgeschlagen',
                 description=f'Das Modul {extension} konnte nicht geladen werden.',
                 color=discord.Color.red()
@@ -89,7 +88,7 @@ class BotCommands(commands.Cog):
         member = ctx.message.author
 
         if extension == 'bot':
-            embed = await build_embed(
+            embed = discord.Embed(
                 title='Dein Ernst?',
                 description='Was glaubst du was passiert wenn du das hier entfernst? Denk doch mal nach!',
                 color=discord.Color.orange()
@@ -104,7 +103,7 @@ class BotCommands(commands.Cog):
             try:
                 self.bot.unload_extension(extension_path)
 
-                embed = await build_embed(
+                embed = discord.Embed(
                     title='Unload erfolgreich',
                     description=f'Das Modul {extension} ist nun nicht mehr benutzbar.',
                     color=discord.Color.green()
@@ -113,7 +112,7 @@ class BotCommands(commands.Cog):
                 logger.info(f'cog {extension} unloaded by {member}')
 
             except Exception as e:
-                embed = await build_embed(
+                embed = discord.Embed(
                     title='Unload fehlgeschlagen',
                     description=f'Das Modul {extension} konnte nicht getrennt werden.',
                     color=discord.Color.red()
@@ -142,7 +141,7 @@ class BotCommands(commands.Cog):
         try:
             self.bot.reload_extension(extension_path)
 
-            embed = await build_embed(
+            embed = discord.Embed(
                 title='Reload erfolgreich',
                 description=f'Das Modul {extension} ist nun wieder benutzbar.',
                 color=discord.Color.green()
@@ -151,7 +150,7 @@ class BotCommands(commands.Cog):
             logger.info(f'cog {extension} reloaded by {member}')
 
         except Exception as e:
-            embed = await build_embed(
+            embed = discord.Embed(
                 title='Reload fehlgeschlagen',
                 description=f'Das Modul {extension} konnte nicht neugeladen werden.',
                 color=discord.Color.red()

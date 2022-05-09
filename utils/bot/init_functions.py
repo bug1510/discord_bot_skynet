@@ -1,12 +1,7 @@
 import sqlite3, json, os, logging
 from discord.utils import get
-
-from logging.handlers import TimedRotatingFileHandler
-import discord, os, json, sys, getopt, logging
-from discord.ext import commands
+import os, json, logging
 from datetime import datetime
-
-
 
 today = datetime.now()
 today = today.strftime("%Y%m%d")
@@ -18,7 +13,7 @@ conf = open(config_file, "r")
 maintenance = json.load(conf)
 conf.close()
 
-logger = logging.getLogger('SkyNet-Core.CommunityCommands')
+logger = logging.getLogger('SkyNet-Core.Init_Functions')
 
 source = os.path.dirname(os.path.abspath(__file__))
 config_file = source + '/../data/config/config.json'
@@ -27,7 +22,8 @@ conf = open(config_file)
 maintenance = json.load(conf)
 conf.close()
 
-async def init_vote_roles_on(self, ctx):
+async def init_vote_roles_on(ctx):
+    
     guild = ctx.message.author.guild
     channel = get(guild.channels, name='rollenverteilung')
     lowest = get(ctx.guild.roles, name='@everyone')
@@ -46,8 +42,8 @@ async def init_vote_roles_on(self, ctx):
 
     await ctx.message.delete()
 
-async def init_leveling_db():
-    '''Initialisiert das Leveling auf deinem Server. Also viel Spaß!'''
+async def init_leveling_db(ctx):
+    
     guild_id = ctx.message.author.guild.id
     con = sqlite3.connect(f'{source}/../../data/{guild_id}.db')
     cur = con.cursor()
