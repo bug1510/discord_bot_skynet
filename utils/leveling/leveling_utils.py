@@ -1,5 +1,7 @@
-import sqlite3, os
+import sqlite3, os, logging
 from skynet_bot import maintenance
+
+logger = logging.getLogger('SkyNet-Core.Leveling_Utils')
 
 source = os.path.dirname(os.path.abspath(__file__))
 

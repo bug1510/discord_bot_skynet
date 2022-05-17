@@ -1,8 +1,7 @@
 import json, os, logging, discord
 from discord.ext import commands
 from discord.utils import get
-import utils.server.embed_builder as meb
-import utils.leveling.lvl as lvl
+import utils.leveling.leveling_utils as leveling_utils
 import utils.server.server_utils as su
 
 logger = logging.getLogger('SkyNet-Core.Events')
@@ -43,9 +42,7 @@ class Events(commands.Cog):
         if message.author.bot:
             return
         else:
-            await lvl.exp_gain(message)
-
-
+            await leveling_utils.exp_gain(message)
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
@@ -105,7 +102,7 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
 
-        embed = await meb.build_embed(title='Na huch!', description='Das ist leider schief gegangen!\n Versuch es doch mal mit !help', color=discord.Color.red())
+        embed = discord.Embed(title='Na huch!', description='Das ist leider schief gegangen!\n Versuch es doch mal mit !help', color=discord.Color.red())
         embed.add_field(name='Es lag wohl hier dran:', value=error)
         await ctx.send(embed=embed)
 

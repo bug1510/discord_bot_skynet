@@ -1,4 +1,4 @@
-import discord, logging, os, json
+import logging, os, json
 from discord.utils import get
 
 logger = logging.getLogger('SkyNet-Core.Server_Utils')

@@ -1,24 +1,9 @@
-import sqlite3, json, os, logging
+import sqlite3, json, os, logging, discord
 from discord.utils import get
+import os, json, logging
+from utils.server.server_utils import create_textchannel as ct
 
-from logging.handlers import TimedRotatingFileHandler
-import discord, os, json, sys, getopt, logging
-from discord.ext import commands
-from datetime import datetime
-
-
-
-today = datetime.now()
-today = today.strftime("%Y%m%d")
-source = os.path.dirname(os.path.abspath(__file__))
-logpath = source + '/logs/'
-config_file = source + '/data/config/config.json'
-
-conf = open(config_file, "r")
-maintenance = json.load(conf)
-conf.close()
-
-logger = logging.getLogger('SkyNet-Core.CommunityCommands')
+logger = logging.getLogger('SkyNet-Core.Init_Functions')
 
 source = os.path.dirname(os.path.abspath(__file__))
 config_file = source + '/../data/config/config.json'
@@ -27,27 +12,49 @@ conf = open(config_file)
 maintenance = json.load(conf)
 conf.close()
 
-async def init_vote_roles_on(self, ctx):
+async def init_server_sync():
+
+    print('Not implemented yet')
+
+async def init_vote_roles_on(ctx):
+    
     guild = ctx.message.author.guild
+    place = get(guild.categories, name=maintenance['maintenanceCatName'])
     channel = get(guild.channels, name='rollenverteilung')
-    lowest = get(ctx.guild.roles, name='@everyone')
+    
+    lowestrole = get(ctx.guild.roles, name=maintenance['lowestSelfGiveableRole'])
     highestrole = get(ctx.guild.roles, name=maintenance['highestSelfGiveableRole'])
-    streamin_grole = get(guild.roles, name='Streamer:in')
 
-    if not channel:
-        channel = await guild.create_text_channel(name='rollenverteilung')
+    member = ctx.message.author
+    user = member.display_name
 
-    for role in ctx.guild.roles:
-        if role.position < highestrole.position and role.position > lowest.position:
-            if role == streamin_grole:
-                await channel.send('Bist du ein Streamer oder eine Streamerin ?')
-            else:
-                await channel.send(f'Spielst du {role} ?')
+    try:
+        embed = discord.Embed(
+            title='Adding Roles',
+            description=f'{user} hat hinzufügen von Rollen ausgelöst.',
+            color=discord.Color.dark_gold()
+            )
 
-    await ctx.message.delete()
+        if not channel:
+            channel = await ct(guild=guild, name='rollenverteilung', place=place, embed=embed)
 
-async def init_leveling_db():
-    '''Initialisiert das Leveling auf deinem Server. Also viel Spaß!'''
+        for role in ctx.guild.roles:
+            if role.position < highestrole.position and role.position > lowestrole.position:
+                await channel.send(f'Möchtest du die Role {role} haben?')
+    
+    except Exception as e:
+        embed = discord.Embed(
+            title='Adding Roles',
+            description=f'{user} hat hinzufügen von Rollen ausgelöst.',
+            color=discord.Color.dark_gold()
+            )
+
+    finally:
+        await ctx.message.delete()
+        await ctx.send(embed=embed)
+
+async def init_leveling_db(ctx):
+    
     guild_id = ctx.message.author.guild.id
     con = sqlite3.connect(f'{source}/../../data/{guild_id}.db')
     cur = con.cursor()
