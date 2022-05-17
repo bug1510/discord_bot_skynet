@@ -21,32 +21,50 @@ class AdminCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # @commands.command()
-    # async def lsrole(self, context):
+    @commands.command()
+    @commands.has_role(maintenance['maintananceRole'])
+    async def init_bot(self, ctx):
 
-    #     """Dieser Befehl Listet dir die für dich bereits verfügbaren Rollen auf"""
+        if maintenance['ServerSync'] == True:
+            return
 
-    #     lowest = get(context.guild.roles, name='@everyone')
-    #     highestrole = get(context.guild.roles, name='Nutzer')
-    #     member = context.message.author
-    #     logger.info(str(member) + ' called lsrole')
-    #     ListRolesField = ''
+        if maintenance['RolesOnVote'] == True:
+            return
 
-    #     for role in context.guild.roles:
-    #         if role.position < highestrole.position and role.position > lowest.position:
-    #             ListRolesField += str(role) + '\n'
-    #         else:
-    #             pass
+        if maintenance['Leveling'] == True:
+            return
 
-    #     embed = discord.Embed(
-    #         title='List of Gamingroles',
-    #         description=ListRolesField,
-    #         color=discord.Color.blue()
-    #     )
-    #     await context.send(embed=embed)
-    #     await context.message.delete()
+        if maintenance['InterServerLeveling'] == True:
+            return
 
     @commands.command()
+    @commands.has_role(maintenance['maintananceRole'])
+    async def lsrole(self, context):
+
+        """Dieser Befehl Listet dir die für dich bereits verfügbaren Rollen auf"""
+
+        lowest = get(context.guild.roles, name='@everyone')
+        highestrole = get(context.guild.roles, name='Nutzer')
+        member = context.message.author
+        logger.info(str(member) + ' called lsrole')
+        ListRolesField = ''
+
+        for role in context.guild.roles:
+            if role.position < highestrole.position and role.position > lowest.position:
+                ListRolesField += str(role) + '\n'
+            else:
+                pass
+
+        embed = discord.Embed(
+            title='List of Gamingroles',
+            description=ListRolesField,
+            color=discord.Color.blue()
+        )
+        await context.send(embed=embed)
+        await context.message.delete()
+
+    @commands.command()
+    @commands.has_role(maintenance['maintananceRole'])
     async def addrole(self, ctx, roles, member=None):
 
         """Vergibt eine oder mehrere Rollen. Gib All an für Alle verfügbaren Rollen (Mit Komma getrennt aber ohne Leerzeichen angeben!)"""
@@ -72,6 +90,7 @@ class AdminCommands(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
+    @commands.has_role(maintenance['maintananceRole'])
     async def rmrole(self, ctx, roles, member=None):
 
         """Entfernt eine oder mehrere Rollen. Gib All an für Alle verfügbaren Rollen (Mit Komma getrennt aber ohne Leerzeichen angeben!)"""
