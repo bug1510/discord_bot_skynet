@@ -10,7 +10,7 @@ async def create_user(message):
     dc_user_id = message.author.id
     dc_user_nick = message.author
 
-    con = sqlite3.connect(f'{guild_id}.db')
+    con = sqlite3.connect(f'{source}/../../data/{guild_id}.db')
     cur = con.cursor()
     cur.execute(
         "SELECT * FROM leveling WHERE dc_user_id = $1",
@@ -21,7 +21,7 @@ async def create_user(message):
     if entry:
         return
     else:
-        con = sqlite3.connect(f'{guild_id}.db')
+        con = sqlite3.connect(f'{source}/../../data/{guild_id}.db')
         cur = con.cursor()
         cur.execute(
             "INSERT INTO leveling (dc_user_nick, dc_user_id) VALUES(?, ?)",
@@ -36,7 +36,7 @@ async def exp_gain(message, rate=maintenance['expGainingRate']):
     if os.path.exists(f'{str(guild_id)}.db'):
         await create_user(message = message)
 
-        con = sqlite3.connect(f'{guild_id}.db')
+        con = sqlite3.connect(f'{source}/../../data/{guild_id}.db')
         cur = con.cursor()
 
         cur.execute(
@@ -72,7 +72,7 @@ async def get_rank(ctx):
     guild_id = ctx.message.author.guild.id
     dc_user_id = ctx.message.author.id
 
-    con = sqlite3.connect(f'{guild_id}.db')
+    con = sqlite3.connect(f'{source}/../../data/{guild_id}.db')
     cur = con.cursor()
     cur.execute(
         "SELECT * FROM leveling WHERE dc_user_id = $1",

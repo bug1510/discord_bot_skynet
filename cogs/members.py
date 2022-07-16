@@ -24,7 +24,7 @@ class MemberCommands(commands.Cog):
         user_nick = ctx.message.author.display_name
         embed =discord.Embed(title=f'{user_nick}´s Rank Card', color=discord.Color.blurple())
 
-        if os.path.exists(f'{str(guild_id)}.db'):
+        if os.path.exists(f'{source}/../data/{str(guild_id)}.db'):
             user_data = await leveling_utils.get_rank(ctx)
 
             user_level = user_data[4]
