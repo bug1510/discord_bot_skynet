@@ -80,7 +80,7 @@ class Events(commands.Cog):
         vote_channel = get(guild.text_channels, name='rollenverteilung')
         content = reaction.message.content
         splitted_content = content.split(" ")
-        content_role = splitted_content[2]
+        content_role = splitted_content[4]
         role = get(guild.roles, name=content_role)
 
         if channel == vote_channel:

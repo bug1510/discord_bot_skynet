@@ -6,6 +6,7 @@ from discord.ext import commands
 from discord.utils import get
 import utils.server.server_utils as su
 import utils.member.member_utils as mu
+import utils.bot.init_functions as inf
 
 logger = logging.getLogger('SkyNet-Core.AdminCommands')
 
@@ -26,16 +27,16 @@ class AdminCommands(commands.Cog):
     async def init_bot(self, ctx):
 
         if maintenance['ServerSync'] == True:
-            return
+            await inf.init_server_sync()
 
         if maintenance['RolesOnVote'] == True:
-            return
+            await inf.init_vote_roles_on(ctx)
 
         if maintenance['Leveling'] == True:
-            return
+            await inf.init_leveling_db(ctx)
 
         if maintenance['InterServerLeveling'] == True:
-            return
+            await inf.init_inter_server_leveling()
 
     @commands.command()
     @commands.has_role(maintenance['maintananceRole'])

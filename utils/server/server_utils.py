@@ -70,7 +70,10 @@ async def set_standard_permission_for_cat(guild, place, role, embed):
             if str(r) == 'defaultRole':
                 space_role = guild.default_role
             elif str(r) == 'RoleByGCC':
-                space_role = get(guild.roles, name=str(role))
+                try:
+                    space_role = get(guild.roles, name=str(role))
+                except:
+                    return
             else:
                 space_role = get(guild.roles, name=str(r))
             
