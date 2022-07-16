@@ -25,18 +25,30 @@ class AdminCommands(commands.Cog):
     @commands.command()
     @commands.has_role(maintenance['maintananceRole'])
     async def init_bot(self, ctx):
+        
+        member = ctx.message.author
+        user = member.display_name
+        
+        embed = discord.Embed(
+            title='Initialisieren des Bots',
+            description=f'{user} hat das initialisieren ausgelöst.',
+            color=discord.Color.dark_gold()
+            )
 
         if maintenance['ServerSync'] == True:
-            await inf.init_server_sync()
+            embed = await inf.init_server_sync(ctx, embed=embed)
 
         if maintenance['RolesOnVote'] == True:
-            await inf.init_vote_roles_on(ctx)
+            embed = await inf.init_vote_roles_on(ctx, embed=embed)
 
         if maintenance['Leveling'] == True:
-            await inf.init_leveling_db(ctx)
+            embed = await inf.init_leveling_db(ctx, embed=embed)
 
         if maintenance['InterServerLeveling'] == True:
-            await inf.init_inter_server_leveling()
+            embed = await inf.init_inter_server_leveling(ctx, embed=embed)
+
+        await ctx.message.delete()
+        await ctx.send(embed=embed)
 
     @commands.command()
     @commands.has_role(maintenance['maintananceRole'])
