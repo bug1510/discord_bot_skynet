@@ -33,7 +33,7 @@ async def exp_gain(message, rate=maintenance['expGainingRate']):
     guild_id = message.author.guild.id
     dc_user_id = message.author.id
 
-    if os.path.exists(f'{str(guild_id)}.db'):
+    if os.path.exists(f'{source}/../../data/{str(guild_id)}.db'):
         await create_user(message = message)
 
         con = sqlite3.connect(f'{source}/../../data/{guild_id}.db')

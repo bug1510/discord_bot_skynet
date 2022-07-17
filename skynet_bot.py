@@ -17,7 +17,6 @@ conf.close()
 
 intents = discord.Intents.default()
 intents.members = True
-
 class SkynetCore(commands.Bot):
     def __init__(self, **options):
         super().__init__(**options)

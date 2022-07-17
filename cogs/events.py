@@ -1,4 +1,5 @@
 import json, os, logging, discord
+from pickle import TRUE
 from discord.ext import commands
 from discord.utils import get
 import utils.leveling.leveling_utils as leveling_utils
@@ -16,20 +17,21 @@ conf.close()
 class Events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-    
+
     @commands.Cog.listener()
     async def on_message(self, message):
-
         channel = message.channel
         member = message.author
         nick = member.display_name
         embed = discord.Embed(title='ACHTUNG',
         description='Ein wiederholter Verstoß könnte einen Ban nach sich ziehen.',
         color=discord.Color.dark_red())
+        deleted = False
 
         for c in maintenance['curseWords']:
             if c in message.content:
                 await message.delete()
+                deleted = True
                 logger.critical(f'Curse Word was detected in a message from {member}, and the message "{message.content}" was deleted')
                 embed.add_field(name=nick,
                 value='Hat ein geblacklistetes Wort verwendet.',
@@ -37,9 +39,11 @@ class Events(commands.Cog):
                 )
                 await channel.send(embed=embed)
 
-    @commands.Cog.listener()
-    async def on_message(self, message):
         if message.author.bot:
+            return
+        elif deleted == True:
+            return
+        elif message.content.startswith('!'):
             return
         else:
             await leveling_utils.exp_gain(message)
