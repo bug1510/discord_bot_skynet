@@ -3,6 +3,7 @@ import os
 import discord
 from skynet_bot import maintenance
 from discord.ext import commands
+from data.config.db_secret import myclient
 
 source = os.path.dirname(os.path.abspath(__file__))
 logger = logging.getLogger('SkyNet-Core.BotCommands')
@@ -168,6 +169,12 @@ class BotCommands(commands.Cog):
             await ctx.send(embed=embed)
             await ctx.message.delete()
 
+    @commands.command(name='check_database')
+    @commands.has_role(maintenance['maintananceRole'])
+    async def check_database(self, ctx):
+        dblist = myclient.list_database_names()
+        if "skynetdatabase" in dblist:
+            print("The database exists.")
 
 def setup(bot):
     bot.add_cog(BotCommands(bot))

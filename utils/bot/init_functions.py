@@ -1,8 +1,9 @@
-import sqlite3, json, os, logging
+import json, os, logging
 from discord.utils import get
 from utils.server.server_utils import create_textchannel as ct
 from utils.server.server_utils import create_category as cc
 from utils.server.server_utils import set_standard_permission_for_cat
+from data.config.db_secret import myclient
 
 logger = logging.getLogger('SkyNet-Core.Init_Functions')
 
@@ -61,17 +62,23 @@ async def init_vote_roles_on(ctx, embed):
     finally:
         return embed
 
-async def init_leveling_db(ctx, embed):
+async def init_database(ctx, embed):
     
     guild_id = ctx.message.author.guild.id
 
     try:
-        con = sqlite3.connect(f'{source}/../../data/{guild_id}.db')
-        cur = con.cursor()
-        cur.execute("""Create Table IF NOT EXISTS leveling
-        (dc_user_nick text, dc_user_id integer, tw_user_nick text, tw_user_id integer, level integer NOT NULL DEFAULT 1, exp integer NOT NULL DEFAULT 0)""")
-        con.commit()
-        con.close()
+
+        with open(config_file) as f:
+            data = json.load(f)
+
+        mydb = myclient[str(guild_id)]
+
+        mycol = mydb["serverconfig"]
+
+        mycol.insert_one(data)
+
+        for y in mycol.find():
+            print(y) 
 
         embed.add_field(
             name= '!Success creating Leveling Database!',
