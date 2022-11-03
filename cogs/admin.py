@@ -81,13 +81,13 @@ class AdminCommands(commands.Cog):
     async def addrole(self, ctx, roles, member=None):
         """Vergibt eine oder mehrere Rollen. Gib All an für Alle verfügbaren Rollen (Mit Komma getrennt aber ohne Leerzeichen angeben!)"""
 
-        if member:
-            member = member
-        else:
-            member = ctx.message.author
-
         guild = ctx.message.guild
         user = ctx.message.author.display_name
+
+        if member:
+            member = get(guild.members, name=str(member))
+        else:
+            member = ctx.message.author
 
         logger.info(str(member) + ' called addrole')
 
@@ -97,7 +97,7 @@ class AdminCommands(commands.Cog):
             color=discord.Color.dark_gold()
             )
 
-        mu.adding_roles(guild=guild, member=member, roles=roles, embed=embed)
+        await mu.adding_roles(guild=guild, member=member, roles=roles, embed=embed)
 
         await ctx.send(embed=embed)
 

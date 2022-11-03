@@ -103,12 +103,12 @@ class Events(commands.Cog):
         else:
             pass
 
-    @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
+    # @commands.Cog.listener()
+    # async def on_command_error(self, ctx, error):
 
-        embed = discord.Embed(title='Na huch!', description='Das ist leider schief gegangen!\n Versuch es doch mal mit !help', color=discord.Color.red())
-        embed.add_field(name='Es lag wohl hier dran:', value=error)
-        await ctx.send(embed=embed)
+    #     embed = discord.Embed(title='Na huch!', description='Das ist leider schief gegangen!\n Versuch es doch mal mit !help', color=discord.Color.red())
+    #     embed.add_field(name='Es lag wohl hier dran:', value=error)
+    #     await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Events(bot))

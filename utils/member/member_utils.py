@@ -44,6 +44,8 @@ async def adding_roles(guild, member, roles, embed):
             if role.position < highestrole.position and role.position > lowestrole.position:
                 await member.add_roles(role)
                 
+                added_roles = role
+
                 embed.add_field(
                     name='!Success adding roles!',
                     value=added_roles
@@ -52,6 +54,8 @@ async def adding_roles(guild, member, roles, embed):
                 logger.info(f'{member} hat die Rolle {role} zugewiesen bekommen')
             else:
                 
+                not_added_roles = role
+
                 embed.add_field(
                     name='!Error adding Roles!',
                     value=not_added_roles
