@@ -25,7 +25,8 @@ class AdminCommands(commands.Cog):
     @commands.command()
     @commands.has_role(maintenance['maintananceRole'])
     async def init_bot(self, ctx):
-        
+        """Initialisiert deine Konfiguration auf deinem Discord."""
+
         member = ctx.message.author
         user = member.display_name
         
@@ -42,7 +43,7 @@ class AdminCommands(commands.Cog):
             embed = await inf.init_vote_roles_on(ctx, embed=embed)
 
         if maintenance['Leveling'] == True:
-            embed = await inf.init_leveling_db(ctx, embed=embed)
+            embed = await inf.init_database(ctx, embed=embed)
 
         if maintenance['InterServerLeveling'] == True:
             embed = await inf.init_inter_server_leveling(ctx, embed=embed)
@@ -53,8 +54,7 @@ class AdminCommands(commands.Cog):
     @commands.command()
     @commands.has_role(maintenance['maintananceRole'])
     async def lsrole(self, context):
-
-        """Dieser Befehl Listet dir die für dich bereits verfügbaren Rollen auf"""
+        """Dieser Befehl Listet dir die zuweisbaren Rollen auf"""
 
         lowest = get(context.guild.roles, name='@everyone')
         highestrole = get(context.guild.roles, name='Nutzer')
@@ -79,16 +79,15 @@ class AdminCommands(commands.Cog):
     @commands.command()
     @commands.has_role(maintenance['maintananceRole'])
     async def addrole(self, ctx, roles, member=None):
-
         """Vergibt eine oder mehrere Rollen. Gib All an für Alle verfügbaren Rollen (Mit Komma getrennt aber ohne Leerzeichen angeben!)"""
-
-        if member:
-            member = member
-        else:
-            member = ctx.message.author
 
         guild = ctx.message.guild
         user = ctx.message.author.display_name
+
+        if member:
+            member = get(guild.members, name=str(member))
+        else:
+            member = ctx.message.author
 
         logger.info(str(member) + ' called addrole')
 
@@ -98,14 +97,13 @@ class AdminCommands(commands.Cog):
             color=discord.Color.dark_gold()
             )
 
-        mu.adding_roles(guild=guild, member=member, roles=roles, embed=embed)
+        await mu.adding_roles(guild=guild, member=member, roles=roles, embed=embed)
 
         await ctx.send(embed=embed)
 
     @commands.command()
     @commands.has_role(maintenance['maintananceRole'])
     async def rmrole(self, ctx, roles, member=None):
-
         """Entfernt eine oder mehrere Rollen. Gib All an für Alle verfügbaren Rollen (Mit Komma getrennt aber ohne Leerzeichen angeben!)"""
 
         if member:
