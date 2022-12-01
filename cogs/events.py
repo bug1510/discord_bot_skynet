@@ -1,22 +1,16 @@
-import json, os, logging, discord
-from pickle import TRUE
+import logging, discord
 from discord.ext import commands
 from discord.utils import get
-import utils.leveling.leveling_utils as leveling_utils
-import utils.server.server_utils as su
-
-logger = logging.getLogger('SkyNet-Core.Events')
-
-source = os.path.dirname(os.path.abspath(__file__))
-config_file = source + '/../data/config/config.json'
-
-conf = open(config_file)
-maintenance = json.load(conf)
-conf.close()
+from utils.bot.config_handler import ConfigHandlingUtils as cohu
+import utils.member.leveling.leveling_utils as lvlu
+import utils.server.channel_handling_utils as su
 
 class Events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.logger = logging.getLogger('SkyNet-Core.Events')
+        self.config = cohu.json_handler(filename=str('config'))
+
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -28,11 +22,11 @@ class Events(commands.Cog):
         color=discord.Color.dark_red())
         deleted = False
 
-        for c in maintenance['curseWords']:
+        for c in self.config['curseWords']:
             if c in message.content:
                 await message.delete()
                 deleted = True
-                logger.critical(f'Curse Word was detected in a message from {member}, and the message "{message.content}" was deleted')
+                self.logger.critical(f'Curse Word was detected in a message from {member}, and the message "{message.content}" was deleted')
                 embed.add_field(name=nick,
                 value='Hat ein geblacklistetes Wort verwendet.',
                 inline=False
@@ -46,18 +40,18 @@ class Events(commands.Cog):
         elif message.content.startswith('!'):
             return
         else:
-            await leveling_utils.exp_gain(message)
+            await lvlu.exp_gain(message)
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
         guild = member.guild
-        place = get(guild.categories, name=maintenance['tmpCatName'])
+        place = get(guild.categories, name=self.config['tmpCatName'])
 
         embed = discord.Embed(title='empty', color=discord.Color.dark_grey())
 
         tmp_channel_name = ''
 
-        for c in maintenance['tempChannelName']:
+        for c in self.config['tempChannelName']:
             tmp_channel_name += c
 
         for vc in place.voice_channels:

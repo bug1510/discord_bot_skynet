@@ -4,29 +4,27 @@ from logging.handlers import TimedRotatingFileHandler
 import discord, os, json, sys, getopt, logging
 from discord.ext import commands
 from datetime import datetime
+from utils.bot.config_handler import ConfigHandlingUtils as cohu
 
-today = datetime.now()
-today = today.strftime("%Y%m%d")
-source = os.path.dirname(os.path.abspath(__file__))
-logpath = source + '/logs/'
-config_file = source + '/data/config/config.json'
-
-conf = open(config_file, "r")
-maintenance = json.load(conf)
-conf.close()
-
-intents = discord.Intents.default()
-intents.members = True
+token = cohu.json_handler(filename=str('token.json'))
+logpath = '/../../data/config/'
+configpath = '/../../logs/'
 class SkynetCore(commands.Bot):
     def __init__(self, **options):
         super().__init__(**options)
+        self.today = datetime.now()
+        self.today = self.today.strftime("%Y%m%d")
+        self.source = os.path.dirname(os.path.abspath(__file__))
+        self.config = cohu.json_handler(filename=str('config'))
+        self.logpath = self.logpath
+        self.configpath = self.configpath
 
     async def init_logger(self):
         # logging
         ## check log folder
 
-        if not os.path.exists(logpath):
-            os.makedirs(logpath)
+        if not os.path.exists(self.logpath):
+            os.makedirs(self.logpath)
 
         self.logger = logging.getLogger('SkyNet-Core')
         self.logger.setLevel(logging.INFO)
@@ -34,7 +32,7 @@ class SkynetCore(commands.Bot):
         format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s | %(message)s')
 
         rotatinglogs = TimedRotatingFileHandler(
-            filename=logpath + '/skynet_bot.log',
+            filename=self.logpath + '/skynet_bot.log',
             when="midnight",
             interval=1,
             backupCount=5
@@ -45,9 +43,9 @@ class SkynetCore(commands.Bot):
         self.logger.addHandler(rotatinglogs)
 
 
-    async def init_modules(self, initial_extension=maintenance['modules']):
+    async def init_modules(self, initial_extension=['bot']): #self.config['modules']):
         #this loop collects all modules in cogs and put them in initial_extension
-        for CogFile in os.listdir(source + '/cogs/'):
+        for CogFile in os.listdir(self.source + '/cogs/'):
             if CogFile.endswith('.py'):
                 module = 'cogs.' + CogFile[:-3]
                 if module not in initial_extension:
@@ -66,8 +64,8 @@ class SkynetCore(commands.Bot):
         await self.init_modules()
         await client.change_presence(activity=discord.Activity(name='!help', type=2))
         self.logger.info('bot started')
-        self.logger.info('config file : ' + config_file)
-        self.logger.info('log path : ' + logpath)
+        self.logger.info(f'config file : {self.configpath}')
+        self.logger.info(f'log path : {self.logpath}')
         print('initiated')
 
 
@@ -78,8 +76,8 @@ class SkynetCore(commands.Bot):
             usage:
 
                 -h or --help    show this help
-                -c or --config  define the json configfile      (default : ./token.json)
-                -l or --log     define the logpath              (default ./logs/)
+                -c or --config  define the json configfiles path      (default : ./../../data/config/)
+                -l or --log     define the logpath              (default ./../../logs/)
 
             example:
 
@@ -108,11 +106,15 @@ class SkynetCore(commands.Bot):
             usage()
             sys.exit(2)
 
-client = SkynetCore(command_prefix='!', 
-description=maintenance['botName'] + maintenance['version'],
-help_command = commands.DefaultHelpCommand(no_category = 'Help'),
-intents=intents
-)
+
 
 if __name__ == '__main__':
-    client.run(maintenance['token'])
+    intents = discord.Intents.default()
+    intents.members = True
+
+    client = SkynetCore(command_prefix='!',
+    description='SKYNET BOT CORE ' + '| V/ 0.8 - ALPHA',
+    help_command = commands.DefaultHelpCommand(no_category = 'Help'),
+    intents=intents)
+
+    client.run(token['token'])

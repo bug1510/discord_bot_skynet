@@ -1,21 +1,16 @@
-import discord, os, json, logging
+import discord, os, logging
 from discord.ext import commands
-import utils.leveling.leveling_utils as leveling_utils
-import utils.server.server_utils as su
 from discord.utils import get
-
-logger = logging.getLogger('SkyNet-Core.MemberCommands')
-
-source = os.path.dirname(os.path.abspath(__file__))
-config_file = source + '/../data/config/config.json'
-
-conf = open(config_file)
-maintenance = json.load(conf)
-conf.close()
+from utils.bot.config_handler import ConfigHandlingUtils as cohu
+import utils.member.leveling.leveling_utils as lvlu
+import utils.server.channel_handling_utils as su
 
 class MemberCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.logger = logging.getLogger('SkyNet-Core.MemberCommands')
+        self.source = None
+        self.config = cohu.json_handler(filename=str('config'))
 
     @commands.command(name='rank')
     async def rank(self, ctx):
@@ -24,8 +19,8 @@ class MemberCommands(commands.Cog):
         user_nick = ctx.message.author.display_name
         embed =discord.Embed(title=f'{user_nick}´s Rank Card', color=discord.Color.blurple())
 
-        if os.path.exists(f'{source}/../data/{str(guild_id)}.db'):
-            user_data = await leveling_utils.get_rank(ctx)
+        if os.path.exists(f'{self.source}/../data/{str(guild_id)}.db'):
+            user_data = await lvlu.get_rank(ctx)
 
             user_level = user_data[4]
             user_exp = user_data[5]
@@ -42,13 +37,13 @@ class MemberCommands(commands.Cog):
         '''Erstellt dir und deinen Freunden einen Temporären Raum.'''
         guild = ctx.message.guild
         member = ctx.message.author
-        place = get(guild.categories, name=maintenance['tmpCatName'])
+        place = get(guild.categories, name=self.config['tmpCatName'])
 
         embed = discord.Embed(title='empty', color=discord.Color.dark_grey())
 
         if not place:
-            place = await su.create_category(guild=guild, name=maintenance['tmpCatName'], member='SkyNet Bot', embed=embed)
-        vc, embed = await su.create_voicechannel(guild=guild, name=maintenance['tempChannelName'], userlimit=userlimit, place=place, embed=embed)
+            place = await su.create_category(guild=guild, name=self.config['tmpCatName'], member='SkyNet Bot', embed=embed)
+        vc, embed = await su.create_voicechannel(guild=guild, name=self.config['tempChannelName'], userlimit=userlimit, place=place, embed=embed)
 
         try:
             await member.move_to(vc)

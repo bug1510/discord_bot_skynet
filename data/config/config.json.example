@@ -10,7 +10,4 @@
     "userLimit": 8,
     "maintananceRole": "El-Special",
     "modules": ["cogs.bot"],
-    "version": "| V/ 0.8 - ALPHA",
-    "botName": "SKYNET BOT CORE ",
-    "token": "your token"
 }
