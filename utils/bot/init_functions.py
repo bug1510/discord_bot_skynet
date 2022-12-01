@@ -1,13 +1,13 @@
 import logging
 from discord.utils import get
-from config_handler import ConfigHandlingUtils as cohu
-from server.channel_handling_utils import ChannelHandlingUtils as chhu
-from server.permission_handling_utils import PermissionHandlingUtils as phu
+from utils.bot.config_handler import ConfigHandlingUtils as cohu
+from utils.server.channel_handling_utils import ChannelHandlingUtils as chhu
+from utils.server.permission_handling_utils import PermissionHandlingUtils as phu
 
 class InitFunctions():
     def __init__(self) -> None:
         self.logger = logging.getLogger('SkyNet-Core.Init_Functions')
-        self.config = cohu.json_handler(filename=str('config'))
+        self.config = cohu().json_handler(filename=str('config.json'))
 
     async def init_server_sync(self, ctx, embed):
 

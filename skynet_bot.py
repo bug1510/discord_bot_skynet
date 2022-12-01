@@ -1,27 +1,28 @@
-#!/usr/bin/python3
+#/usr/bin/python3
 
 from logging.handlers import TimedRotatingFileHandler
-import discord, os, json, sys, getopt, logging
+import discord, os, sys, getopt, logging
 from discord.ext import commands
 from datetime import datetime
 from utils.bot.config_handler import ConfigHandlingUtils as cohu
 
-token = cohu.json_handler(filename=str('token.json'))
-logpath = '/../../data/config/'
-configpath = '/../../logs/'
+token = cohu().json_handler(filename=str('token.json'))
+
+configpath = '/../../data/config/'
+logpath = '/../../logs'
 class SkynetCore(commands.Bot):
     def __init__(self, **options):
         super().__init__(**options)
         self.today = datetime.now()
         self.today = self.today.strftime("%Y%m%d")
         self.source = os.path.dirname(os.path.abspath(__file__))
-        self.config = cohu.json_handler(filename=str('config'))
-        self.logpath = self.logpath
-        self.configpath = self.configpath
+        self.config = cohu().json_handler(filename=str('config.json'))
+        self.logpath = logpath
+        self.configpath = configpath
 
     async def init_logger(self):
-        # logging
-        ## check log folder
+        #logging
+        #check log folder
 
         if not os.path.exists(self.logpath):
             os.makedirs(self.logpath)
@@ -43,7 +44,7 @@ class SkynetCore(commands.Bot):
         self.logger.addHandler(rotatinglogs)
 
 
-    async def init_modules(self, initial_extension=['bot']): #self.config['modules']):
+    async def init_modules(self, initial_extension=['cogs.bot']): #self.config['modules']):
         #this loop collects all modules in cogs and put them in initial_extension
         for CogFile in os.listdir(self.source + '/cogs/'):
             if CogFile.endswith('.py'):
@@ -87,7 +88,7 @@ class SkynetCore(commands.Bot):
 
         """)
 
-    # parameters for bot start
+    #parameters for bot start
     try:
         opts, args = getopt.getopt(sys.argv[1:],'c:l:h',['config','log','help'])
     except:

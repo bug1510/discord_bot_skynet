@@ -9,7 +9,7 @@ class Events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.logger = logging.getLogger('SkyNet-Core.Events')
-        self.config = cohu.json_handler(filename=str('config'))
+        self.config = cohu().json_handler(filename=str('config.json'))
 
 
     @commands.Cog.listener()

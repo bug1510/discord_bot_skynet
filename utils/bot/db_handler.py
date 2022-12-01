@@ -6,7 +6,7 @@ import urllib.parse as up
 class DBHandler():
     def __init__(self) -> None:
         self.logger = logging.getLogger('SkyNet-Core.DBHandler')
-        self.config = cohu.json_handler(filename=str('config'))
+        self.config = cohu().json_handler(filename=str('config.json'))
         self.username = up.quote_plus(str(self.config['DBUsername']))
         self.password = up.quote_plus(str(self.config['DBPassword']))
         self.host = str(self.config['DBHost'])
@@ -37,3 +37,10 @@ class DBHandler():
             )
         finally:
             return embed
+
+    @commands.command(name='check_database')
+    @commands.has_role(needed_role['maintananceRole'])
+    async def check_database(self, ctx):
+        dblist = myclient.list_database_names()
+        if "skynetdatabase" in dblist:
+            print("The database exists.")

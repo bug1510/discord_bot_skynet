@@ -7,13 +7,13 @@ from utils.member.role_handling_utils import RoleHandlingUtils as rhu
 from utils.server.role_managing_utils import RoleManagingUtils as rmu
 from utils.server.channel_handling_utils import ChannelHandlingUtils as chhu
 
-needed_role = cohu.json_handler(filename=str('config'))
+needed_role = cohu().json_handler(filename=str('config.json'))
 
 class AdminCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.logger = logging.getLogger('SkyNet-Core.AdminCommands')
-        self.config = cohu.json_handler(filename=str('config'))
+        self.config = cohu().json_handler(filename=str('config.json'))
 
     @commands.command()
     @commands.has_role(needed_role['maintananceRole'])

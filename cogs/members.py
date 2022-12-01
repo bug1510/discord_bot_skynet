@@ -3,14 +3,14 @@ from discord.ext import commands
 from discord.utils import get
 from utils.bot.config_handler import ConfigHandlingUtils as cohu
 import utils.member.leveling.leveling_utils as lvlu
-import utils.server.channel_handling_utils as su
+from utils.server.channel_handling_utils import ChannelHandlingUtils as chhu
 
 class MemberCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.logger = logging.getLogger('SkyNet-Core.MemberCommands')
         self.source = None
-        self.config = cohu.json_handler(filename=str('config'))
+        self.config = cohu().json_handler(filename=str('config.json'))
 
     @commands.command(name='rank')
     async def rank(self, ctx):
@@ -42,8 +42,8 @@ class MemberCommands(commands.Cog):
         embed = discord.Embed(title='empty', color=discord.Color.dark_grey())
 
         if not place:
-            place = await su.create_category(guild=guild, name=self.config['tmpCatName'], member='SkyNet Bot', embed=embed)
-        vc, embed = await su.create_voicechannel(guild=guild, name=self.config['tempChannelName'], userlimit=userlimit, place=place, embed=embed)
+            place = await chhu.create_category(guild=guild, name=self.config['tmpCatName'], member='SkyNet Bot', embed=embed)
+        vc, embed = await chhu.create_voicechannel(guild=guild, name=self.config['tempChannelName'], userlimit=userlimit, place=place, embed=embed)
 
         try:
             await member.move_to(vc)

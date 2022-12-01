@@ -1,12 +1,12 @@
 import logging
 from discord.utils import get
-from bot.config_handler import ConfigHandlingUtils as chu
+from utils.bot.config_handler import ConfigHandlingUtils as cohu
 
 class PermissionHandlingUtils():
     def __init__(self) -> None:
         self.logger = logging.getLogger('SkyNet-Core.Permission_Handling_Utils')
-        self.config = chu.json_handler(filename=str('config'))
-        self.permissions = chu.json_handler(filename=str('permissions'))
+        self.config = cohu().json_handler(filename=str('config.json'))
+        self.permissions = cohu().json_handler(filename=str('permissions.json'))
 
     async def set_standard_permission_for_cat(self, guild, place, role, embed):
         try:

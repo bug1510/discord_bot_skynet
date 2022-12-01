@@ -1,10 +1,11 @@
 import logging
 from discord.utils import get
 from utils.bot.config_handler import ConfigHandlingUtils as cohu
+
 class RoleHandlingUtils():
     def __init__(self) -> None:
         self.logger = logging.getLogger('SkyNet-Core.Role_Handling_Utils')
-        self.config = cohu.json_handler(filename=str('config'))
+        self.config = cohu().json_handler(filename=str('config.json'))
     
     async def adding_roles(self, guild, member, roles, embed):
 
