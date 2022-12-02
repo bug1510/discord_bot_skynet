@@ -4,7 +4,7 @@ from logging.handlers import TimedRotatingFileHandler
 import discord, os, sys, getopt, logging
 from discord.ext import commands
 from datetime import datetime
-from utils.bot.config_handler import ConfigHandlingUtils as cohu
+from utils.config_handler import ConfigHandlingUtils as cohu
 
 token = cohu().json_handler(filename=str('token.json'))
 
@@ -20,53 +20,19 @@ class SkynetCore(commands.Bot):
         self.logpath = logpath
         self.configpath = configpath
 
-    async def init_logger(self):
-        #logging
-        #check log folder
-
-        if not os.path.exists(self.logpath):
-            os.makedirs(self.logpath)
-
-        self.logger = logging.getLogger('SkyNet-Core')
-        self.logger.setLevel(logging.INFO)
-
-        format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s | %(message)s')
-
-        rotatinglogs = TimedRotatingFileHandler(
-            filename=self.logpath + '/skynet_bot.log',
-            when="midnight",
-            interval=1,
-            backupCount=5
-            )
-        rotatinglogs.setLevel(logging.INFO)
-        rotatinglogs.setFormatter(format)
-
-        self.logger.addHandler(rotatinglogs)
-
-
-    async def init_modules(self, initial_extension=['cogs.bot']): #self.config['modules']):
-        #this loop collects all modules in cogs and put them in initial_extension
-        for CogFile in os.listdir(self.source + '/cogs/'):
-            if CogFile.endswith('.py'):
-                module = 'cogs.' + CogFile[:-3]
-                if module not in initial_extension:
-                    initial_extension.append(module)
-                    self.logger.info('append cog - ' + module)
-
-        #this loop loads the extension in the bot
-        for extension in initial_extension:
-            try:
-                client.load_extension(extension)
-            except Exception as e:
-                print(e)
-
     async def on_ready(self):
-        await self.init_logger()
-        await self.init_modules()
+        # await self.init_logger()
+        await client.load_extension('cogs.bot.cog_handler')
+        cog_handler = self.get_cog('CogHandler')
+        await cog_handler.init_cogs(path='/cogs/bot/', file_prefix='cogs.bot.')
+        await cog_handler.init_cogs(path='/cogs/server/', file_prefix='cogs.server.')
+        await cog_handler.init_cogs(path='/cogs/commands/', file_prefix='cogs.commands.')
+        await cog_handler.init_cogs(path='/cogs/member/', file_prefix='cogs.member.')
+        await cog_handler.init_cogs(path='/cogs/leveling/', file_prefix='cogs.leveling.')
         await client.change_presence(activity=discord.Activity(name='!help', type=2))
-        self.logger.info('bot started')
-        self.logger.info(f'config file : {self.configpath}')
-        self.logger.info(f'log path : {self.logpath}')
+        # self.logger.info('bot started')
+        # self.logger.info(f'config file : {self.configpath}')
+        # self.logger.info(f'log path : {self.logpath}')
         print('initiated')
 
 
@@ -110,8 +76,7 @@ class SkynetCore(commands.Bot):
 
 
 if __name__ == '__main__':
-    intents = discord.Intents.default()
-    intents.members = True
+    intents = discord.Intents.all()
 
     client = SkynetCore(command_prefix='!',
     description='SKYNET BOT CORE ' + '| V/ 0.8 - ALPHA',

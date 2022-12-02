@@ -13,34 +13,34 @@ class Events(commands.Cog):
 
 
     @commands.Cog.listener()
-    async def on_message(self, message):
-        channel = message.channel
-        member = message.author
-        nick = member.display_name
-        embed = discord.Embed(title='ACHTUNG',
-        description='Ein wiederholter Verstoß könnte einen Ban nach sich ziehen.',
-        color=discord.Color.dark_red())
-        deleted = False
+    # async def on_message(self, message):
+    #     channel = message.channel
+    #     member = message.author
+    #     nick = member.display_name
+    #     embed = discord.Embed(title='ACHTUNG',
+    #     description='Ein wiederholter Verstoß könnte einen Ban nach sich ziehen.',
+    #     color=discord.Color.dark_red())
+    #     deleted = False
 
-        for c in self.config['curseWords']:
-            if c in message.content:
-                await message.delete()
-                deleted = True
-                self.logger.critical(f'Curse Word was detected in a message from {member}, and the message "{message.content}" was deleted')
-                embed.add_field(name=nick,
-                value='Hat ein geblacklistetes Wort verwendet.',
-                inline=False
-                )
-                await channel.send(embed=embed)
+    #     for c in self.config['curseWords']:
+    #         if c in message.content:
+    #             await message.delete()
+    #             deleted = True
+    #             self.logger.critical(f'Curse Word was detected in a message from {member}, and the message "{message.content}" was deleted')
+    #             embed.add_field(name=nick,
+    #             value='Hat ein geblacklistetes Wort verwendet.',
+    #             inline=False
+    #             )
+    #             await channel.send(embed=embed)
 
-        if message.author.bot:
-            return
-        elif deleted == True:
-            return
-        elif message.content.startswith('!'):
-            return
-        else:
-            await lvlu.exp_gain(message)
+    #     if message.author.bot:
+    #         return
+    #     elif deleted == True:
+    #         return
+    #     elif message.content.startswith('!'):
+    #         return
+    #     else:
+    #         await lvlu.exp_gain(message)
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
@@ -104,5 +104,5 @@ class Events(commands.Cog):
     #     embed.add_field(name='Es lag wohl hier dran:', value=error)
     #     await ctx.send(embed=embed)
 
-def setup(bot):
-    bot.add_cog(Events(bot))
+async def setup(bot):
+    await bot.add_cog(Events(bot))

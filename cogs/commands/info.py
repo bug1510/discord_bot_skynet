@@ -1,6 +1,6 @@
 import discord, os, logging, platform, psutil
 from discord.ext import commands
-
+from  discord import colour
 logger = logging.getLogger('SkyNet-Core.InfoCommands')
 
 source = os.path.dirname(os.path.abspath(__file__))
@@ -48,7 +48,7 @@ class InfoCommands(commands.Cog):
         guild_owner = ctx.message.guild.owner
         guild_roles = ctx.message.guild.roles
         guild_members = ctx.message.guild.member_count
-        twitch_url = maintenance['twitchLink']
+        #twitch_url = maintenance['twitchLink']
 
         number_of_roles = 0
 
@@ -60,10 +60,10 @@ class InfoCommands(commands.Cog):
         embed.add_field(name='Owner', value=guild_owner, inline=True)
         embed.add_field(name='Number of Roles', value=number_of_roles, inline=True)
         embed.add_field(name='Number of Members(including Bots)', value=guild_members, inline=True)
-        embed.add_field(name=f'Twitch Link of {guild_owner}', value=twitch_url, inline=True)
+        #embed.add_field(name=f'Twitch Link of {guild_owner}', value=twitch_url, inline=True)
 
         await ctx.send(embed=embed)
         await ctx.message.delete()
 
-def setup(bot):
-    bot.add_cog(InfoCommands(bot))
+async def setup(bot):
+    await bot.add_cog(InfoCommands(bot))

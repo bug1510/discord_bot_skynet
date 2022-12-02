@@ -4,7 +4,7 @@ class ConfigHandlingUtils():
     def __init__(self) -> None:
         self.logger = logging.getLogger('SkyNet-Core.Config_Handling_Utils')
         self.source = os.path.dirname(os.path.abspath(__file__))
-        self.fullpath = self.source + '/../../data/config/'
+        self.fullpath = self.source + '/../data/config/'
     
     def json_handler(self, filename: str):
         try:

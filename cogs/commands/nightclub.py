@@ -79,5 +79,5 @@ class NightClubCommands(commands.Cog):
         else:
             await ctx.channel.send(":coin:  **Zahl!**  :coin:")
 
-def setup(bot):
-    bot.add_cog(NightClubCommands(bot))
+async def setup(bot):
+    await bot.add_cog(NightClubCommands(bot))

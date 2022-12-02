@@ -1,31 +1,33 @@
 import logging
+from discord.ext import commands
 from discord.utils import get
 from utils.bot.config_handler import ConfigHandlingUtils as cohu
 
-class PermissionHandlingUtils():
-    def __init__(self) -> None:
+class PermissionHandlingUtils(commands.Cog):
+    def __init__(self, bot) -> None:
+        self.bot = bot
         self.logger = logging.getLogger('SkyNet-Core.Permission_Handling_Utils')
         self.config = cohu().json_handler(filename=str('config.json'))
         self.permissions = cohu().json_handler(filename=str('permissions.json'))
 
-    async def set_standard_permission_for_cat(self, guild, place, role, embed):
+    async def set_standard_permission_for_cat(self, space):
         try:
             for r in self.permissions['Roles']:
 
                 if str(r) == 'defaultRole':
-                    space_role = guild.default_role
+                    space_role = space.guild.default_role
                 elif str(r) == 'RoleByGCC':
                     try:
-                        space_role = get(guild.roles, name=str(role))
+                        space_role = get(space.guild.roles, name=str(space.role))
                     except:
                         return
                 else:
-                    space_role = get(guild.roles, name=str(r))
+                    space_role = get(space.guild.roles, name=str(r))
                 
                 roles = self.permissions['Roles']
                 file_role = roles[str(r)]
 
-                await place.set_permissions(
+                await space.place.set_permissions(
                     space_role,
 
                     view_channel=file_role['view_channel'],
@@ -54,18 +56,21 @@ class PermissionHandlingUtils():
                     request_to_speak=file_role['request_to_speak']
                     )
             
-            self.logger.info(f'Permissions for the category {place} were set')
-            embed.add_field(
+            self.logger.info(f'Permissions for the category {space.place} were set')
+            space.embed.add_field(
                 name= '!Success setting Permissions!',
-                value= f'Die Berechtigungen für die Kategorie {place} wurden gesetzt.',
+                value= f'Die Berechtigungen für die Kategorie {space.place} wurden gesetzt.',
                 inline=False
             )
         except Exception as e:
-            self.logger.warning(f'Failed to set Permissions for the Categorie {place} due to an error: {e}')
-            embed.add_field(
+            self.logger.warning(f'Failed to set Permissions for the Categorie {space.place} due to an error: {e}')
+            space.embed.add_field(
                 name= '!Failure setting Permissions!',
-                value= f'Beim setzen der Berechtigungen für die Kategorie {place}\n ist etwas schief gelaufen.\n {e}',
+                value= f'Beim setzen der Berechtigungen für die Kategorie {space.place}\n ist etwas schief gelaufen.\n {e}',
                 inline=False
             )
         finally:
-            return embed
+            return space
+
+async def setup(bot):
+    await bot.add_cog(PermissionHandlingUtils(bot))

@@ -40,5 +40,5 @@ class Sounds(commands.Cog):
         await vc.disconnect()
         await ctx.message.delete()
 
-def setup(bot):
-    bot.add_cog(Sounds(bot))
+async def setup(bot):
+    await bot.add_cog(Sounds(bot))
