@@ -1,39 +1,45 @@
 #/usr/bin/python3
 
-from logging.handlers import TimedRotatingFileHandler
-import discord, os, sys, getopt, logging
+import discord, os, sys, getopt
 from discord.ext import commands
 from datetime import datetime
-from utils.config_handler import ConfigHandlingUtils as cohu
+from utils.file_handler import FileHandlingUtils as fhu
 
-token = cohu().json_handler(filename=str('token.json'))
+configpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/data/config/')
+logpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/logs/')
 
-configpath = '/../../data/config/'
-logpath = '/../../logs'
 class SkynetCore(commands.Bot):
     def __init__(self, **options):
         super().__init__(**options)
-        self.today = datetime.now()
-        self.today = self.today.strftime("%Y%m%d")
         self.source = os.path.dirname(os.path.abspath(__file__))
-        self.config = cohu().json_handler(filename=str('config.json'))
-        self.logpath = logpath
         self.configpath = configpath
+        self.logpath = logpath
+        self.config = fhu.json_handler(path=configpath, filename=str('config.json'))
+        self.cogpath = str(f'{self.source}/cogs/')
+        self.loaded_cogs = []
 
     async def on_ready(self):
-        # await self.init_logger()
+        await client.load_extension('cogs.bot.logging_handler')
+        self.loaded_cogs.append('cogs.bot.logging_handler')
+        logging_handler = self.get_cog('LoggingHandler')
+        await logging_handler.init_logger()
+
+        self.logger.info(f' Core | the logpath was set to: {self.logpath}')
+        self.logger.info(f'Core | the configpath was set to: {self.configpath}')
+        
+
         await client.load_extension('cogs.bot.cog_handler')
+        self.loaded_cogs.append('cogs.bot.cog_handler')
         cog_handler = self.get_cog('CogHandler')
-        await cog_handler.init_cogs(path='/cogs/bot/', file_prefix='cogs.bot.')
-        await cog_handler.init_cogs(path='/cogs/server/', file_prefix='cogs.server.')
-        await cog_handler.init_cogs(path='/cogs/commands/', file_prefix='cogs.commands.')
-        await cog_handler.init_cogs(path='/cogs/member/', file_prefix='cogs.member.')
-        await cog_handler.init_cogs(path='/cogs/leveling/', file_prefix='cogs.leveling.')
+        extensions = fhu.cog_finder(path=self.cogpath, extensions=[])
+        await cog_handler.init_cogs(extensions=extensions)
+        
         await client.change_presence(activity=discord.Activity(name='!help', type=2))
-        # self.logger.info('bot started')
-        # self.logger.info(f'config file : {self.configpath}')
-        # self.logger.info(f'log path : {self.logpath}')
-        print('initiated')
+        self.logger.info('Core | Client presence was changed')
+
+        self.logger.info('Core | has finished the startup process')
+        self.logger.info('Core | Bot was initiated successfully')
+        print('Core | Bot was initiated successfully')
 
 
     def usage():
@@ -43,8 +49,8 @@ class SkynetCore(commands.Bot):
             usage:
 
                 -h or --help    show this help
-                -c or --config  define the json configfiles path      (default : ./../../data/config/)
-                -l or --log     define the logpath              (default ./../../logs/)
+                -c or --config  define the json configfiles path      (default : ./data/config/)
+                -l or --log     define the logpath              (default ./logs/)
 
             example:
 
@@ -83,4 +89,4 @@ if __name__ == '__main__':
     help_command = commands.DefaultHelpCommand(no_category = 'Help'),
     intents=intents)
 
-    client.run(token['token'])
+    client.run((fhu.json_handler(path=configpath, filename=str('token.json')))['token'])

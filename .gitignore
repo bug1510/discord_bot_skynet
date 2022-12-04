@@ -9,6 +9,6 @@ __pycache__
 *.jpg
 *.mp3
 skynet_venv
-cogs/jfw.py
 VENV
-test.py
+jfw.py
+modules_to_refactor
