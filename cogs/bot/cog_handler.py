@@ -7,26 +7,24 @@ class CogHandler(commands.Cog):
         self.bot = bot
 
     async def init_cogs(self, extensions:list) -> None:
-        loaded_extensions = []
-        try:
-            for extension in extensions: #this loop loads the extension in the bot.
+        for extension in extensions: #this loop loads the extension in the bot.
+            try:
                 if extension not in self.bot.loaded_cogs:
                     await self.bot.load_extension(extension)
-                    list(loaded_extensions).append(extension)
-            self.bot.loaded_cogs.append(loaded_extensions)
-            self.bot.logger.info('CogHandler | finished initiating the modules')
-        except Exception as e:
-            self.bot.logger.critical(f'CogHandler | failed to initiate the modul {extension}, due to: {e}')
+                    self.bot.loaded_cogs.append(extension)
+            except Exception as e:
+                self.bot.logger.critical(f'CogHandler | failed to initiate the modul {extension}, due to: {e}')
+        self.bot.logger.info('CogHandler | finished initiating the modules')
 
     async def list_available_cogs(self, embed):
-            ListModulesField = ['']
+            ListModulesField = []
+            ListOfModules = ''
             try:
                 for CogFile in (fhu.cog_finder(path=self.bot.cogpath, extensions=ListModulesField)):
-                    if CogFile.endswith('.py'):
-                        CogFileSplitted = [CogFile.split('.')]
-                        CogFileSplitted.reverse()
-                        list(ListModulesField).append(str(CogFileSplitted[1]) + '\n')
-                embed.add_field(name='Found:', value=ListModulesField, inline=False)
+                    CogFileSplitted = CogFile.split('.')
+                    CogFileSplitted.reverse()
+                    ListOfModules += (f'-{CogFileSplitted[0]}\n')
+                embed.add_field(name='Found:', value=ListOfModules, inline=False)
             except Exception as e:
                 self.bot.logger.critical(f'CogHandler | could not list cogs because of: {e}')
                 embed.add_field(
@@ -41,8 +39,8 @@ class CogHandler(commands.Cog):
     async def load_cogs(self, member: str, embed, extensions:list):
         for extension in extensions:
             try:
-                if extension not in self.bot.load_cogs:
-                    self.bot.load_extension(extension)
+                if extension not in self.bot.loaded_cogs:
+                    await self.bot.load_extension(extension)
                     self.bot.logger.warning(f'CogHandler | cog {extension} loaded by {member}')
                     embed.add_field(name='!Success!', value='Modul was loaded')
                     embed.color=discord.Color.green()

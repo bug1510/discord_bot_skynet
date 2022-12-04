@@ -16,20 +16,19 @@ class SkynetCore(commands.Bot):
         self.logpath = logpath
         self.config = fhu.json_handler(path=configpath, filename=str('config.json'))
         self.cogpath = str(f'{self.source}/cogs/')
-        self.loaded_cogs = []
 
     async def on_ready(self):
         await client.load_extension('cogs.bot.logging_handler')
-        self.loaded_cogs.append('cogs.bot.logging_handler')
+        self.loaded_cogs = ['cogs.bot.logging_handler']
         logging_handler = self.get_cog('LoggingHandler')
         await logging_handler.init_logger()
 
         self.logger.info(f' Core | the logpath was set to: {self.logpath}')
         self.logger.info(f'Core | the configpath was set to: {self.configpath}')
-        
 
         await client.load_extension('cogs.bot.cog_handler')
         self.loaded_cogs.append('cogs.bot.cog_handler')
+
         cog_handler = self.get_cog('CogHandler')
         extensions = fhu.cog_finder(path=self.cogpath, extensions=[])
         await cog_handler.init_cogs(extensions=extensions)
