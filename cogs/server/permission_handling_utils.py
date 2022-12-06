@@ -8,9 +8,9 @@ class PermissionHandlingUtils(commands.Cog):
         self.bot = bot
 
     async def set_standard_permission_for_cat(self, space):
-        try:
-            for r in (fhu.json_handler(path=self.bot.configpath, filename=str('permissions.json')))['Roles']:
-
+        for r in (fhu.json_handler(path=self.bot.configpath, filename='permissions.json'))['Roles']:
+            print(r)
+            try:
                 if str(r) == 'defaultRole':
                     space_role = space.guild.default_role
                 elif str(r) == 'RoleByGCC':
@@ -21,9 +21,9 @@ class PermissionHandlingUtils(commands.Cog):
                 else:
                     space_role = get(space.guild.roles, name=str(r))
                 
-                roles = (fhu.json_handler(path=self.bot.configpath, filename=str('permissions.json')))['Roles']
+                roles = (fhu.json_handler(path=self.bot.configpath, filename='permissions.json'))['Roles']
                 file_role = roles[str(r)]
-
+                print(file_role)
                 await space.place.set_permissions(
                     space_role,
 
@@ -53,21 +53,21 @@ class PermissionHandlingUtils(commands.Cog):
                     request_to_speak=file_role['request_to_speak']
                     )
             
-            self.bot.logger.info(f'PermissionHandlingUtils | Permissions for the new category {space.place} were set')
-            space.embed.add_field(
-                name= '!Success setting Permissions!',
-                value= f'Die Berechtigungen für die Kategorie {space.place} wurden gesetzt.',
-                inline=False
-            )
-        except Exception as e:
-            self.bot.logger.critical(f'PermissionHandlingUtils | Failed to set Permissions for the Categorie {space.place} due to an error: {e}')
-            space.embed.add_field(
-                name= '!Failure setting Permissions!',
-                value= f'Beim setzen der Berechtigungen für die Kategorie {space.place}\n ist etwas schief gelaufen.\n {e}',
-                inline=False
-            )
-        finally:
-            return space
+                self.bot.logger.info(f'PermissionHandlingUtils | Permissions for the new category {space.place} were set')
+                space.embed.add_field(
+                    name= '!Success setting Permissions!',
+                    value= f'Die Berechtigungen für die Kategorie {space.place} wurden gesetzt.',
+                    inline=False
+                )
+            except Exception as e:
+                self.bot.logger.critical(f'PermissionHandlingUtils | Failed to set Permissions for the Categorie {space.place} due to an error: {e}')
+                space.embed.add_field(
+                    name= '!Failure setting Permissions!',
+                    value= f'Beim setzen der Berechtigungen für die Kategorie {space.place}\n ist etwas schief gelaufen.\n {e}',
+                    inline=False
+                )
+            finally:
+                return space
 
 async def setup(bot):
     await bot.add_cog(PermissionHandlingUtils(bot))

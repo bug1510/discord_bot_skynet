@@ -8,7 +8,7 @@ class RoleManagingUtils(commands.Cog):
     
     async def create_role(self, customobject:CustomObject) -> CustomObject:
         try:
-            customobject.role = customobject.guild.create_role(name=customobject.name)
+            customobject.role = await customobject.guild.create_role(name=customobject.name)
             self.bot.logger.info(f'RoleManagingUtils | created role {customobject.name} successfully')
             customobject.embed.add_field(
                 name= '!Success creating Role!',

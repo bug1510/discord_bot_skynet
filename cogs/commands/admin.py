@@ -210,6 +210,7 @@ class AdminCommands(commands.Cog):
         user_icon = ctx.message.author.display_avatar
         embed.set_thumbnail(url=user_icon)
         space = co(guild=ctx.message.guild, name=space_name, embed=embed)
+        space.userlimit = self.bot.config['userLimit']
         channel_manager = self.bot.get_cog('ChannelManagingUtils')
         role_manager = self.bot.get_cog('RoleManagingUtils')
         permission_handler = self.bot.get_cog('PermissionHandlingUtils')
