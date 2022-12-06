@@ -1,12 +1,11 @@
 import logging, os, json, os.path
 
-logger = logging.getLogger('Skynet-Core.FilHandlingUtils')
+logger = logging.getLogger('Skynet.FilHandlingUtils')
 
 class FileHandlingUtils:
     def json_handler(path: str, filename: str) -> json:
         try:
             file = str(path) + str(filename)
-
             file = open(file)
             open_file = json.load(file)
             file.close()

@@ -2,20 +2,16 @@
 
 import discord, os, sys, getopt
 from discord.ext import commands
-from datetime import datetime
 from utils.file_handler import FileHandlingUtils as fhu
 
 configpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/data/config/')
 logpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/logs/')
+cogpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/cogs/')
 
 class SkynetCore(commands.Bot):
     def __init__(self, **options):
         super().__init__(**options)
         self.source = os.path.dirname(os.path.abspath(__file__))
-        self.configpath = configpath
-        self.logpath = logpath
-        self.config = fhu.json_handler(path=configpath, filename=str('config.json'))
-        self.cogpath = str(f'{self.source}/cogs/')
 
     async def on_ready(self):
         await client.load_extension('cogs.bot.logging_handler')
@@ -23,20 +19,20 @@ class SkynetCore(commands.Bot):
         logging_handler = self.get_cog('LoggingHandler')
         await logging_handler.init_logger()
 
-        self.logger.info(f' Core | the logpath was set to: {self.logpath}')
+        self.configpath = configpath
         self.logger.info(f'Core | the configpath was set to: {self.configpath}')
+        self.config = fhu.json_handler(path=configpath, filename=str('config.json'))
 
         await client.load_extension('cogs.bot.cog_handler')
         self.loaded_cogs.append('cogs.bot.cog_handler')
 
         cog_handler = self.get_cog('CogHandler')
-        extensions = fhu.cog_finder(path=self.cogpath, extensions=[])
-        await cog_handler.init_cogs(extensions=extensions)
+        await cog_handler.init_cogs()
         
         await client.change_presence(activity=discord.Activity(name='!help', type=2))
         self.logger.info('Core | Client presence was changed')
 
-        self.logger.info('Core | has finished the startup process')
+        self.logger.info('Core | Bot has finished the startup process')
         self.logger.info('Core | Bot was initiated successfully')
         print('Core | Bot was initiated successfully')
 

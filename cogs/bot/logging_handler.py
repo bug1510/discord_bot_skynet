@@ -1,15 +1,16 @@
 import os, logging
 from logging.handlers import TimedRotatingFileHandler
 from discord.ext import commands
+from skynet_bot import logpath
 
 class LoggingHandler(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
     async def init_logger(self):
+        self.bot.logpath = logpath
         if not os.path.exists(self.bot.logpath): #checks if log folder exist if not creates one
             os.makedirs(self.bot.logpath)
-
         self.bot.logger = logging.getLogger('SkyNet')
         self.bot.logger.setLevel(logging.INFO)
 
@@ -26,6 +27,7 @@ class LoggingHandler(commands.Cog):
 
         self.bot.logger.addHandler(rotatinglogs)
         self.bot.logger.info('LoggingHandler | finished initiating the logging')
+        self.bot.logger.info(f'LoggingHandler | the logpath was set to: {self.bot.logpath}')
 
 async def setup(bot):
     await bot.add_cog(LoggingHandler(bot))

@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord.utils import get
 from utils.file_handler import FileHandlingUtils as fhu
-from utils.custom_objects import Space
+from utils.custom_object import CustomObject
 
 class RoleHandler(commands.Cog):
     def __init__(self, bot) -> None:
@@ -11,9 +11,11 @@ class RoleHandler(commands.Cog):
     async def checking_role(self, guild, role):
         highestrole = get(guild.roles, name=self.bot.config['highestSelfGiveableRole'])
         lowestrole = get(guild.roles, name=self.bot.config['lowestSelfGiveableRole'])
-
-        if role.position < highestrole.position and role.position > lowestrole.position:
-            return True
+        try:
+            if role.position < highestrole.position and role.position > lowestrole.position:
+                return True
+        except Exception as e:
+            self.bot.logger.warning(f'RoleHandler | checking the Role {role} failed due to: {e}')
 
     async def listing_role(self, guild, ListRolesField, embed):
         try:
@@ -28,146 +30,39 @@ class RoleHandler(commands.Cog):
         finally:
             return embed
 
-    async def adding_roles(self, guild, member, roles, embed):
-        added_role = ''
-        not_added_role = ''
-        match roles:
-            case 'All':
+    async def adding_roles(self, customobject:CustomObject) -> CustomObject:
+        for r in customobject.roles:
                 try:
-                    for role in guild.roles:
-                        if (self.check_role(guild=guild, role=role)):
-                            await member.add_roles(role)
-                            added_role += str(role) + '\n'
-                    embed.add_field(name='!Success adding roles!', value=added_role, inline=False)
-                    self.bot.logger.info(f'RoleHandler | {member} hat alle Rollen die zur Verfügung stehen zugewiesen bekommen')
+                    await customobject.member.add_roles(customobject.roles)
+                    self.bot.logger.info(f'RoleHandler | {customobject.member} was given the Role: {r}')
+                    customobject.embed.add_field(name=f'Success adding role!', value=r, inline=False)
                 except Exception as e:
-                    self.bot.logger.warning(f'RoleHandler | While adding roles to {member} went something wrong: {e}.')
-                    embed.add_field(
+                    self.logger.warning(f'RoleHandler | While adding role {r} to {customobject.member} went something wrong: {e}.')
+                    customobject.embed.add_field(
                         name= '!Failure adding Roles',
                         value= f'Beim hinzufügen der Rollen ist etwas schief gegangen,\nüberprüfe bitte deine Eingabe.',
                         inline=False
                     )
-                    embed.add_field(name='Error', value=e)
-                    embed.color = discord.Color.red()
-                finally:
-                    return embed
-            case roles.find(","):
-                para = roles.split(",")
-                try:
-                    for p in para:
-                        role = get(member.guild.roles, name=p)
-                        if (self.check_role(guild=guild, role=role)):
-                            await member.add_roles(role)
-                            added_role = role
-                            self.bot.logger.info(f'RoleHandler | {member} hat die Rolle {role} zugewiesen bekommen')
-                        else:
-                            not_added_role = role
-                            embed.add_field(name='!Error adding Roles!', value=not_added_role)
-                            self.bot.logger.warning(f'RoleHandler | {member} hat versucht eine Rolle zu bekommen die nicht gemanagt ist.')
-                    embed.add_field(name='!Success adding roles!', value=added_role)
-                except Exception as e:
-                    self.logger.warning(f'RoleHandler | While adding roles to {member} went something wrong: {e}.')
-                    embed.add_field(
-                        name= '!Failure adding Roles',
-                        value= f'Beim hinzufügen der Rollen ist etwas schief gegangen,\nüberprüfe bitte deine Eingabe.',
-                        inline=False
-                    )
-                    embed.add_field(name='Error', value=e)
-                    embed.color = discord.Color.red()
-                finally:
-                    return embed
-            case _:
-                try:
-                    para = [roles]
-                    for e in para:
-                        role = get(member.guild.roles, name=e)
-                        if (self.check_role(guild=guild, role=role)):
-                            await member.add_roles(role)
-                            added_roles = role
-                            embed.add_field(name='!Success adding roles!', value=added_roles)
-                            self.bot.logger.info(f'RoleHandler | {member} hat die Rolle {role} zugewiesen bekommen')
-                        else:
-                            not_added_roles = role
-                            embed.add_field(name='!Error adding Roles!', value=not_added_roles)
-                            self.bot.logger.warning(f'RoleHandler | {member} hat versucht eine Rolle zu bekommen die nicht gemanagt ist.')
-                except Exception as e:
-                    self.bot.logger.warning(f'RoleHandler | While adding roles to {member} went something wrong: {e}.')
-                    embed.add_field(
-                        name= '!Failure adding Roles',
-                        value= f'Beim hinzufügen der Rollen ist etwas schief gegangen,\nüberprüfe bitte deine Eingabe.',
-                        inline=False
-                    )
-                    embed.add_field(name='Error',value=e)
-                    embed.color = discord.Color.red()
-                finally:
-                    return embed
+                    customobject.embed.add_field(name='Error', value=e)
+                    customobject.embed.color = discord.Color.red()
+        return customobject
 
-    async def removing_roles(self, guild, member, roles, embed):
-        removed_roles = ''
-        match roles:
-            case 'All':
-                try:
-                    for role in guild.roles:
-                        if (self.check_role(guild=guild, role=role)):
-                            await member.remove_roles(role)
-                            removed_roles += str(role) + '\n'
-                    embed.add_field(name=f'Success removing roles!', value=removed_roles, inline=False)
-                except Exception as e:
-                    self.bot.logger.warning(f'RoleHandler | While removing roles from {member} went something wrong: {e}.')
-                    embed.add_field(
-                        name= '!Failure removing Roles',
-                        value= f'Beim entfernen der Rollen ist etwas schief gegangen,\nüberprüfe bitte deine Eingabe.',
-                        inline=False
-                    )
-                    embed.add_field(name='Error', value=e)
-                finally:
-                    return embed
-            
-            case roles.find(","):
-                try:
-                    para = roles.split(",")
-                    for e in para:
-                        role = get(member.guild.roles, name=e)
-                        if (self.check_role(guild=guild, role=role)):
-                            await member.remove_roles(role)
-                            embed.add_field(name='!Success removing roles!', value=removed_roles)
-                    self.bot.logger.info(f'RoleHandler | {member} hat die Rolle {role} entfernt bekommen')
-                except Exception as e:
-                    self.bot.logger.warning(f'RoleHandler | While removing roles from {member} went something wrong: {e}.')
-                    embed.add_field(
-                        name= '!Failure removing Roles',
-                        value= f'Beim entfernen der Rollen ist etwas schief gegangen,\nüberprüfe bitte deine Eingabe.',
-                        inline=False
-                    )
-                    embed.add_field(name='Error', value=e)
-                finally:
-                    return embed
-
-            case _:
-                try:
-                    para = [roles]
-                    for e in para:
-                        role = get(member.guild.roles, name=e)
-                        if (self.check_role(guild=guild, role=role)):
-                            await member.remove_roles(role)
-                            embed.add_field(
-                                name='!Success removing roles!',
-                                value=removed_roles
-                                )
-                    self.bot.logger.info(f'RoleHandler | {member} hat die Rolle {role} entfernt bekommen')
-                except Exception as e:
-                    self.bot.logger.warning(f'RoleHandler | While removing roles from {member} went something wrong: {e}.')
-                    embed.add_field(
-                        name= '!Failure removing Roles',
-                        value= f'Beim entfernen der Rollen ist etwas schief gegangen,\nüberprüfe bitte deine Eingabe.',
-                        inline=False
-                    )
-                    embed.add_field(
-                        name='Error',
-                        value=e
-                    )
-                finally:
-                    return embed
-
+    async def removing_roles(self, customobject: CustomObject) -> CustomObject:
+        for r in customobject.roles:
+            try:
+                await customobject.member.remove_roles(r)
+                self.bot.logger.info(f'RoleHandler | Removed {r} from {customobject.member}.')
+                customobject.embed.add_field(name=f'Success removing role!', value=r, inline=False)
+            except Exception as e:
+                self.bot.logger.warning(f'RoleHandler | While removing roles from {customobject.member} went something wrong: {e}.')
+                customobject.embed.add_field(
+                    name= '!Failure removing Roles',
+                    value= f'Beim entfernen der Rollen ist etwas schief gegangen,\nüberprüfe bitte deine Eingabe.',
+                    inline=False
+                )
+                customobject.embed.add_field(name='Error', value=e)
+                customobject.embed.color = discord.Color.red()
+        return customobject       
+        
 async def setup(bot):
     await bot.add_cog(RoleHandler(bot))
