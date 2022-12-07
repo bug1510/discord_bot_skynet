@@ -272,29 +272,29 @@ class AdminCommands(commands.Cog):
         await ctx.message.delete()
 
     # Funktioniert in momentaner Kofiguration nicht
-    # @commands.command()
-    # @commands.has_role(needed_role['maintananceRole'])
-    # async def clear(self, ctx, number=50):
-    #     '''Löscht eine Nummer an Nachrichten aus diesem Kanal'''
+    @commands.command()
+    @commands.has_role(needed_role['maintananceRole'])
+    async def clear(self, ctx, number=50):
+        '''Löscht eine Nummer an Nachrichten aus diesem Kanal'''
 
-    #     channel = ctx.message.channel
-    #     member = ctx.message.author
-    #     user = ctx.message.author.display_name
+        channel = ctx.message.channel
+        member = ctx.message.author
+        user = ctx.message.author.display_name
 
-    #     user_icon = ctx.message.author.avatar_url_as(static_format='png', size=128)
+        user_icon = ctx.message.author.display_avatar
 
-    #     embed = discord.Embed(
-    #         title='!ACHTUNG!',
-    #         description=f'{number} alte Nachrichten wurden aus diesem Chat gelöscht,\nvon deinem Admin: {user}',
-    #         color=discord.Color.dark_red())
+        embed = discord.Embed(
+            title='!ACHTUNG!',
+            description=f'{number} alte Nachrichten wurden aus diesem Chat gelöscht,\nvon deinem Admin: {user}',
+            color=discord.Color.dark_red())
 
-    #     embed.set_thumbnail(url=user_icon)
+        embed.set_thumbnail(url=user_icon)
 
-    #     self.bot.logger.warning(f'{number} alte Nachrichten wurden aus diesem Chat: {channel} gelöscht, vom Admin: {member}')
+        self.bot.logger.warning(f'{number} alte Nachrichten wurden aus diesem Chat: {channel} gelöscht, vom Admin: {member}')
 
-    #     await ctx.message.delete()
-    #     await channel.purge(limit=int(number), oldest_first=True, bulk=True)
-    #     await ctx.channel.send(embed=embed)
+        await ctx.message.delete()
+        await channel.purge(limit=int(number), oldest_first=True, bulk=True)
+        await ctx.channel.send(embed=embed)
 
 
 async def setup(bot):

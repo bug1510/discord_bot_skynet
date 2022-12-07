@@ -54,8 +54,7 @@ class BotCommands(commands.Cog):
     async def load_cog(self, ctx, extension):
         """Lädt ein Modul um ein neustart des Bots zu vermeiden."""
         member = ctx.message.author
-        extensions = []
-        extensions.append(extension)
+        extensions = fhu.cog_finder(path=self.bot.cogpath, extension=extension)
 
         embed = discord.Embed(title='Load Modul', description=f'{extension}')
 
@@ -70,8 +69,7 @@ class BotCommands(commands.Cog):
     async def unload_cog(self, ctx, extension):
         """Trennt ein Modul um es ohne Impact berabeiten oder entfernen zu können."""
         member = ctx.message.author
-        extensions = []
-        extensions.append(extension)
+        extensions = fhu.cog_finder(path=self.bot.cogpath, extension=extension)
 
         embed = discord.Embed(title='Unload Modul',description=f'{extension}')
 
@@ -86,8 +84,7 @@ class BotCommands(commands.Cog):
     async def reload_cog(self, ctx, extension):
         """Lädt ein Modul neu wenn es sich geändert haben sollte."""
         member = ctx.message.author
-        extensions = []
-        extensions.append(extension)
+        extensions = fhu.cog_finder(path=self.bot.cogpath, extension=extension)
 
         embed = discord.Embed(title='Reload Modul',description=f'{extension}')
 

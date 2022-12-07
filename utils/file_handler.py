@@ -21,7 +21,14 @@ class FileHandlingUtils:
     #         json.dump(data, f, indent=4)
     #         f.truncate()     # remove remaining part
 
-    def cog_finder(path:str, extensions:list) -> list:
+    def cog_finder(path:str, extension) -> list:
+        extensions = []
+        for CogFile in (FileHandlingUtils.cog_listing(path=path, extensions=[])):
+            if str(extension) in str(CogFile):
+                extensions.append(CogFile)
+        return extensions
+
+    def cog_listing(path:str, extensions:list) -> list:
         try:
             for root, dirs, CogFiles in os.walk(path):
                 for CogFile in CogFiles:

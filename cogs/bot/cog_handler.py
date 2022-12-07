@@ -10,7 +10,7 @@ class CogHandler(commands.Cog):
     async def init_cogs(self) -> None:
         self.bot.cogpath = cogpath
         self.bot.logger.info(f' CogHandler | The Cogpath was set to: {self.bot.cogpath}')
-        extensions = fhu.cog_finder(path=self.bot.cogpath, extensions=[])
+        extensions = fhu.cog_listing(path=self.bot.cogpath, extensions=[])
         for extension in extensions:
             try:
                 if extension not in self.bot.loaded_cogs:
@@ -25,7 +25,7 @@ class CogHandler(commands.Cog):
             ListModulesField = []
             ListOfModules = ''
             try:
-                for CogFile in (fhu.cog_finder(path=self.bot.cogpath, extensions=ListModulesField)):
+                for CogFile in (fhu.cog_listing(path=self.bot.cogpath, extensions=ListModulesField)):
                     CogFileSplitted = CogFile.split('.')
                     CogFileSplitted.reverse()
                     ListOfModules += (f'-{CogFileSplitted[0]}\n')
@@ -61,7 +61,7 @@ class CogHandler(commands.Cog):
             match str(extension):
                 case extension.startswith('cogs.commands.'):
                     try:
-                        self.bot.unload_extension(extension)
+                        await self.bot.unload_extension(extension)
                         self.bot.logger.warning(f'CogHandler | cog {extension} unloaded by {member}')
                         embed.add_field(name='!Success!', value='Modul was unloaded')
                         embed.color=discord.Color.green()
@@ -83,14 +83,14 @@ class CogHandler(commands.Cog):
     async def reload_cogs(self, member: str, embed, extensions: list):
         for extension in extensions:
             try:
-                self.bot.reload_extension(extension)
-                self.logger.info(f'CogHandler | cog {extension} reloaded by {member}')
+                await self.bot.reload_extension(extension)
+                self.bot.logger.info(f'CogHandler | cog {extension} reloaded by {member}')
                 embed.add_field(name='!Success!', value='Modul was reloaded')
                 embed.color=discord.Color.green()
             except Exception as e:
                 embed.add_field(name='Error',value=e)
                 embed.color=discord.Color.red()
-                self.logger.critical(f'CogHandler | {member} tried to reload the cog {extension} but the following Error occured:\n{e}')
+                self.bot.logger.critical(f'CogHandler | {member} tried to reload the cog {extension} but the following Error occured:\n{e}')
             finally:
                 return embed
 
