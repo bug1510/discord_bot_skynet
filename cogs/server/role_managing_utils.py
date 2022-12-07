@@ -28,7 +28,7 @@ class RoleManagingUtils(commands.Cog):
 
     async def delete_role(self, customobject:CustomObject) -> CustomObject:
         try:
-            customobject.role.delete(reason=None)
+            await customobject.role.delete(reason=None)
 
             self.bot.logger.info(f'RoleManagingUtils | deleted the role {customobject.role} successfully')
             customobject.embed.add_field(
