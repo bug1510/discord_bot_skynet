@@ -24,7 +24,7 @@ class FileHandlingUtils:
     def cog_finder(path:str, extension) -> list:
         extensions = []
         for CogFile in (FileHandlingUtils.cog_listing(path=path, extensions=[])):
-            if str(extension) in str(CogFile):
+            if str(CogFile).endswith(extension):
                 extensions.append(CogFile)
         return extensions
 

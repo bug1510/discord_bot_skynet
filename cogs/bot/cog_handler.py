@@ -46,9 +46,14 @@ class CogHandler(commands.Cog):
             try:
                 if extension not in self.bot.loaded_cogs:
                     await self.bot.load_extension(extension)
+                    self.bot.loaded_cogs.append(extension)
                     self.bot.logger.warning(f'CogHandler | cog {extension} loaded by {member}')
                     embed.add_field(name='!Success!', value='Modul was loaded')
                     embed.color=discord.Color.green()
+                else:
+                    embed.add_field(name='Success?!', value='Modul was allready loaded')
+                    self.bot.logger.warning(f'CogHandler | {member} tried to load the cog {extension} but it was allready loaded')
+                    embed.color=discord.Color.purple()
             except Exception as e:
                 embed.add_field(name='!Error!', value=e)
                 self.bot.logger.critical(f'CogHandler | {member} tried to load the cog {extension} but the following Error occured:\n {e}')
@@ -58,27 +63,27 @@ class CogHandler(commands.Cog):
 
     async def unload_cogs(self, member: str, embed, extensions:list):
         for extension in extensions:
-            match str(extension):
-                case extension.startswith('cogs.commands.'):
-                    try:
-                        await self.bot.unload_extension(extension)
-                        self.bot.logger.warning(f'CogHandler | cog {extension} unloaded by {member}')
-                        embed.add_field(name='!Success!', value='Modul was unloaded')
-                        embed.color=discord.Color.green()
-                    except Exception as e:
-                        embed.add_field(name='Error', value=e)
-                        embed.color=discord.Color.red()
-                        self.bot.logger.critical(f'CogHandler | {member} tried to unload the cog {extension} but the following Error occured:\n{e}')
-                    finally:
-                        return embed
-                case _:
-                    embed = discord.Embed(
-                        title='Dein Ernst?',
-                        description='Was glaubst du was passiert wenn du das hier entfernst? Denk doch mal nach!',
-                        color=discord.Color.orange()
-                    )
-                    self.bot.logger.critical(f'CogHandler | {member} tried to unload the cog {extension} that shouldnt be unloaded')
+            if str(extension).startswith('cogs.commands.') and not str(extension).endswith('bot'):
+                try:
+                    await self.bot.unload_extension(extension)
+                    self.bot.loaded_cogs.remove(extension)
+                    self.bot.logger.warning(f'CogHandler | cog {extension} unloaded by {member}')
+                    embed.add_field(name='!Success!', value='Modul was unloaded')
+                    embed.color=discord.Color.green()
+                except Exception as e:
+                    embed.add_field(name='Error', value=e)
+                    embed.color=discord.Color.red()
+                    self.bot.logger.critical(f'CogHandler | {member} tried to unload the cog {extension} but the following Error occured:\n{e}')
+                finally:
                     return embed
+            else:
+                embed = discord.Embed(
+                    title='Dein Ernst?',
+                    description=f'Was glaubst du was passiert,\nwenn du das hier entfernst {extension}? Denk doch mal nach!',
+                    color=discord.Color.orange()
+                )
+                self.bot.logger.critical(f'CogHandler | {member} tried to unload the cog {extension} that shouldnt be unloaded')
+                return embed
 
     async def reload_cogs(self, member: str, embed, extensions: list):
         for extension in extensions:
