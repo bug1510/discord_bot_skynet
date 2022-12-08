@@ -1,13 +1,48 @@
 import logging
 from discord.utils import get
-from utils.bot.config_handler import ConfigHandlingUtils as cohu
-from utils.server.channel_handling_utils import ChannelHandlingUtils as chhu
-from utils.server.permission_handling_utils import PermissionHandlingUtils as phu
+from discord.ext import commands
+from utils.file_handler import FileHandlingUtils as fhu
 
-class InitFunctions():
-    def __init__(self) -> None:
+class InitFunctions(commands.Cog):
+    def __init__(self, bot) -> None:
+        self.bot = bot
         self.logger = logging.getLogger('SkyNet-Core.Init_Functions')
-        self.config = cohu().json_handler(filename=str('config.json'))
+
+    async def init_database(self, ctx, embed):
+        guild_id = ctx.message.author.guild.id
+        
+        try:
+            mydb = self.dbclient[str(guild_id)]
+            mycol = mydb["serverconfig"]
+            mycol.insert_one(self.config)
+
+            for y in mycol.find():
+                print(y) 
+
+            embed.add_field(
+                name= '!Success creating Leveling Database!',
+                value= 'Die Level Datenbank wurde angelegt.',
+                inline= False
+            )
+        except Exception as e:
+            embed.add_field(
+                name= '!Failure creating Leveling Database',
+                value= f'Die Level Datenbank konnte nicht angelegt werden. \n{e}',
+                inline= False
+            )
+        finally:
+            return embed
+
+    async def init_leveling():
+        pass
+
+    async def init_inter_server_leveling(self, ctx, embed):
+        embed.add_field(
+        name= '!Information Inter-Server-Leveling!',
+        value= 'Inter-Server-Leveling is not implemented yet',
+        inline= False
+    )
+        return embed
 
     async def init_server_sync(self, ctx, embed):
 
@@ -56,13 +91,5 @@ class InitFunctions():
         finally:
             return embed
 
-    async def init_leveling():
-        pass
-
-    async def init_inter_server_leveling(self, ctx, embed):
-        embed.add_field(
-        name= '!Information Inter-Server-Leveling!',
-        value= 'Inter-Server-Leveling is not implemented yet',
-        inline= False
-    )
-        return embed
+async def setup(bot).
+    await bot.add_cog(InitFunctions(bot))

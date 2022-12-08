@@ -7,6 +7,7 @@ from utils.file_handler import FileHandlingUtils as fhu
 configpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/data/config/')
 logpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/logs/')
 cogpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/cogs/')
+ssdbpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/data/database/')
 
 class SkynetCore(commands.Bot):
     def __init__(self, **options):

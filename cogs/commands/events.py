@@ -1,64 +1,62 @@
 import logging, discord
 from discord.ext import commands
 from discord.utils import get
-from utils.bot.config_handler import ConfigHandlingUtils as cohu
-import utils.member.leveling.leveling_utils as lvlu
-import utils.server.channel_handling_utils as su
+from utils.custom_object import CustomObject as co
 
 class Events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.logger = logging.getLogger('SkyNet-Core.Events')
-        self.config = cohu().json_handler(filename=str('config.json'))
 
 
     @commands.Cog.listener()
-    # async def on_message(self, message):
-    #     channel = message.channel
-    #     member = message.author
-    #     nick = member.display_name
-    #     embed = discord.Embed(title='ACHTUNG',
-    #     description='Ein wiederholter Verstoß könnte einen Ban nach sich ziehen.',
-    #     color=discord.Color.dark_red())
-    #     deleted = False
+    async def on_message(self, message):
+        deleted = False
+        embed = discord.Embed(title='ACHTUNG',
+        description='Ein wiederholter Verstoß könnte einen Ban nach sich ziehen.',
+        color=discord.Color.dark_red())
+        
+        leveling_handler = await self.bot.get_cog(str(self.bot.lvl_handler))
 
-    #     for c in self.config['curseWords']:
-    #         if c in message.content:
-    #             await message.delete()
-    #             deleted = True
-    #             self.logger.critical(f'Curse Word was detected in a message from {member}, and the message "{message.content}" was deleted')
-    #             embed.add_field(name=nick,
-    #             value='Hat ein geblacklistetes Wort verwendet.',
-    #             inline=False
-    #             )
-    #             await channel.send(embed=embed)
+        custom_user = co(guild=message.guild, name=message.author, embed=embed )
+        custom_user.user = message.author
 
-    #     if message.author.bot:
-    #         return
-    #     elif deleted == True:
-    #         return
-    #     elif message.content.startswith('!'):
-    #         return
-    #     else:
-    #         await lvlu.exp_gain(message)
+        for c in self.config['curseWords']:
+            if c in message.content:
+                await message.delete()
+                deleted = True
+                self.logger.critical(f'Curse Word was detected in a message from {message.author}, and the message "{message.content}" was deleted')
+                embed.add_field(name=message.author,
+                value='Hat ein geblacklistetes Wort verwendet.',
+                inline=False
+                )
+                await message.channel.send(embed=embed)
+
+        if message.author.bot:
+            return
+        elif deleted == True:
+            return
+        elif message.content.startswith('!'):
+            return
+        else:
+            await leveling_handler.exp_gain(custom_user)
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
-        guild = member.guild
-        place = get(guild.categories, name=self.config['tmpCatName'])
-
         embed = discord.Embed(title='empty', color=discord.Color.dark_grey())
 
-        tmp_channel_name = ''
+        tmp_channel_name = self.bot.config['tempChannelName']
+        custom_channel = co(member.guild, tmp_channel_name, embed)
 
-        for c in self.config['tempChannelName']:
-            tmp_channel_name += c
+        channel_manager = self.bot.get_cog('ChannelHandlingUtils')
+        custom_channel.place = get(member.guild.categories, name=self.bot.config['tmpCatName'])
 
-        for vc in place.voice_channels:
+        for vc in custom_channel.place.voice_channels:
             vs = vc.voice_states
-            if str(vc) == str(tmp_channel_name):
+            if str(vc) == custom_channel.name:
                 if not vs:
-                    await su.delete_voicechannel(place=place, name=vc, member='SkyNet Bot', embed=embed)
+                    custom_channel.vc = vc
+                    await channel_manager.delete_voicechannel(custom_channel)
 
     @commands.Cog.listener()
     async def on_guild_role_update(self, before, after):
