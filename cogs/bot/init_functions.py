@@ -8,33 +8,11 @@ class InitFunctions(commands.Cog):
         self.bot = bot
         self.logger = logging.getLogger('SkyNet-Core.Init_Functions')
 
-    async def init_database(self, ctx, embed):
-        guild_id = ctx.message.author.guild.id
-        
-        try:
-            mydb = self.dbclient[str(guild_id)]
-            mycol = mydb["serverconfig"]
-            mycol.insert_one(self.config)
-
-            for y in mycol.find():
-                print(y) 
-
-            embed.add_field(
-                name= '!Success creating Leveling Database!',
-                value= 'Die Level Datenbank wurde angelegt.',
-                inline= False
-            )
-        except Exception as e:
-            embed.add_field(
-                name= '!Failure creating Leveling Database',
-                value= f'Die Level Datenbank konnte nicht angelegt werden. \n{e}',
-                inline= False
-            )
-        finally:
-            return embed
-
-    async def init_leveling():
+    async def register_server(self):
         pass
+
+    async def init_database(self, ctx):
+        db_handler = self.bot.get_cog(self.bot.db_handler)
 
     async def init_inter_server_leveling(self, ctx, embed):
         embed.add_field(
@@ -43,7 +21,8 @@ class InitFunctions(commands.Cog):
         inline= False
     )
         return embed
-
+    commands.command()
+    @commands.check()
     async def init_server_sync(self, ctx, embed):
 
         embed.add_field(
@@ -91,5 +70,5 @@ class InitFunctions(commands.Cog):
         finally:
             return embed
 
-async def setup(bot).
+async def setup(bot):
     await bot.add_cog(InitFunctions(bot))
