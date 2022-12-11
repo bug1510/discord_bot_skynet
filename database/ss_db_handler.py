@@ -6,6 +6,14 @@ class SingleServerDatabaseHandler(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
+    async def create_table(self, guild_id):
+        con = sqlite3.connect(f'{ssdbpath}/{guild_id}.db')
+        cur = con.cursor()
+        cur.execute("""Create Table IF NOT EXISTS leveling
+        (dc_user_nick text, dc_user_id integer, tw_user_nick text, tw_user_id integer, level integer NOT NULL DEFAULT 1, exp integer NOT NULL DEFAULT 0)""")
+        con.commit()
+        con.close()
+
     async def create_user(self, guild_id, dc_user_id, dc_user_name):
         try:
             con = sqlite3.connect(f'{ssdbpath}/{guild_id}.db')

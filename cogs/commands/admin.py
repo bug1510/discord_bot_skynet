@@ -10,36 +10,35 @@ needed_role = fhu.json_handler(path=configpath, filename=str('config.json'))
 class AdminCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+    
+    @commands.command()
+    @commands.has_role(needed_role['maintananceRole'])
+    async def init_bot(self, ctx):
+        """Initialisiert deine Konfiguration auf deinem Discord."""
 
-    # Ist noch nicht vollständig implementiert.
-    # @commands.command()
-    # @commands.has_role(needed_role['maintananceRole'])
-    # async def init_bot(self, ctx):
-    #     """Initialisiert deine Konfiguration auf deinem Discord."""
+        member = ctx.message.author
+        user = member.display_name
 
-    #     member = ctx.message.author
-    #     user = member.display_name
+        embed = discord.Embed(
+            title='Initialisieren des Bots',
+            description=f'{user} hat das initialisieren ausgelöst.',
+            color=discord.Color.dark_gold()
+            )
 
-    #     embed = discord.Embed(
-    #         title='Initialisieren des Bots',
-    #         description=f'{user} hat das initialisieren ausgelöst.',
-    #         color=discord.Color.dark_gold()
-    #         )
+        #if self.bot.config['ServerSync'] == True:
+        #    embed = await inf.init_server_sync(ctx, embed=embed)
 
-    #     if self.bot.config['ServerSync'] == True:
-    #         embed = await inf.init_server_sync(ctx, embed=embed)
+        #if self.bot.config['RolesOnVote'] == True:
+        #    embed = await inf.init_vote_roles_on(ctx, embed=embed)
 
-    #     if self.bot.config['RolesOnVote'] == True:
-    #         embed = await inf.init_vote_roles_on(ctx, embed=embed)
+        if self.bot.config['Leveling'] == True:
+            embed = await inf.init_database(ctx, embed=embed)
 
-    #     if self.bot.config['Leveling'] == True:
-    #         embed = await inf.init_database(ctx, embed=embed)
+        if self.bot.config['InterServerLeveling'] == True:
+            embed = await inf.init_inter_server_leveling(ctx, embed=embed)
 
-    #     if self.bot.config['InterServerLeveling'] == True:
-    #         embed = await inf.init_inter_server_leveling(ctx, embed=embed)
-
-    #     await ctx.message.delete()
-    #     await ctx.send(embed=embed)
+        await ctx.message.delete()
+        await ctx.send(embed=embed)
 
     @commands.command(name='lsrole')
     @commands.has_role(needed_role['maintananceRole'])

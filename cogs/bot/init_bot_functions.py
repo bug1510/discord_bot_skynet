@@ -1,36 +1,26 @@
 import logging
 from discord.utils import get
 from discord.ext import commands
-from utils.file_handler import FileHandlingUtils as fhu
 
-class InitFunctions(commands.Cog):
+class InitBotFunctions(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
         self.logger = logging.getLogger('SkyNet-Core.Init_Functions')
 
-    async def register_server(self):
-        pass
+    async def init_database(self):
+        community_settings = self.bot.config['CommunitySettings']
 
-    async def init_database(self, ctx):
-        db_handler = self.bot.get_cog(self.bot.db_handler)
+        if community_settings['MultiServerLeveling'] and not community_settings['SingleServerLeveling']:
+            self.bot.load_extension('database.ms_db_handler')
+        elif community_settings['SingleServerLeveling'] and not community_settings['MultiServerLeveling']:
+            self.bot.load_extension('database.ss_db_handler')
+        else:
+            return
 
-    async def init_inter_server_leveling(self, ctx, embed):
-        embed.add_field(
-        name= '!Information Inter-Server-Leveling!',
-        value= 'Inter-Server-Leveling is not implemented yet',
-        inline= False
-    )
-        return embed
-    commands.command()
-    @commands.check()
-    async def init_server_sync(self, ctx, embed):
+        if community_settings['MultiServerSync']:
+            pass
 
-        embed.add_field(
-        name= '!Information on Multi-Server-Sync!',
-        value= 'Multi-Server-Sync is not implemented yet',
-        inline= False
-    )
-        return embed
+
 
     async def init_vote_roles_on(self, ctx, embed):
         
@@ -71,4 +61,4 @@ class InitFunctions(commands.Cog):
             return embed
 
 async def setup(bot):
-    await bot.add_cog(InitFunctions(bot))
+    await bot.add_cog(InitBotFunctions(bot))

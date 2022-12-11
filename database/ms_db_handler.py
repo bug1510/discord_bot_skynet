@@ -37,7 +37,7 @@ class MultiServerDatabaseHandler(commands.Cog):
         except Exception as e:
             self.bot.logger.critical(f'MultiServerDatabaseHandler | Initiating the Database Client failed due to: {e}')
     
-    async def create_db_table(self):
+    async def create_table(self):
         pass
 
     async def create_user(self, guild_id, dc_user_id, dec_user_name):

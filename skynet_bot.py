@@ -7,7 +7,7 @@ from utils.file_handler import FileHandlingUtils as fhu
 configpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/data/config/')
 logpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/logs/')
 cogpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/cogs/')
-ssdbpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/data/database/')
+ssdbpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/database/')
 
 class SkynetCore(commands.Bot):
     def __init__(self, **options):
@@ -29,7 +29,7 @@ class SkynetCore(commands.Bot):
 
         cog_handler = self.get_cog('CogHandler')
         await cog_handler.init_cogs()
-        
+
         await client.change_presence(activity=discord.Activity(name='!help', type=2))
         self.logger.info('Core | Client presence was changed')
 

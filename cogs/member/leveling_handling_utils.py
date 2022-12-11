@@ -1,9 +1,26 @@
 from discord.ext import commands
-from utils.file_handler import FileHandlingUtils as fhu
 
 class LevelHandlingUtils(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
+
+    async def init_inter_server_leveling(self, ctx, embed):
+        embed.add_field(
+        name= '!Information Inter-Server-Leveling!',
+        value= 'Inter-Server-Leveling is not implemented yet',
+        inline= False
+    )
+        return embed
+    commands.command()
+    @commands.check()
+    async def init_server_sync(self, ctx, embed):
+
+        embed.add_field(
+        name= '!Information on Multi-Server-Sync!',
+        value= 'Multi-Server-Sync is not implemented yet',
+        inline= False
+    )
+        return embed
 
     async def exp_gain(self, custom_user, rate):
         if self.bot.config['Leveling']:
