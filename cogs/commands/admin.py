@@ -13,29 +13,25 @@ class AdminCommands(commands.Cog):
     
     @commands.command()
     @commands.has_role(needed_role['maintananceRole'])
-    async def init_bot(self, ctx):
+    async def register_server(self, ctx):
         """Initialisiert deine Konfiguration auf deinem Discord."""
+
+        db_hanlder = self.bot.get_cog('DBHandler')
 
         member = ctx.message.author
         user = member.display_name
 
         embed = discord.Embed(
-            title='Initialisieren des Bots',
-            description=f'{user} hat das initialisieren ausgelöst.',
+            title='Registrieren des Servers',
+            description=f'Server wurde von {member} ausgelöst',
             color=discord.Color.dark_gold()
             )
 
-        #if self.bot.config['ServerSync'] == True:
-        #    embed = await inf.init_server_sync(ctx, embed=embed)
+        if self.bot.['ServerSync'] == True:
+            await inf.init_server_sync(ctx, embed=embed)
 
-        #if self.bot.config['RolesOnVote'] == True:
-        #    embed = await inf.init_vote_roles_on(ctx, embed=embed)
-
-        if self.bot.config['Leveling'] == True:
-            embed = await inf.init_database(ctx, embed=embed)
-
-        if self.bot.config['InterServerLeveling'] == True:
-            embed = await inf.init_inter_server_leveling(ctx, embed=embed)
+        if self.bot.community_settings['Leveling']:
+            await db_hanlder.create_table(guild_id=ctx.message.guild.id)
 
         await ctx.message.delete()
         await ctx.send(embed=embed)
@@ -270,7 +266,6 @@ class AdminCommands(commands.Cog):
         await ctx.send(embed=space.embed)
         await ctx.message.delete()
 
-    # Funktioniert in momentaner Kofiguration nicht
     @commands.command()
     @commands.has_role(needed_role['maintananceRole'])
     async def clear(self, ctx, number=50):

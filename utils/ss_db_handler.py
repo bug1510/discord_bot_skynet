@@ -2,7 +2,7 @@ import sqlite3
 from discord.ext import commands
 from skynet_bot import ssdbpath
 
-class SingleServerDatabaseHandler(commands.Cog):
+class DBHandler(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
@@ -62,4 +62,4 @@ class SingleServerDatabaseHandler(commands.Cog):
             self.bot.logger.warning(f'SingleServerDBHandlingUtils | failed to update Level and Experience for User {dc_user_name} due to: {e}')
 
 async def setup(bot):
-    await bot.add_cog(SingleServerDatabaseHandler(bot))
+    await bot.add_cog(DBHandler(bot))

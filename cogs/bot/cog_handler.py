@@ -1,25 +1,11 @@
 import discord
 from discord.ext import commands
 from utils.file_handler import FileHandlingUtils as fhu
-from skynet_bot import cogpath
+
 
 class CogHandler(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
-
-    async def init_cogs(self) -> None:
-        self.bot.cogpath = cogpath
-        self.bot.logger.info(f' CogHandler | The Cogpath was set to: {self.bot.cogpath}')
-        extensions = fhu.cog_listing(path=self.bot.cogpath, extensions=[])
-        for extension in extensions:
-            try:
-                if extension not in self.bot.loaded_cogs:
-                    await self.bot.load_extension(extension)
-                    self.bot.loaded_cogs.append(extension)
-                    self.bot.logger.info(f'CogHandler | The following Module was loaded into the bot: {extension}')
-            except Exception as e:
-                self.bot.logger.critical(f'CogHandler | failed to initiate the modul {extension}, due to: {e}')
-        self.bot.logger.info('CogHandler | finished initiating the modules')
 
     async def list_available_cogs(self, embed):
             ListModulesField = []

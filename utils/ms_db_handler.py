@@ -2,7 +2,7 @@ import urllib.parse as up
 from discord.ext import commands
 from pymongo import MongoClient
 
-class MultiServerDatabaseHandler(commands.Cog):
+class DBHandler(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
@@ -37,7 +37,7 @@ class MultiServerDatabaseHandler(commands.Cog):
         except Exception as e:
             self.bot.logger.critical(f'MultiServerDatabaseHandler | Initiating the Database Client failed due to: {e}')
     
-    async def create_table(self):
+    async def create_table(self, guild_id):
         pass
 
     async def create_user(self, guild_id, dc_user_id, dec_user_name):
@@ -50,4 +50,4 @@ class MultiServerDatabaseHandler(commands.Cog):
         pass
 
 async def setup(bot):
-    await bot.add_cog(MultiServerDatabaseHandler(bot))
+    await bot.add_cog(DBHandler(bot))

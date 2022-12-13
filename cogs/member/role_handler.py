@@ -63,6 +63,50 @@ class RoleHandler(commands.Cog):
                 customobject.embed.add_field(name='Error', value=e)
                 customobject.embed.color = discord.Color.red()
         return customobject       
+
+    async def init_vote_roles_on(self, ctx, embed):
+        channel_manager = self.bot.get_cog('ChannelManagingUtils')
+        permission_handler = self.bot.get_cog('PermissionHandlingUtils')
+        role_manager = self.bot.get_cog('RoleHandler')
         
+        server_settings = self.config['Serversettings']
+
+        custom_channel = co(guild=ctx.message.guild, name=server_settings['TempCatName'], embed=embed)
+        custom_channel.place = get(custom_channel.guild.categories, name=server_settings['TempCatName'])
+        channel_name = server_settings['TempChannelName']
+        channel_name = channel_name[0]
+        custom_channel.channel = get(custom_channel.guild.channels, name=str(channel_name))
+
+        if not custom_channel.place:
+            custom_channel = await channel_manager.create_category(custom_channel)
+            custom_channel.role = custom_channel.guild.default_role
+            custom_channel = await permission_handler.set_standard_permission_for_cat(custom_channel)
+
+        if not custom_channel.channel:
+            custom_channel.channel = str(channel_name)
+            custom_channel = await channel_manager.create_textchannel(custom_channel)
+        try:
+            for role in ctx.guild.roles:
+                if (role_manager.check_role(guild=custom_channel.guild, role=role)):
+                    msg = await custom_channel.channel.send(f'Möchtest du die Role {role} haben?')
+
+                    await msg.add_reaction(emoji='👍')
+                    await msg.add_reaction(emoji='👎')
+        
+            embed.add_field(
+                name= '!Success creating Roles on Vote!',
+                value= 'Die Vote Nachrichten wurden angelegt.',
+                inline= False
+            )
+
+        except Exception as e:
+            embed.add_field(
+                name= '!Failure creating Roles on Vote!',
+                value= f'Die Vote Nachrichten konnten nicht angelegt werden. \n{e}',
+                inline= False
+            )
+        finally:
+            return embed
+
 async def setup(bot):
     await bot.add_cog(RoleHandler(bot))

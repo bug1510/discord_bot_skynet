@@ -7,7 +7,7 @@ from utils.file_handler import FileHandlingUtils as fhu
 configpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/data/config/')
 logpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/logs/')
 cogpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/cogs/')
-ssdbpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/database/')
+ssdbpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/data/')
 
 class SkynetCore(commands.Bot):
     def __init__(self, **options):
@@ -15,20 +15,23 @@ class SkynetCore(commands.Bot):
         self.source = os.path.dirname(os.path.abspath(__file__))
 
     async def on_ready(self):
-        await client.load_extension('cogs.bot.logging_handler')
-        self.loaded_cogs = ['cogs.bot.logging_handler']
-        logging_handler = self.get_cog('LoggingHandler')
-        await logging_handler.init_logger()
+        await client.load_extension('cogs.bot.init_bot_functions')
+        init_bot_functions = self.get_cog('InitBotFunctions')
+        self.loaded_cogs = ['InitBotFunctions']
+        
+        await init_bot_functions.init_logger()
 
         self.configpath = configpath
         self.logger.info(f'Core | the configpath was set to: {self.configpath}')
         self.config = fhu.json_handler(path=configpath, filename=str('config.json'))
+        self.community_settings = self.config['CommunitySettings']
+        self.server_settings = self.config['ServerSettings']
+        self.permission_settings = ['PermissionSettings']
 
-        await client.load_extension('cogs.bot.cog_handler')
-        self.loaded_cogs.append('cogs.bot.cog_handler')
+        await init_bot_functions.init_cogs()
 
-        cog_handler = self.get_cog('CogHandler')
-        await cog_handler.init_cogs()
+        await init_bot_functions.init_database_handler()
+
 
         await client.change_presence(activity=discord.Activity(name='!help', type=2))
         self.logger.info('Core | Client presence was changed')

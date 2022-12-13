@@ -1,6 +1,5 @@
 {   
     "BotSettings" :{
-        "helpCommandCategorie": "Help"
     },
     "CommunitySettings":{
         "maxLevel": 100,
@@ -21,7 +20,7 @@
         "maintananceRole": "El-Special",
         "maintenanceCatName": "Infos & Support"
     },
-    "PermissiionSettings":{
+    "PermissionSettings":{
         "Roles":{
             "defaultRole":{
                 "view_channel":false,
