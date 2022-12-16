@@ -4,10 +4,14 @@
     "CommunitySettings":{
         "maxLevel": 100,
         "expGainingRate": 2,
-        "MultiServerSync": false,
-        "RolesOnVote": false,
-        "SingleServerLeveling": true,
-        "MultiServerLeveling": false
+        "Leveling": true,
+        "MultiServerSync": {
+            "Enalbled" : false,
+            "SyncRoles" : false,
+            "SyncChannel" : false,
+            "SyncLevel" : false,
+            "SyncBannedUser" : false
+        }
     },
     "ServerSettings":{
         "highestSelfGiveableRole": "Nutzer",
@@ -15,7 +19,7 @@
         "standardTextChannels": [],
         "standardVoiceChannels": ["Fraktion-I", "Fraktion-II", "Fraktion-III", "Fraktion-IV"],
         "userLimit": 8,
-        "tmpCatName": "Temp-Channels",
+        "TempCatName": "Temp-Channels",
         "tempChannelName": ["temp-channel"],
         "maintananceRole": "El-Special",
         "maintenanceCatName": "Infos & Support"
