@@ -11,6 +11,31 @@ class BotCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.command()
+    @commands.has_role(maintenance_role)
+    async def register_server(self, ctx):
+        """Initialisiert deine Konfiguration auf deinem Discord."""
+        db_hanlder = self.bot.get_cog('DBHandler')
+
+        leveling = self.bot.community_settings['Leveling']
+
+        member = ctx.message.author
+
+        embed = discord.Embed(
+            title='Registrieren des Servers',
+            description=f'Server wurde von {member} registriert',
+            color=discord.Color.dark_gold()
+            )
+
+        # if self.bot.['ServerSync'] == True:
+        #     await inf.init_server_sync(ctx, embed=embed)
+
+        if leveling['Enalbled']:
+            await db_hanlder.create_table(guild_id=ctx.message.guild.id)
+
+        await ctx.message.delete()
+        await ctx.send(embed=embed)
+
     @commands.command(name='list_loaded')
     @commands.has_role(maintenance_role)
     async def list_loaded_cogs(self, ctx):
