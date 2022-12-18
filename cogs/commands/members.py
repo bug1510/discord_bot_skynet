@@ -13,7 +13,7 @@ class MemberCommands(commands.Cog):
         member = ctx.message.author
         user_nick = ctx.message.author.display_name
 
-        db_handler = self.bot.get_cog(str(self.bot.db_handler))
+        db_handler = self.bot.get_cog('DBHandler')
         embed = discord.Embed(title=f'{user_nick}´s Rank Card', color=discord.Color.blurple())
 
         try:

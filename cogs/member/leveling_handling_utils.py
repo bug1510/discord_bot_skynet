@@ -4,45 +4,26 @@ class LevelHandlingUtils(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
-    async def init_inter_server_leveling(self, ctx, embed):
-        embed.add_field(
-        name= '!Information Inter-Server-Leveling!',
-        value= 'Inter-Server-Leveling is not implemented yet',
-        inline= False
-    )
-        return embed
-    commands.command()
-    @commands.check()
-    async def init_server_sync(self, ctx, embed):
-
-        embed.add_field(
-        name= '!Information on Multi-Server-Sync!',
-        value= 'Multi-Server-Sync is not implemented yet',
-        inline= False
-    )
-        return embed
-
     async def exp_gain(self, custom_user, rate):
-        if self.bot.config['Leveling']:
-            db_handler = self.bot.get_cog(str(self.bot.db_handler))
-            try:
-                custom_user.db_entry = await db_handler.get_user_exp_and_level(custom_user.guild.id, custom_user.user.id, str(custom_user.name))
-                custom_user.user_lvl_exp = await self.calc_lvl(custom_user.db_entry, rate)
-                await db_handler.update_user_exp(custom_user.guild.id, custom_user.user.id, custom_user.name, custom_user.user_lvl_exp)
+        db_handler = self.bot.get_cog('DBHandler')
+        try:
+            custom_user.db_entry = await db_handler.get_user_exp_and_level(custom_user.guild.id, custom_user.user.id, str(custom_user.name))
+            custom_user.user_lvl_exp = await self.calc_lvl(custom_user.db_entry, rate)
+            await db_handler.update_user_exp(custom_user.guild.id, custom_user.user.id, custom_user.name, custom_user.user_lvl_exp)
 
-            except Exception as e:
-                self.bot.logger.warning(f'LevelingHandlingUtils | Trying to gain exp for User {custom_user.name} failed due to: {e}')
-        else:
-            return
+        except Exception as e:
+            self.bot.logger.warning(f'LevelHandlingUtils | Trying to gain exp for User {custom_user.name} failed due to: {e}')
 
     async def calc_lvl(self, db_entry, rate):
+        leveling = self.bot.community_settings['Leveling']
+
         user_lvl_exp = []
         level = db_entry[4]
         exp = db_entry[5]
 
         new_exp = exp + rate
 
-        if level == self.bot.config['maxLevel']:
+        if level == leveling['MaxLevel']:
             return
         elif level < 2:
             new_level = int((exp + rate) / (100 * 2 ** (level - 1)))

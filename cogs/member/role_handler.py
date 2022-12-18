@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 from discord.utils import get
-from utils.file_handler import FileHandlingUtils as fhu
 from utils.custom_object import CustomObject
 
 class RoleHandler(commands.Cog):
@@ -9,21 +8,25 @@ class RoleHandler(commands.Cog):
         self.bot = bot
 
     async def checking_role(self, guild, role):
-        highestrole = get(guild.roles, name=self.bot.config['highestSelfGiveableRole'])
-        lowestrole = get(guild.roles, name=self.bot.config['lowestSelfGiveableRole'])
+        highestrole = get(guild.roles, name=self.bot.server_settings['HighestSelfGiveableRole'])
+        lowestrole = get(guild.roles, name=self.bot.server_settings['LowestSelfGiveableRole'])
         try:
             if role.position < highestrole.position and role.position > lowestrole.position:
                 return True
+            else:
+                return False
         except Exception as e:
             self.bot.logger.warning(f'RoleHandler | checking the Role {role} failed due to: {e}')
 
-    async def listing_role(self, guild, ListRolesField, embed):
+    async def listing_role(self, guild, embed):
+        ListRolesField = ''
         try:
             for role in guild.roles:
-                if (self.check_role(guild=guild, role=role)):
+                if (await self.checking_role(guild=guild, role=role)):
                     ListRolesField += str(role) + '\n'
                 else:
                     pass
+            embed.add_field(name='Found Roles', value=ListRolesField)
         except Exception as e:
             self.bot.logger(f'RoleHandler | Listing the Roles failed due to: {e}')
             embed.color = discord.Color.red()
@@ -33,11 +36,11 @@ class RoleHandler(commands.Cog):
     async def adding_roles(self, customobject:CustomObject) -> CustomObject:
         for r in customobject.roles:
                 try:
-                    await customobject.member.add_roles(customobject.roles)
+                    await customobject.member.add_roles(r)
                     self.bot.logger.info(f'RoleHandler | {customobject.member} was given the Role: {r}')
                     customobject.embed.add_field(name=f'Success adding role!', value=r, inline=False)
                 except Exception as e:
-                    self.logger.warning(f'RoleHandler | While adding role {r} to {customobject.member} went something wrong: {e}.')
+                    self.bot.logger.warning(f'RoleHandler | While adding role {r} to {customobject.member} went something wrong: {e}.')
                     customobject.embed.add_field(
                         name= '!Failure adding Roles',
                         value= f'Beim hinzufügen der Rollen ist etwas schief gegangen,\nüberprüfe bitte deine Eingabe.',
@@ -71,7 +74,7 @@ class RoleHandler(commands.Cog):
         
         server_settings = self.config['Serversettings']
 
-        custom_channel = co(guild=ctx.message.guild, name=server_settings['TempCatName'], embed=embed)
+        custom_channel = CustomObject(guild=ctx.message.guild, name=server_settings['TempCatName'], embed=embed)
         custom_channel.place = get(custom_channel.guild.categories, name=server_settings['TempCatName'])
         channel_name = server_settings['TempChannelName']
         channel_name = channel_name[0]

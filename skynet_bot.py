@@ -17,7 +17,7 @@ class SkynetCore(commands.Bot):
     async def on_ready(self):
         await client.load_extension('cogs.bot.init_bot_functions')
         init_bot_functions = self.get_cog('InitBotFunctions')
-        self.loaded_cogs = ['InitBotFunctions']
+        self.loaded_cogs = ['cogs.bot.init_bot_functions']
         
         await init_bot_functions.init_logger()
 
@@ -26,7 +26,7 @@ class SkynetCore(commands.Bot):
         self.config = fhu.json_handler(path=configpath, filename=str('config.json'))
         self.community_settings = self.config['CommunitySettings']
         self.server_settings = self.config['ServerSettings']
-        self.permission_settings = ['PermissionSettings']
+        self.permission_settings = self.config['PermissionSettings']
 
         await init_bot_functions.init_cogs()
 

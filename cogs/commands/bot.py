@@ -3,14 +3,16 @@ from discord.ext import commands
 from utils.file_handler import FileHandlingUtils as fhu
 from skynet_bot import configpath
 
-needed_role = fhu.json_handler(path=configpath, filename=str('config.json'))
+config = fhu.json_handler(path=configpath, filename=str('config.json'))
+server_settings = config['ServerSettings']
+maintenance_role = server_settings['MaintenanceRole']
 
 class BotCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command(name='list_loaded')
-    @commands.has_role(needed_role['maintananceRole'])
+    @commands.has_role(maintenance_role)
     async def list_loaded_cogs(self, ctx):
         """list all cogs loaded on the server"""
         embed = discord.Embed(
@@ -34,7 +36,7 @@ class BotCommands(commands.Cog):
             await ctx.message.delete()
 
     @commands.command(name='list_available')
-    @commands.has_role(needed_role['maintananceRole'])
+    @commands.has_role(maintenance_role)
     async def list_available_cogs(self, ctx):
         """Listet alle verfügbaren Module auf"""
         embed = discord.Embed(
@@ -50,7 +52,7 @@ class BotCommands(commands.Cog):
 
 
     @commands.command(name='load')
-    @commands.has_role(needed_role['maintananceRole'])
+    @commands.has_role(maintenance_role)
     async def load_cog(self, ctx, extension):
         """Lädt ein Modul um ein neustart des Bots zu vermeiden."""
         member = ctx.message.author
@@ -65,7 +67,7 @@ class BotCommands(commands.Cog):
         await ctx.message.delete()
 
     @commands.command(name='unload')
-    @commands.has_role(needed_role['maintananceRole'])
+    @commands.has_role(maintenance_role)
     async def unload_cog(self, ctx, extension):
         """Trennt ein Modul um es ohne Impact berabeiten oder entfernen zu können."""
         member = ctx.message.author
@@ -80,7 +82,7 @@ class BotCommands(commands.Cog):
         await ctx.message.delete()
     
     @commands.command(name='reload')
-    @commands.has_role(needed_role['maintananceRole'])
+    @commands.has_role(maintenance_role)
     async def reload_cog(self, ctx, extension):
         """Lädt ein Modul neu wenn es sich geändert haben sollte."""
         member = ctx.message.author

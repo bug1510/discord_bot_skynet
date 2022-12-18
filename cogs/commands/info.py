@@ -3,14 +3,12 @@ from discord.ext import commands
 from  discord import colour
 logger = logging.getLogger('SkyNet-Core.InfoCommands')
 
-source = os.path.dirname(os.path.abspath(__file__))
-
 class InfoCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command(name='serverinfo')
-    async def get_serverinfo(self, context):
+    async def get_serverinfo(self, ctx):
         """ Show Server Informations """
         embed = discord.Embed(title='Serverinformations',
         description='Informations about the Backend Server',
@@ -32,12 +30,11 @@ class InfoCommands(commands.Cog):
                         value=RamInfoField,
                         inline=False) 
 
-        file = discord.File(source + "/../data/img/confidential.png", filename="confidential.png")
+        file = discord.File(f'{self.bot.source}/data/img/confidential.png', filename='confidential.png')
         embed.set_thumbnail(url="attachment://confidential.png")
 
-        await context.send(file=file,embed=embed)
-        
-        await context.message.delete()
+        await ctx.channel.send(file=file,embed=embed)
+        await ctx.message.delete()
 
     @commands.command(name='communityinfo')
     async def get_communityinfo(self, ctx):
@@ -48,7 +45,6 @@ class InfoCommands(commands.Cog):
         guild_owner = ctx.message.guild.owner
         guild_roles = ctx.message.guild.roles
         guild_members = ctx.message.guild.member_count
-        #twitch_url = maintenance['twitchLink']
 
         number_of_roles = 0
 

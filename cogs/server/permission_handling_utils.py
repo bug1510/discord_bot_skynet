@@ -2,14 +2,13 @@ import discord
 from discord.ext import commands
 from discord.utils import get
 from utils.custom_object import CustomObject
-from utils.file_handler import FileHandlingUtils as fhu
 
 class PermissionHandlingUtils(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
     async def set_standard_permission_for_cat(self, customobject: CustomObject) -> CustomObject:
-        for r in (fhu.json_handler(path=self.bot.configpath, filename='permissions.json'))['Roles']:
+        for r in self.bot.permission_settings['Roles']:
             try:
                 if str(r) == 'defaultRole':
                     space_role = customobject.guild.default_role
@@ -21,7 +20,7 @@ class PermissionHandlingUtils(commands.Cog):
                 else:
                     space_role = get(customobject.guild.roles, name=str(r))
                 
-                roles = (fhu.json_handler(path=self.bot.configpath, filename='permissions.json'))['Roles']
+                roles = self.bot.permission_settings['Roles']
                 file_role = roles[str(r)]
                 await customobject.place.set_permissions(
                     space_role,

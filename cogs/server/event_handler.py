@@ -3,11 +3,9 @@ from discord.ext import commands
 from discord.utils import get
 from utils.custom_object import CustomObject as co
 
-class Events(commands.Cog):
+class EventHandler(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.logger = logging.getLogger('SkyNet-Core.Events')
-
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -16,16 +14,16 @@ class Events(commands.Cog):
         description='Ein wiederholter Verstoß könnte einen Ban nach sich ziehen.',
         color=discord.Color.dark_red())
         
-        leveling_handler = await self.bot.get_cog(str(self.bot.lvl_handler))
+        leveling_handler = self.bot.get_cog('LevelHandlingUtils')
 
         custom_user = co(guild=message.guild, name=message.author, embed=embed )
         custom_user.user = message.author
 
-        for c in self.config['curseWords']:
+        for c in self.bot.community_settings['BlackListedWords']:
             if c in message.content:
                 await message.delete()
                 deleted = True
-                self.logger.critical(f'Curse Word was detected in a message from {message.author}, and the message "{message.content}" was deleted')
+                self.bot.logger.critical(f'EventHandler | Blacklisted word was detected in a message from {message.author}, and the message "{message.content}" was deleted')
                 embed.add_field(name=message.author,
                 value='Hat ein geblacklistetes Wort verwendet.',
                 inline=False
@@ -34,12 +32,13 @@ class Events(commands.Cog):
 
         if message.author.bot:
             return
-        elif deleted == True:
+        elif deleted:
             return
         elif message.content.startswith('!'):
             return
         else:
-            await leveling_handler.exp_gain(custom_user)
+            leveling = self.bot.community_settings['Leveling']
+            await leveling_handler.exp_gain(custom_user, leveling['ExpGainingRate'])
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
@@ -95,12 +94,5 @@ class Events(commands.Cog):
         else:
             pass
 
-    # @commands.Cog.listener()
-    # async def on_command_error(self, ctx, error):
-
-    #     embed = discord.Embed(title='Na huch!', description='Das ist leider schief gegangen!\n Versuch es doch mal mit !help', color=discord.Color.red())
-    #     embed.add_field(name='Es lag wohl hier dran:', value=error)
-    #     await ctx.send(embed=embed)
-
 async def setup(bot):
-    await bot.add_cog(Events(bot))
+    await bot.add_cog(EventHandler(bot))

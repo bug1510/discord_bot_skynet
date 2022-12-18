@@ -112,65 +112,65 @@ class JFWCommands(commands.Cog):
         else:
             await ctx.send(embed=embeds)
 
-    @commands.command(name='cchannel')
-    @commands.has_any_role(
-        'AK-digitale-Infrastruktur',
-        'AK-Social-Media',
-        'AK-Strukturaufbau/Mitgliederwerbung',
-        'AK-Agenda-&-Inhalte',
-        'AK-Presse-&-Öffentlichkeit'
-    )
-    async def create_channel(self, ctx, channel_name, channel_type, userlimit=None):
+    # @commands.command(name='cchannel')
+    # @commands.has_any_role(
+    #     'AK-digitale-Infrastruktur',
+    #     'AK-Social-Media',
+    #     'AK-Strukturaufbau/Mitgliederwerbung',
+    #     'AK-Agenda-&-Inhalte',
+    #     'AK-Presse-&-Öffentlichkeit'
+    # )
+    # async def create_channel(self, ctx, channel_name, channel_type, userlimit=None):
         
-        roles = ['AK-digitale-Infrastruktur',
-        'AK-Social-Media',
-        'AK-Strukturaufbau/Mitgliederwerbung',
-        'AK-Agenda-&-Inhalte',
-        'AK-Presse-&-Öffentlichkeit'
-        ]
+    #     roles = ['AK-digitale-Infrastruktur',
+    #     'AK-Social-Media',
+    #     'AK-Strukturaufbau/Mitgliederwerbung',
+    #     'AK-Agenda-&-Inhalte',
+    #     'AK-Presse-&-Öffentlichkeit'
+    #     ]
 
-        guild_id = ctx.message.guild
-        member = ctx.message.author
+    #     guild_id = ctx.message.guild
+    #     member = ctx.message.author
 
-        channel = []
-        channel.append(channel_name)
+    #     channel = []
+    #     channel.append(channel_name)
 
-        for mr in member.roles:
-            if str(mr) in roles:
-                category_name = get(guild_id.categories, name=str(mr))
+    #     for mr in member.roles:
+    #         if str(mr) in roles:
+    #             category_name = get(guild_id.categories, name=str(mr))
 
-        embed = discord.Embed(
-            title='Create Channel',
-            description='Das Erstellen wurde von ausgelöst.',
-            color=discord.Color.dark_gold()
-        )
-        try:
-            if str(channel_type) == 'text':
-                await su.create_textchannel(
-                    guild=guild_id,
-                    name=channel,
-                    place=category_name,
-                    embed=embed
-                    )
-            elif str(channel_type) == 'voice':
-                if userlimit == None:
-                    userlimit = 0
-                await su.create_voicechannel(
-                    guild=guild_id,
-                    name=channel,
-                    userlimit=userlimit,
-                    place=category_name,
-                    embed=embed
-                )
-        except Exception as e:
-            logger.warning(f'Category wasnt created due to an error: {e}')
-            embed.add_field(
-                name= '!Failure creating Category!',
-                value= f'Die Kategorie konnte nicht erstellt werden. \n{e}',
-                inline=False
-            )
-        finally:
-            await ctx.send(embed=embed)
+    #     embed = discord.Embed(
+    #         title='Create Channel',
+    #         description='Das Erstellen wurde von ausgelöst.',
+    #         color=discord.Color.dark_gold()
+    #     )
+    #     try:
+    #         if str(channel_type) == 'text':
+    #             await su.create_textchannel(
+    #                 guild=guild_id,
+    #                 name=channel,
+    #                 place=category_name,
+    #                 embed=embed
+    #                 )
+    #         elif str(channel_type) == 'voice':
+    #             if userlimit == None:
+    #                 userlimit = 0
+    #             await su.create_voicechannel(
+    #                 guild=guild_id,
+    #                 name=channel,
+    #                 userlimit=userlimit,
+    #                 place=category_name,
+    #                 embed=embed
+    #             )
+    #     except Exception as e:
+    #         logger.warning(f'Category wasnt created due to an error: {e}')
+    #         embed.add_field(
+    #             name= '!Failure creating Category!',
+    #             value= f'Die Kategorie konnte nicht erstellt werden. \n{e}',
+    #             inline=False
+    #         )
+    #     finally:
+    #         await ctx.send(embed=embed)
 
-def setup(bot):
-    bot.add_cog(JFWCommands(bot))
+async def setup(bot):
+    await bot.add_cog(JFWCommands(bot))
