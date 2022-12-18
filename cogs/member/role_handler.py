@@ -90,7 +90,7 @@ class RoleHandler(commands.Cog):
             custom_channel = await channel_manager.create_textchannel(custom_channel)
         try:
             for role in ctx.guild.roles:
-                if (role_manager.check_role(guild=custom_channel.guild, role=role)):
+                if (role_manager.checking_role(guild=custom_channel.guild, role=role)):
                     msg = await custom_channel.channel.send(f'Möchtest du die Role {role} haben?')
 
                     await msg.add_reaction(emoji='👍')

@@ -59,14 +59,16 @@ class EventHandler(commands.Cog):
 
     @commands.Cog.listener()
     async def on_guild_role_update(self, before, after):
+        role_manager = self.bot.get_cog('RoleHandler')
         guild = after.guild
         channel = get(guild.text_channels, name='rollenverteilung')
         streamin_grole = get(guild.roles, name='Streamer:in')
-
-        if after == streamin_grole:
-            await channel.send('Bist du ein Streamer oder eine Streamerin ?')
-        else:
-            await channel.send(f'Spielst du {after.name} ?')
+        
+        if (await role_manager.checking_role(guild, after)):
+            if after == streamin_grole:
+                await channel.send('Bist du ein Streamer oder eine Streamerin ?')
+            else:
+                await channel.send(f'Spielst du {after.name} ?')
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
