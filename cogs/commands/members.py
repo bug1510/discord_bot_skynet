@@ -157,7 +157,7 @@ class MemberCommands(commands.Cog):
         for r in guild_roles:
             number_of_roles += 1
 
-        embed = discord.Embed(title=f'Info about {guild_name}',color=colour.Color.blurple())
+        embed = discord.Embed(title=f'Info about {guild_name}',color=discord.colour.Color.blurple())
         embed.set_thumbnail(url=guild_icon)
         embed.add_field(name='Owner', value=guild_owner, inline=True)
         embed.add_field(name='Number of Roles', value=number_of_roles, inline=True)
