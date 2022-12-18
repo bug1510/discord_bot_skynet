@@ -7,6 +7,63 @@ class MemberCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.command(name='poll')
+    async def create_poll(self, ctx, q1, ans1, ans2, ans3='0', ans4='0', ans5='0', ans6='0', ans7='0', ans8='0', ans9='0', ans10='0'):
+        '''Mit dem Befehl poll erstellt Mr.Meeseeks dir eine Abstimmung um dir Klarheit zu verschaffen.'''
+
+        user_icon = ctx.message.author.avatar_url_as(static_format='png', size=128)
+        member = ctx.message.author.display_name
+        answeres = ''
+
+        answeres += '1️⃣' + str(ans1) + '\n'
+        answeres += '2️⃣' + str(ans2) + '\n'
+
+        if not ans3 == '0':
+            answeres += '3️⃣' + str(ans3) + '\n'
+        if not ans4 == '0':
+            answeres += '4️⃣' + str(ans4) + '\n'
+        if not ans5 == '0':
+            answeres += '5️⃣' + str(ans5) + '\n'
+        if not ans5 == '0':
+            answeres += '6️⃣' + str(ans6) + '\n'
+        if not ans5 == '0':
+            answeres += '7️⃣' + str(ans7) + '\n'
+        if not ans5 == '0':
+            answeres += '8️⃣' + str(ans8) + '\n'
+        if not ans5 == '0':
+            answeres += '9️⃣' + str(ans9) + '\n'
+        if not ans5 == '0':
+            answeres += '🔟' + str(ans10) + '\n'
+
+        embed = discord.Embed(title=f'{member} fragt euch: ' + q1, description=answeres, color=discord.Color.dark_purple())
+        embed.set_thumbnail(url=user_icon)
+
+        embed.add_field(name='Info', value='Alle Reaktionswerte -1 sehen!', inline=False )
+
+        msg = await ctx.send(embed=embed)
+
+        await msg.add_reaction(emoji='1️⃣')
+        await msg.add_reaction(emoji='2️⃣')
+
+        if not ans3 == '0':
+            await msg.add_reaction(emoji='3️⃣')
+        if not ans4 == '0':
+            await msg.add_reaction(emoji='4️⃣')
+        if not ans5 == '0':
+            await msg.add_reaction(emoji='5️⃣')
+        if not ans6 == '0':
+            await msg.add_reaction(emoji='6️⃣')
+        if not ans7 == '0':
+            await msg.add_reaction(emoji='7️⃣')
+        if not ans8 == '0':
+            await msg.add_reaction(emoji='8️⃣')
+        if not ans9 == '0':
+            await msg.add_reaction(emoji='9️⃣')
+        if not ans10 == '0':
+            await msg.add_reaction(emoji='🔟')
+
+        await ctx.message.delete()
+
     @commands.command(name='rank')
     async def rank(self, ctx):
         '''Gibt dir eine genaue Übersicht über dein Level und deine Erfahrungspunkte.'''

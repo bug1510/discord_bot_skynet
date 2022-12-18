@@ -114,6 +114,51 @@ class ModeratorCommands(commands.Cog):
 
         await ctx.channel.send(embed=embed)
 
+    @commands.command(name='Kettenbrief')
+    async def invite_group(self, ctx, group, invite_message):
+
+        user_icon = ctx.message.author.avatar_url_as(static_format='png', size=128)
+        member = ctx.message.author.display_name
+
+        guild = ctx.message.guild
+        role = get(guild.roles, name=group)
+
+        members = role.members
+
+        embed = discord.Embed(title=f'{member} möchte dir folgendes mitteilen:', description=invite_message, color=discord.Color.purple())
+        embed.set_thumbnail(url=user_icon)
+
+        embeds = discord.Embed(title='!Alle Nutzer haben die Nachricht erhalten!', color=discord.Color.green())
+
+        faileduser = ''
+
+        embedf = discord.Embed(title=f'!Folgende Nutzer haben die Nachricht leider nicht erhalten!', color=discord.Color.red())
+
+        failed = False
+
+        for m in members:
+            try:
+                c = await m.create_dm()
+                await c.send(embed=embed)
+            except:
+                if 'Mr Meeseeks' in str(m):
+                    return
+                else:
+                    failed = True
+                    faileduser += str(m) + '\n'
+        
+        if failed:
+            embedf.add_field(
+                name='Die Nutzer waren..',
+                value=faileduser,
+                inline=False
+            )
+            
+            await ctx.send(embed=embedf)
+
+        else:
+            await ctx.send(embed=embeds)
+
     @commands.command()
     @commands.has_role(maintenance_role)
     async def clear(self, ctx, number=50):
