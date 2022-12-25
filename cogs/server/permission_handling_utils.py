@@ -12,7 +12,7 @@ class PermissionHandlingUtils(commands.Cog):
             try:
                 if str(r) == 'defaultRole':
                     space_role = customobject.guild.default_role
-                elif str(r) == 'RoleByGCC':
+                elif str(r) == 'RoleByCspace':
                     try:
                         space_role = get(customobject.guild.roles, name=str(customobject.role))
                     except:

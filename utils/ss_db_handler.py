@@ -1,4 +1,4 @@
-import sqlite3
+import sqlite3, os
 from discord.ext import commands
 from skynet_bot import ssdbpath
 
@@ -6,7 +6,7 @@ class DBHandler(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
-    async def create_table(self, guild_id):
+    async def create_table(self, guild_id: int) -> None:
         con = sqlite3.connect(f'{ssdbpath}/{guild_id}.db')
         cur = con.cursor()
         cur.execute("""Create Table IF NOT EXISTS leveling
@@ -14,7 +14,7 @@ class DBHandler(commands.Cog):
         con.commit()
         con.close()
 
-    async def create_user(self, guild_id, dc_user_id, dc_user_name):
+    async def create_user(self, guild_id: int, dc_user_id: int, dc_user_name: str) -> None:
         try:
             con = sqlite3.connect(f'{ssdbpath}/{guild_id}.db')
             cur = con.cursor()
@@ -34,19 +34,32 @@ class DBHandler(commands.Cog):
         except Exception as e:
             self.bot.logger.critical(f'SingleServerDBHandlingUtils | Creating User Entry {dc_user_name} in the Database failed due to: {e}')
 
-    async def get_user_exp_and_level(self, guild_id, dc_user_id, dc_user_name):
-        await self.create_user(guild_id, dc_user_id, dc_user_name)
-        try:
-            con = sqlite3.connect(f'{ssdbpath}/{guild_id}.db')
-            cur = con.cursor()
-            cur.execute("SELECT * FROM leveling WHERE dc_user_id = $1",(dc_user_id,))
-            db_entry = cur.fetchone()
-            con.close()
-            return db_entry
-        except Exception as e:
-            self.bot.logger.warning(f'SingleServerDBHandlingUtils | failed to get User Level and Experience from User {dc_user_name} due to: {e}')
-    
-    async def update_user_exp(self, guild_id, dc_user_id, dc_user_name, user_lvl_exp):
+    async def get_user_exp_and_level(self, table_name: str, collum_name: str, user_guild_id: int, dc_user_id: int, dc_user_name: str) -> list:
+        db_hanlder = self.bot.get_cog('DBHandler')
+        leveling = self.bot.community_settings['Leveling']
+        
+        table_name = user_guild_id
+
+        if leveling['Enalbled']:
+            if os.path.exists(f'{str(table_name)}.db'):
+                return
+            else:
+                await db_hanlder.create_table(table_name)
+
+            await self.create_user(table_name, dc_user_id, dc_user_name)
+            try:
+                con = sqlite3.connect(f'{ssdbpath}/{guild_id}.db')
+                cur = con.cursor()
+                cur.execute("SELECT * FROM leveling WHERE dc_user_id = $1",(dc_user_id,))
+                db_entry = cur.fetchone()
+                con.close()
+                return db_entry
+            except Exception as e:
+                self.bot.logger.warning(f'SingleServerDBHandlingUtils | failed to get User Level and Experience from User {dc_user_name} due to: {e}')
+        else:
+            return
+
+    async def update_user_exp(self, guild_id: int, dc_user_id: int, dc_user_name: str, user_lvl_exp: list) -> None:
         level = user_lvl_exp[0]
         exp = user_lvl_exp[1]
 

@@ -2,9 +2,12 @@
     "BotSettings" :{
     },
     "CommunitySettings":{
-        "maxLevel": 100,
-        "expGainingRate": 2,
-        "Leveling": true,
+        "BlackListedWords":[],
+        "Leveling":{
+            "Enalbled": true,
+            "MaxLevel": 100,
+            "ExpGainingRate": 2
+        },
         "MultiServerSync": {
             "Enalbled" : false,
             "SyncRoles" : false,
@@ -14,14 +17,16 @@
         }
     },
     "ServerSettings":{
-        "highestSelfGiveableRole": "Nutzer",
-        "lowestSelfGiveableRole": "@everyone",
-        "standardTextChannels": [],
-        "standardVoiceChannels": ["Fraktion-I", "Fraktion-II", "Fraktion-III", "Fraktion-IV"],
-        "userLimit": 8,
+        "HighestSelfGiveableRole": "Nutzer",
+        "LowestSelfGiveableRole": "@everyone",
+        "StandardTextChannels": ["Text"],
+        "StandardVoiceChannels": ["Voice"],
+        "UserLimit": 8,
         "TempCatName": "Temp-Channels",
-        "tempChannelName": ["temp-channel"],
-        "maintananceRole": "El-Special",
+        "TempChannelName": ["temp-channel"],
+        "ModeratorRole": "Moderator",
+        "AdminRole": "Admin",
+        "MaintenanceRole": "Bot Admin",
         "maintenanceCatName": "Infos & Support"
     },
     "PermissionSettings":{
@@ -52,7 +57,7 @@
                 "move_members":false,
                 "request_to_speak":false
             },
-            "RoleByGCC":{
+            "RoleByCspace":{
                 "view_channel":true,
                 "manage_channels":false,
                 "manage_permissions":false,
@@ -78,7 +83,7 @@
                 "move_members":false,
                 "request_to_speak":true
             },
-            "Junior Admin":{
+            "Moderator":{
                 "view_channel":true,
                 "manage_channels":false,
                 "manage_permissions":false,
@@ -105,32 +110,6 @@
                 "request_to_speak":true
             },
             "Admin":{
-                "view_channel":true,
-                "manage_channels":false,
-                "manage_permissions":false,
-                "manage_webhooks":false,
-                "create_instant_invite":false,
-                "send_messages":true,
-                "embed_links":true,
-                "attach_files":false,
-                "add_reactions":true,
-                "use_external_emojis":true,
-                "mention_everyone":true,
-                "manage_messages":true,
-                "read_message_history":true,
-                "send_tts_messages":true,
-                "use_application_commands":true,
-                "connect":true,
-                "speak":true,
-                "stream":true,
-                "use_voice_activation":true,
-                "priority_speaker":true,
-                "mute_members":true,
-                "deafen_members":true,
-                "move_members":true,
-                "request_to_speak":true        
-            },
-            "Senior Admin":{
                 "view_channel":true,
                 "manage_channels":true,
                 "manage_permissions":false,

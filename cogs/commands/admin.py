@@ -7,14 +7,14 @@ from skynet_bot import configpath
 
 config = fhu.json_handler(path=configpath, filename=str('config.json'))
 server_settings = config['ServerSettings']
-maintenance_role = server_settings['MaintenanceRole']
+admin_role = server_settings['AdminRole']
 
 class AdminCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command(name='cchannel')
-    @commands.has_role(maintenance_role)
+    @commands.has_role(admin_role)
     async def create_a_channel(self, ctx, channel_name, channel_category, channel_type, userlimit: int=None):
         user = ctx.message.author.display_name
         embed = discord.Embed(
@@ -40,7 +40,7 @@ class AdminCommands(commands.Cog):
         await ctx.send(embed=custom_channel.embed)
 
     @commands.command('dchannel')
-    @commands.has_role(maintenance_role)
+    @commands.has_role(admin_role)
     async def delete_a_channel(self , ctx, channel_name, channel_category, channel_type):
         user = ctx.message.author.display_name
         embed = discord.Embed(
@@ -66,7 +66,7 @@ class AdminCommands(commands.Cog):
         await ctx.message.send(embed=custom_channel.embed)
 
     @commands.command(name='cspace')
-    @commands.has_role(maintenance_role)
+    @commands.has_role(admin_role)
     async def create_space(self, ctx, space_name):
         """Legt eine Kategorie eine Rolle dazu und ihre Channel an"""
         user = ctx.message.author.display_name
@@ -104,7 +104,7 @@ class AdminCommands(commands.Cog):
         await ctx.message.delete()
 
     @commands.command(name='dspace')
-    @commands.has_role(maintenance_role)
+    @commands.has_role(admin_role)
     async def delete_space(self, ctx, space_name):
         """Löscht eine Kategorie ihre Rolle und die dazugehörigen Channel an"""
         user = ctx.message.author.display_name

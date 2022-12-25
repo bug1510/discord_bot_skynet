@@ -15,9 +15,7 @@ class BotCommands(commands.Cog):
     @commands.has_role(maintenance_role)
     async def register_server(self, ctx):
         """Initialisiert deine Konfiguration auf deinem Discord."""
-        db_hanlder = self.bot.get_cog('DBHandler')
 
-        leveling = self.bot.community_settings['Leveling']
 
         member = ctx.message.author
 
@@ -29,9 +27,6 @@ class BotCommands(commands.Cog):
 
         # if self.bot.['ServerSync'] == True:
         #     await inf.init_server_sync(ctx, embed=embed)
-
-        if leveling['Enalbled']:
-            await db_hanlder.create_table(guild_id=ctx.message.guild.id)
 
         await ctx.message.delete()
         await ctx.send(embed=embed)

@@ -14,6 +14,8 @@ class DBHandler(commands.Cog):
         self.dbport = str(self.config['DBPort'])
         self.dbclient = MongoClient("mongodb://%s:%s@%s:%s" % (self.username, self.password, self.host, self.port))
 
+        client = ''
+
         guild_id = ctx.message.author.guild.id
         
         try:
@@ -34,11 +36,21 @@ class DBHandler(commands.Cog):
                 value= f'Die Level Datenbank konnte nicht angelegt werden. \n{e}',
                 inline= False
             )
+            return client
         except Exception as e:
             self.bot.logger.critical(f'MultiServerDatabaseHandler | Initiating the Database Client failed due to: {e}')
     
-    async def create_table(self, guild_id):
+    async def init_db(self,client, table_name):
         pass
+
+    async def create_table(self, table_name, collum_name):
+        client = self.init_db_client()
+        db_list = client.list_database_names()
+
+        if table_name in db_list:
+            db = client[str(table_name)]
+        else:
+            db = self.init_db(client, table_name)
 
     async def create_user(self, guild_id, dc_user_id, dec_user_name):
         pass
