@@ -1,7 +1,7 @@
 from discord.ext import commands
 from utils.custom_object import CustomObject
 
-class LevelHandlingUtils(commands.Cog):
+class LevelingHandler(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
@@ -43,4 +43,4 @@ class LevelHandlingUtils(commands.Cog):
         return user_lvl_exp
 
 async def setup(bot):
-    await bot.add_cog(LevelHandlingUtils(bot))
+    await bot.add_cog(LevelingHandler(bot))

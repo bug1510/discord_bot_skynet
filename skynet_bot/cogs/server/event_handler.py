@@ -14,7 +14,7 @@ class EventHandler(commands.Cog):
         description='Ein wiederholter Verstoß könnte einen Ban nach sich ziehen.',
         color=discord.Color.dark_red())
         
-        leveling_handler = self.bot.get_cog('LevelHandlingUtils')
+        leveling_handler = self.bot.get_cog('LevelingHandler')
 
         custom_user = co(guild=message.guild, name=message.author, embed=embed )
         custom_user.user = message.author

@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord.utils import get
 from utils.custom_object import CustomObject
 
-class PermissionHandlingUtils(commands.Cog):
+class PermissionHandler(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
@@ -68,4 +68,4 @@ class PermissionHandlingUtils(commands.Cog):
         return customobject
 
 async def setup(bot):
-    await bot.add_cog(PermissionHandlingUtils(bot))
+    await bot.add_cog(PermissionHandler(bot))

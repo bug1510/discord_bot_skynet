@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from utils.custom_object import CustomObject
 
-class ChannelManagingUtils(commands.Cog):
+class ChannelManager(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
@@ -130,4 +130,4 @@ class ChannelManagingUtils(commands.Cog):
         return customobject
 
 async def setup(bot):
-    await bot.add_cog(ChannelManagingUtils(bot))
+    await bot.add_cog(ChannelManager(bot))

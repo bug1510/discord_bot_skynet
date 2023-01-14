@@ -22,7 +22,7 @@ class AdminCommands(commands.Cog):
             description=f'{user} hat einen Channel erstellen lassen',
             color=discord.Color.dark_gold()
             )
-        channel_manager = self.bot.get_cog('ChannelManagingUtils')
+        channel_manager = self.bot.get_cog('ChannelManager')
         custom_channel = co(guild=ctx.message.guild, name=str(channel_name), embed=embed)
         custom_channel.channel = [str(channel_name)]
         custom_channel.place = get(custom_channel.guild.categories, name=str(channel_category))
@@ -48,7 +48,7 @@ class AdminCommands(commands.Cog):
             description=f'{user} hat einen Channel löschen lassen',
             color=discord.Color.dark_gold()
             )
-        channel_manager = self.bot.get_cog('ChannelManagingUtils')
+        channel_manager = self.bot.get_cog('ChannelManager')
         custom_channel = co(guild=ctx.message.guild, name=[str(channel_name)], embed=embed)
         custom_channel.place = get(custom_channel.guild.categories, name=str(channel_category))
         
@@ -80,9 +80,9 @@ class AdminCommands(commands.Cog):
         embed.set_thumbnail(url=user_icon)
         space = co(guild=ctx.message.guild, name=space_name, embed=embed)
         space.userlimit = self.bot.server_settings['UserLimit']
-        channel_manager = self.bot.get_cog('ChannelManagingUtils')
-        role_manager = self.bot.get_cog('RoleManagingUtils')
-        permission_handler = self.bot.get_cog('PermissionHandlingUtils')
+        channel_manager = self.bot.get_cog('ChannelManager')
+        role_manager = self.bot.get_cog('RoleManager')
+        permission_handler = self.bot.get_cog('PermissionHandler')
 
         space = await channel_manager.create_category(space)
 
@@ -120,8 +120,8 @@ class AdminCommands(commands.Cog):
         space.role = get(space.guild.roles, name=space.name)
         space.place = get(space.guild.categories,name=str(space.name))
 
-        channel_manager = self.bot.get_cog('ChannelManagingUtils')
-        role_manager = self.bot.get_cog('RoleManagingUtils')
+        channel_manager = self.bot.get_cog('ChannelManager')
+        role_manager = self.bot.get_cog('RoleManager')
         
         space.channel = []
         for vc in space.place.voice_channels:

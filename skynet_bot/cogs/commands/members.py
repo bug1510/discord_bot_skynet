@@ -98,7 +98,7 @@ class MemberCommands(commands.Cog):
         custom_channel.channel = [str(self.bot.config['tempChannelName'])]
         custom_channel.userlimit = userlimit
 
-        channel_manager = self.bot.get_cog('ChannelHandlingUtils')
+        channel_manager = self.bot.get_cog('ChannelHandler')
 
         if not custom_channel.place:
             custom_channel = await channel_manager.create_category(custom_channel)
