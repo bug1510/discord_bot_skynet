@@ -2,8 +2,8 @@ import os, logging
 from logging.handlers import TimedRotatingFileHandler
 from discord.ext import commands
 from utils.file_handler import FileHandlingUtils as fhu
-from skynet_bot import logpath
-from skynet_bot import cogpath
+from skynet_bot.skynet_bot import logpath
+from skynet_bot.skynet_bot import cogpath
 
 
 class InitBotFunctions(commands.Cog):

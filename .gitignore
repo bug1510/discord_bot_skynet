@@ -8,6 +8,6 @@ __pycache__
 *.db
 *.jpg
 *.mp3
-skynet_venv
+discord_bot
 VENV
 dump

@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord.utils import get
 from utils.file_handler import FileHandlingUtils as fhu
 from utils.custom_object import CustomObject as co
-from skynet_bot import configpath
+from skynet_bot.skynet_bot import configpath
 
 config = fhu.json_handler(path=configpath, filename=str('config.json'))
 server_settings = config['ServerSettings']
