@@ -2,8 +2,6 @@ import os, logging
 from logging.handlers import TimedRotatingFileHandler
 from discord.ext import commands
 from utils.file_handler import FileHandlingUtils as fhu
-from skynet_bot.skynet_bot import logpath
-from skynet_bot.skynet_bot import cogpath
 
 
 class InitBotFunctions(commands.Cog):
@@ -11,7 +9,6 @@ class InitBotFunctions(commands.Cog):
         self.bot = bot
 
     async def init_logger(self) -> None:
-        self.bot.logpath = logpath
         if not os.path.exists(self.bot.logpath): #checks if log folder exist if not creates one
             os.makedirs(self.bot.logpath)
         self.bot.logger = logging.getLogger('SkyNet')
@@ -33,7 +30,6 @@ class InitBotFunctions(commands.Cog):
         self.bot.logger.info(f'LoggingHandler | the logpath was set to: {self.bot.logpath}')
 
     async def init_cogs(self) -> None:
-        self.bot.cogpath = cogpath
         self.bot.logger.info(f' CogHandler | The Cogpath was set to: {self.bot.cogpath}')
         extensions = fhu.cog_listing(path=self.bot.cogpath, extensions=[])
         for extension in extensions:

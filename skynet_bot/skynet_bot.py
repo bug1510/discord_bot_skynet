@@ -8,11 +8,37 @@ configpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/data/config/')
 logpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/logs/')
 cogpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/cogs/')
 ssdbpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/data/')
+token = None
+
+def usage():
+    print("""
+        SkyNet Bot - have fun to use
+        
+        usage:
+
+            -h or --help        show this help
+            -t or --token       define your application token to run the bot. (required!) 
+            -c or --config      define the json configfiles path. (default : ./data/config/)
+            -l or --log         define the logpath (default ./logs/)
+            -m or --modules     define the path for your modules. (default ./cogs/) 
+            -d or --database    define where the Single Server Database ist or shoud be placed. (default ./data/)
+        
+        example:
+
+            use sbot.json as config and write logfile to /var/log/
+
+            skynet_bot.py -t <your token> -c /home/dev/skynet_bot/skynet_bot.json -l /var/log/
+
+    """)
 
 class SkynetCore(commands.Bot):
     def __init__(self, **options):
         super().__init__(**options)
         self.source = os.path.dirname(os.path.abspath(__file__))
+        self.configpath = configpath
+        self.logpath = logpath
+        self.cogpath = cogpath
+        self.ssdbpath = ssdbpath
 
     async def on_ready(self):
         await client.load_extension('cogs.bot.init_bot_functions')
@@ -40,47 +66,38 @@ class SkynetCore(commands.Bot):
         self.logger.info('Core | Bot was initiated successfully')
         print('Core | Bot was initiated successfully')
 
-
-    def usage():
-        print("""
-            SkyNet Bot - have fun to use
-            
-            usage:
-
-                -h or --help    show this help
-                -c or --config  define the json configfiles path      (default : ./data/config/)
-                -l or --log     define the logpath              (default ./logs/)
-
-            example:
-
-                use sbot.json as config and write logfile to /var/log/
-
-                skynet_bot.py -c /home/dev/document/sbot.json -l /var/log/
-
-        """)
+if __name__ == '__main__':
 
     #parameters for bot start
     try:
-        opts, args = getopt.getopt(sys.argv[1:],'c:l:h',['config','log','help'])
+        opts, args = getopt.getopt(sys.argv[1:],'t:c:l:m:d:h',['token','config','log','modules','database','help'])
     except:
         usage()
         sys.exit(2)
 
     for opt, arg in opts:
-        if opt in ('-h','--help'):
-            usage()
-            sys.exit(1)
+        if opt in ('-t', '--token'):
+            token = arg
         elif opt in ('-c','--config'):
-            config_file = arg
+            configpath = arg
         elif opt in ('-l','--log'):
             logpath = arg
+        elif opt in ('-m', '--modules'):
+            cogpath = arg
+        elif opt in ('-d', '--database'):
+            ssdbpath = arg
+        elif opt in ('-h','--help'):
+            usage()
+            sys.exit(1)
         else:
             usage()
             sys.exit(2)
 
+    if not token:
+        print('Please enter token')
+        usage()
+        sys.exit(2)
 
-
-if __name__ == '__main__':
     intents = discord.Intents.all()
 
     client = SkynetCore(command_prefix='!',
@@ -88,4 +105,4 @@ if __name__ == '__main__':
     help_command = commands.DefaultHelpCommand(no_category = 'Help'),
     intents=intents)
 
-    client.run((fhu.json_handler(path=configpath, filename=str('token.json')))['token'])
+    client.run(token)
