@@ -9,5 +9,5 @@ __pycache__
 *.jpg
 *.mp3
 discord_bot
-VENV
+skynet_venv
 dump
