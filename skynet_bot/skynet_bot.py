@@ -94,7 +94,13 @@ if __name__ == '__main__':
             sys.exit(2)
 
     if not token:
-        print('Please enter token')
+        print("""
+        !Attention!
+        
+        Please enter token
+        
+        !Attention!
+        """)
         usage()
         sys.exit(2)
 
