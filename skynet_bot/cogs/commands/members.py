@@ -1,7 +1,7 @@
-import discord, platform, psutil
+import discord
 from discord.ext import commands
 from discord.utils import get
-from utils.custom_object import CustomObject as co
+from cogs.utils.custom_object import CustomObject as co
 
 class MemberCommands(commands.Cog):
     def __init__(self, bot):
@@ -93,12 +93,12 @@ class MemberCommands(commands.Cog):
         embed = discord.Embed(title='empty', color=discord.Color.dark_grey())
         member = ctx.message.author
 
-        custom_channel = co(guild=ctx.message.guild, name=self.bot.config['tmpCatName'], embed=embed)
-        custom_channel.place = get(ctx.guild.categories, name=self.bot.config['tmpCatName'])
-        custom_channel.channel = [str(self.bot.config['tempChannelName'])]
+        custom_channel = co(guild=ctx.message.guild, name=self.bot.server_settings['TempCatName'], embed=embed)
+        custom_channel.place = get(ctx.guild.categories, name=self.bot.server_settings['TempCatName'])
+        custom_channel.channel = [str(self.bot.server_settings['TempChannelName'])]
         custom_channel.userlimit = userlimit
 
-        channel_manager = self.bot.get_cog('ChannelHandler')
+        channel_manager = self.bot.get_cog('ChannelManager')
 
         if not custom_channel.place:
             custom_channel = await channel_manager.create_category(custom_channel)
@@ -111,35 +111,6 @@ class MemberCommands(commands.Cog):
         except:
             return
         
-        await ctx.message.delete()
-
-    @commands.command(name='serverinfo')
-    async def get_serverinfo(self, ctx):
-        """ Show Server Informations """
-        embed = discord.Embed(title='Serverinformations',
-        description='Informations about the Backend Server',
-        color=discord.Color.orange()
-        )
-
-        SystemInfoField = 'Platform : ' + platform.system() + '\n'
-        SystemInfoField += 'Version  : ' + platform.version() + '\n'
-        SystemInfoField += 'CPU      : ' + platform.processor()
-
-        embed.add_field(name='System Informations',
-                        value=SystemInfoField,
-                        inline=False) 
-        
-        RamInfoField = 'Total    : ' + str(round(((psutil.virtual_memory()[0] / 1024 ) / 1024) / 1024,0)) + ' GB \n'
-        RamInfoField += 'Free     : ' + str(round(((psutil.virtual_memory()[4] / 1024 ) / 1024) / 1024,0)) + ' GB'
-
-        embed.add_field(name='Memory Informations',
-                        value=RamInfoField,
-                        inline=False) 
-
-        file = discord.File(f'{self.bot.source}/data/img/confidential.png', filename='confidential.png')
-        embed.set_thumbnail(url="attachment://confidential.png")
-
-        await ctx.channel.send(file=file,embed=embed)
         await ctx.message.delete()
 
     @commands.command(name='communityinfo')

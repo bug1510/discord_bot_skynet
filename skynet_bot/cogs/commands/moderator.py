@@ -1,20 +1,14 @@
 import discord
 from discord.ext import commands
 from discord.utils import get
-from utils.file_handler import FileHandlingUtils as fhu
-from utils.custom_object import CustomObject as co
-from skynet_bot.skynet_bot import configpath
-
-config = fhu.json_handler(path=configpath, filename=str('config.json'))
-server_settings = config['ServerSettings']
-moderator_role = server_settings['ModeratorRole']
+from cogs.utils.custom_object import CustomObject as co
 
 class ModeratorCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command(name='lsrole')
-    @commands.has_role(moderator_role)
+    @commands.has_role("Moderator")
     async def list_role(self, ctx):
         """Dieser Befehl Listet dir die zuweisbaren Rollen auf"""
         role_manager = self.bot.get_cog('RoleHandler')
@@ -26,7 +20,7 @@ class ModeratorCommands(commands.Cog):
         await ctx.message.delete()
 
     @commands.command()
-    @commands.has_role(moderator_role)
+    @commands.has_role("Moderator")
     async def addrole(self, ctx, roles, member=None):
         """Vergibt eine oder mehrere Rollen. Gib All an für Alle verfügbaren Rollen (Mit Komma getrennt aber ohne Leerzeichen angeben!)"""
         user = ctx.message.author.display_name
@@ -70,7 +64,7 @@ class ModeratorCommands(commands.Cog):
         await ctx.channel.send(embed=embed)
 
     @commands.command()
-    @commands.has_role(moderator_role)
+    @commands.has_role("Moderator")
     async def rmrole(self, ctx, roles, member=None):
         """Entfernt eine oder mehrere Rollen. Gib All an für Alle verfügbaren Rollen (Mit Komma getrennt aber ohne Leerzeichen angeben!)"""
         user = ctx.message.author.display_name
@@ -115,7 +109,7 @@ class ModeratorCommands(commands.Cog):
         await ctx.channel.send(embed=embed)
 
     @commands.command(name='Kettenbrief')
-    @commands.has_role(moderator_role)
+    @commands.has_role("Moderator")
     async def invite_group(self, ctx, group, invite_message):
 
         user_icon = ctx.message.author.avatar_url_as(static_format='png', size=128)
@@ -161,7 +155,7 @@ class ModeratorCommands(commands.Cog):
             await ctx.send(embed=embeds)
 
     @commands.command()
-    @commands.has_role(moderator_role)
+    @commands.has_role("Moderator")
     async def clear(self, ctx, number=50):
         '''Löscht eine Nummer an Nachrichten aus diesem Kanal'''
 

@@ -2,7 +2,6 @@
 
 import discord, os, sys, getopt
 from discord.ext import commands
-from utils.file_handler import FileHandlingUtils as fhu
 
 configpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/data/config/')
 logpath = str(f'{os.path.dirname(os.path.abspath(__file__))}/logs/')
@@ -49,7 +48,10 @@ class SkynetCore(commands.Bot):
 
         self.configpath = configpath
         self.logger.info(f'Core | the configpath was set to: {self.configpath}')
-        self.config = fhu.json_handler(path=configpath, filename=str('config.json'))
+        await client.load_extension('cogs.bot.file_handler')
+        file_handler = self.get_cog('FileHandler')
+        self.loaded_cogs.append('cogs.bot.file_handler')
+        self.config = await file_handler.json_handler(path=configpath, filename=str('config.json'))
         self.community_settings = self.config['CommunitySettings']
         self.server_settings = self.config['ServerSettings']
         self.permission_settings = self.config['PermissionSettings']

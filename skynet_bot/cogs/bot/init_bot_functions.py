@@ -1,7 +1,6 @@
 import os, logging
 from logging.handlers import TimedRotatingFileHandler
 from discord.ext import commands
-from utils.file_handler import FileHandlingUtils as fhu
 
 
 class InitBotFunctions(commands.Cog):
@@ -30,8 +29,9 @@ class InitBotFunctions(commands.Cog):
         self.bot.logger.info(f'LoggingHandler | the logpath was set to: {self.bot.logpath}')
 
     async def init_cogs(self) -> None:
+        file_handler = self.bot.get_cog('FileHandler')
         self.bot.logger.info(f' CogHandler | The Cogpath was set to: {self.bot.cogpath}')
-        extensions = fhu.cog_listing(path=self.bot.cogpath, extensions=[])
+        extensions = await file_handler.cog_listing(path=self.bot.cogpath, extensions=[])
         for extension in extensions:
             try:
                 if extension not in self.bot.loaded_cogs:

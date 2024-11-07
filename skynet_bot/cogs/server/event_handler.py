@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord.utils import get
-from utils.custom_object import CustomObject as co
+from cogs.utils.custom_object import CustomObject as co
 
 class EventHandler(commands.Cog):
     def __init__(self, bot):
@@ -44,11 +44,11 @@ class EventHandler(commands.Cog):
     async def on_voice_state_update(self, member, before, after):
         embed = discord.Embed(title='empty', color=discord.Color.dark_grey())
 
-        tmp_channel_name = self.bot.config['tempChannelName']
+        tmp_channel_name = self.bot.server_settings['TempChannelName']
         custom_channel = co(member.guild, tmp_channel_name, embed)
 
-        channel_manager = self.bot.get_cog('ChannelHandlingUtils')
-        custom_channel.place = get(member.guild.categories, name=self.bot.config['tmpCatName'])
+        channel_manager = self.bot.get_cog('ChannelManager')
+        custom_channel.place = get(member.guild.categories, name=self.bot.server_settings['TempCatName'])
 
         for vc in custom_channel.place.voice_channels:
             vs = vc.voice_states

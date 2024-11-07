@@ -1,17 +1,20 @@
-import logging, os, json, os.path
+import os, json, os.path
+from discord.ext import commands
 
-logger = logging.getLogger('Skynet.FilHandlingUtils')
+class FileHandler(commands.Cog):
+    def __init__(self, bot) -> None:
+        self.bot = bot
 
-class FileHandlingUtils:
-    def json_handler(path: str, filename: str) -> json:
+    async def json_handler(self, path: str, filename: str) -> json:
         try:
             file = str(path) + str(filename)
             file = open(file)
             open_file = json.load(file)
-            file.close()
+            file.close() 
+
             return open_file
         except Exception as e:
-            logger.critical(f'Das Laden des JSON {filename} ist aus folgendem Grund fehlgeschlagen: {e}')
+            self.bot.logger.critical(f'Das Laden des JSON {filename} ist aus folgendem Grund fehlgeschlagen: {e}')
     
     # def json_modifier():
     #     with open('data.json', 'r+') as f:
@@ -21,14 +24,14 @@ class FileHandlingUtils:
     #         json.dump(data, f, indent=4)
     #         f.truncate()     # remove remaining part
 
-    def cog_finder(path:str, extension) -> list:
+    async def cog_finder(self, path:str, extension) -> list:
         extensions = []
-        for CogFile in (FileHandlingUtils.cog_listing(path=path, extensions=[])):
+        for CogFile in (self.cog_listing(path=path, extensions=[])):
             if str(CogFile).endswith(extension):
                 extensions.append(CogFile)
         return extensions
 
-    def cog_listing(path:str, extensions:list) -> list:
+    async def cog_listing(self, path:str, extensions:list) -> list:
         try:
             for root, dirs, CogFiles in os.walk(path):
                 for CogFile in CogFiles:
@@ -41,4 +44,7 @@ class FileHandlingUtils:
                         extensions.append(cog)
             return extensions
         except Exception as e:
-            logger.critical(f'Das Laden des Ordner {path} ist aus folgendem Grund fehlgeschlagen: {e}')
+            self.bot.logger.critical(f'Das Laden des Ordner {path} ist aus folgendem Grund fehlgeschlagen: {e}')
+
+async def setup(bot):
+    await bot.add_cog(FileHandler(bot))

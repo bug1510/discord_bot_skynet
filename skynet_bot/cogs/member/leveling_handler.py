@@ -1,5 +1,5 @@
 from discord.ext import commands
-from utils.custom_object import CustomObject
+from cogs.utils.custom_object import CustomObject
 
 class LevelingHandler(commands.Cog):
     def __init__(self, bot) -> None:

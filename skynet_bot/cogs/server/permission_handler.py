@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord.utils import get
-from utils.custom_object import CustomObject
+from cogs.utils.custom_object import CustomObject
 
 class PermissionHandler(commands.Cog):
     def __init__(self, bot) -> None:

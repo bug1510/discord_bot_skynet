@@ -1,6 +1,6 @@
 import sqlite3, os
 from discord.ext import commands
-from skynet_bot.skynet_bot import ssdbpath
+from skynet_bot.skynetbot import ssdbpath
 
 class DBHandler(commands.Cog):
     def __init__(self, bot) -> None:

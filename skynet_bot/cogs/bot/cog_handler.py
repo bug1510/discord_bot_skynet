@@ -1,7 +1,5 @@
 import discord
 from discord.ext import commands
-from utils.file_handler import FileHandlingUtils as fhu
-
 
 class CogHandler(commands.Cog):
     def __init__(self, bot) -> None:
@@ -10,8 +8,9 @@ class CogHandler(commands.Cog):
     async def list_available_cogs(self, embed):
             ListModulesField = []
             ListOfModules = ''
+            file_handler = self.bot.get_cog('FileHandler')
             try:
-                for CogFile in (fhu.cog_listing(path=self.bot.cogpath, extensions=ListModulesField)):
+                for CogFile in (await file_handler.cog_listing(path=self.bot.cogpath, extensions=ListModulesField)):
                     CogFileSplitted = CogFile.split('.')
                     CogFileSplitted.reverse()
                     ListOfModules += (f'-{CogFileSplitted[0]}\n')
